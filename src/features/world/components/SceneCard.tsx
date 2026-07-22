@@ -5,9 +5,11 @@ type Scene = NonNullable<PublicWorldSnapshot["scene"]>;
 export function SceneCard({
 	scene,
 	snapshot,
+	activeTurnIndex,
 }: {
 	scene: Scene;
 	snapshot: PublicWorldSnapshot;
+	activeTurnIndex: number;
 }) {
 	const location =
 		snapshot.rooms.find((room) => room.id === scene.locationId)?.name ??
@@ -26,7 +28,7 @@ export function SceneCard({
 				<span>Speakers</span> {speakers.join(" and ")}
 			</p>
 			<p className="scene-progress">
-				Complete scene · {scene.turns.length} of {scene.turns.length} turns
+				Scene playback · {activeTurnIndex + 1} of {scene.turns.length} turns
 			</p>
 		</section>
 	);

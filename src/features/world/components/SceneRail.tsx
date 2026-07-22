@@ -6,9 +6,11 @@ import { SceneCard } from "./SceneCard.tsx";
 export function SceneRail({
 	snapshot,
 	mode,
+	activeTurnIndex,
 }: {
 	snapshot: PublicWorldSnapshot | null;
 	mode: PresentationMode;
+	activeTurnIndex: number | null;
 }) {
 	if (!snapshot) {
 		return (
@@ -53,7 +55,11 @@ export function SceneRail({
 			<a className="scene-focus-target" href="#observer-controls">
 				Scene transcript. Continue to observer controls
 			</a>
-			<SceneCard scene={snapshot.scene} snapshot={snapshot} />
+			<SceneCard
+				scene={snapshot.scene}
+				snapshot={snapshot}
+				activeTurnIndex={activeTurnIndex ?? 0}
+			/>
 			<div className="transcript-heading">
 				<h2>Dialogue</h2>
 				<p>
@@ -63,6 +69,7 @@ export function SceneRail({
 			<DialogueTranscript
 				scene={snapshot.scene}
 				residents={snapshot.residents}
+				activeTurnIndex={activeTurnIndex ?? 0}
 			/>
 		</aside>
 	);

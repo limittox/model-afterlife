@@ -5,9 +5,11 @@ type Scene = NonNullable<PublicWorldSnapshot["scene"]>;
 export function DialogueTranscript({
 	scene,
 	residents,
+	activeTurnIndex,
 }: {
 	scene: Scene;
 	residents: PublicWorldSnapshot["residents"];
+	activeTurnIndex: number;
 }) {
 	const residentNames = new Map(
 		residents.map((resident) => [resident.id, resident.name]),
@@ -19,7 +21,7 @@ export function DialogueTranscript({
 				<li
 					className="dialogue-turn"
 					key={turn.id}
-					aria-current={index === scene.turns.length - 1 ? "true" : undefined}
+					aria-current={index === activeTurnIndex ? "true" : undefined}
 				>
 					<p className="speaker-name">
 						{residentNames.get(turn.speakerId) ?? "Resident"}

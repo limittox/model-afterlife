@@ -7,6 +7,7 @@ import { ObserverControlDock } from "../components/ObserverControlDock.tsx";
 import { PixelWorldViewport } from "../components/PixelWorldViewport.tsx";
 import { SceneRail } from "../components/SceneRail.tsx";
 import { useWorldFeed } from "./use-world-feed.ts";
+import { useScenePlayback } from "./use-scene-playback.ts";
 import type {
 	RendererControl,
 	RendererControlEnvelope,
@@ -20,6 +21,7 @@ export function WorldObserver() {
 		useState<RendererControlEnvelope | null>(null);
 	const controlSequence = useRef(0);
 	const snapshot = state.presentedSnapshot;
+	const activeTurnIndex = useScenePlayback(snapshot?.scene ?? null, state.mode);
 	const followedResidentName = snapshot?.residents.find(
 		(resident) => resident.id === state.followedResidentId,
 	)?.name;
@@ -74,6 +76,7 @@ export function WorldObserver() {
 						reducedMotion={reducedMotion}
 						manualPan={state.manualPan}
 						connection={state.connection}
+						activeTurnIndex={activeTurnIndex}
 						rendererControl={rendererControl}
 						onFollow={(residentId, residentName) =>
 							dispatch({ type: "follow", residentId, residentName })
@@ -94,7 +97,11 @@ export function WorldObserver() {
 						}}
 					/>
 				</div>
-				<SceneRail snapshot={snapshot} mode={state.mode} />
+				<SceneRail
+					snapshot={snapshot}
+					mode={state.mode}
+					activeTurnIndex={activeTurnIndex}
+				/>
 				<ObserverControlDock
 					hasSnapshot={snapshot !== null}
 					connection={state.connection}

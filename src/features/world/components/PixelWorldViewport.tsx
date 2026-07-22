@@ -15,6 +15,7 @@ export function PixelWorldViewport({
 	reducedMotion,
 	manualPan,
 	connection,
+	activeTurnIndex,
 	rendererControl,
 	onCameraSettled,
 	onPanBy,
@@ -27,6 +28,7 @@ export function PixelWorldViewport({
 	reducedMotion: boolean;
 	manualPan: boolean;
 	connection: ConnectionState;
+	activeTurnIndex: number | null;
 	rendererControl: RendererControlEnvelope | null;
 	onCameraSettled: (
 		intent: Extract<RendererIntent, { type: "cameraSettled" }>,
@@ -53,6 +55,7 @@ export function PixelWorldViewport({
 	const renderState = projectSnapshotToRenderState(snapshot, {
 		mode,
 		reducedMotion,
+		activeTurnIndex: activeTurnIndex ?? 0,
 		followedResidentId,
 		manualPan,
 		showSpeechBubble: connection === "connected",
@@ -89,6 +92,7 @@ export function PixelWorldViewport({
 			data-through-sequence={snapshot.throughSequence}
 			data-state-hash={snapshot.stateHash}
 			data-scene-id={snapshot.scene?.id ?? "quiet"}
+			data-active-turn-index={activeTurnIndex ?? "quiet"}
 			data-resident-locations={snapshot.residents
 				.map((resident) => `${resident.id}:${resident.roomId}`)
 				.sort()

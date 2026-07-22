@@ -274,7 +274,7 @@ test.describe("semantic observer UI consideration matrix", () => {
 		await expect(page.locator(".scene-speakers")).toContainText(
 			"The Former Giant",
 		);
-		await expect(page.locator(".scene-progress")).toContainText("6 of 6 turns");
+		await expect(page.locator(".scene-progress")).toContainText("1 of 6 turns");
 	});
 
 	test("SceneRail partial scene is withheld and prior complete presentation remains", async ({
@@ -371,6 +371,26 @@ test.describe("semantic observer UI consideration matrix", () => {
 		await expect(turns.nth(1)).toContainText("The Masked Encoder");
 	});
 
+	test("scene turns advance over configured time while Pause freezes playback", async ({
+		page,
+	}) => {
+		await page.clock.install();
+		await openSnapshot(page, activeSnapshot);
+		const currentTurn = page.locator('.dialogue-turn[aria-current="true"]');
+
+		await expect(currentTurn).toContainText("In my day");
+		await page.clock.fastForward(7_600);
+		await expect(currentTurn).toContainText("preferred seeing both sides");
+
+		await page.getByRole("button", { name: "Pause presentation" }).click();
+		await page.clock.fastForward(15_000);
+		await expect(currentTurn).toContainText("preferred seeing both sides");
+
+		await page.getByRole("button", { name: "Resume presentation" }).click();
+		await page.clock.fastForward(7_600);
+		await expect(currentTurn).toContainText("discovered confidence");
+	});
+
 	test("DialogueTranscript partial content never replaces complete rows", async ({
 		page,
 	}) => {
@@ -390,6 +410,9 @@ test.describe("semantic observer UI consideration matrix", () => {
 		await expect(
 			page.locator('.dialogue-turn[aria-current="true"]'),
 		).toHaveCount(1);
+		await expect(
+			page.locator('.dialogue-turn[aria-current="true"]'),
+		).toContainText("In my day");
 		await expect(page.locator(".dialogue-transcript")).toHaveCSS(
 			"overflow-y",
 			"auto",

@@ -27,10 +27,12 @@ describe("renderer bridge", () => {
 		const first = projectSnapshotToRenderState(snapshot, {
 			mode: "live",
 			reducedMotion: false,
+			activeTurnIndex: 0,
 		});
 		const second = projectSnapshotToRenderState(structuredClone(snapshot), {
 			mode: "live",
 			reducedMotion: false,
+			activeTurnIndex: 0,
 		});
 
 		expect(first).toEqual(second);
@@ -47,7 +49,7 @@ describe("renderer bridge", () => {
 			"resident:deprecated-coder",
 		]);
 		expect(first.scene?.activeTurn?.speakerRenderId).toBe(
-			"resident:masked-encoder",
+			"resident:former-giant",
 		);
 		expect(first).not.toHaveProperty("camera");
 		expect(first).not.toHaveProperty("positionMutation");
@@ -215,16 +217,15 @@ describe("supplementary speech bubbles", () => {
 		const state = projectSnapshotToRenderState(snapshot, {
 			mode: "live",
 			reducedMotion: false,
+			activeTurnIndex: 2,
 		});
 		const bubble = createSpeechBubble(state);
 
 		expect(bubble).not.toBeNull();
-		expect(bubble?.speakerId).toBe(snapshot.scene.turns.at(-1)?.speakerId);
+		expect(bubble?.speakerId).toBe(snapshot.scene.turns[2]?.speakerId);
 		expect(bubble?.lines).toHaveLength(MAX_BUBBLE_LINES);
 		expect(bubble?.lines.every((line) => line.length <= 28)).toBe(true);
-		expect(snapshot.scene.turns.at(-1)?.text).toContain(
-			"asked you to stop being hospitable",
-		);
+		expect(snapshot.scene.turns[2]?.text).toContain("discovered confidence");
 	});
 });
 

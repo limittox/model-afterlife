@@ -64,12 +64,17 @@ export function projectSnapshotToRenderState(
 	presentation: {
 		mode: PresentationMode;
 		reducedMotion: boolean;
+		activeTurnIndex?: number;
 		followedResidentId?: string | null;
 		manualPan?: boolean;
 		showSpeechBubble?: boolean;
 	},
 ): RenderWorldState {
-	const activeTurn = snapshot.scene?.turns.at(-1) ?? null;
+	const activeTurn = snapshot.scene
+		? (snapshot.scene.turns[presentation.activeTurnIndex ?? 0] ??
+			snapshot.scene.turns[0] ??
+			null)
+		: null;
 	return {
 		worldId: snapshot.worldId,
 		logicalTick: snapshot.logicalTick,
