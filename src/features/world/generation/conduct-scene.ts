@@ -3,12 +3,16 @@ import type { ResidentTurnProvider } from "./resident-turn-provider.ts";
 
 export async function conductSceneAttempt(input: { brief: SceneBrief; attemptId: string; provider: ResidentTurnProvider; modelForResident: (residentId: string) => string }): Promise<{ attempt: GenerationAttempt; turns: ResidentTurn[] }> {
 	const turns: ResidentTurn[] = [];
-	let identityEvidence: GenerationAttempt["identityEvidence"] = "provider_response";
+	let identityEvidence: GenerationAttempt["identityEvidence"] = "openrouter_verified";
 	let providerResponseId: string | undefined;
 	for (const [turnIndex, residentId] of input.brief.speakerOrder.entries()) {
 		const requestedModelId = input.modelForResident(residentId);
 		const response = await input.provider.generateTurn({ brief: input.brief, turnIndex, residentId, requestedModelId, priorTurns: turns.map((turn) => turn.text) });
-		if (response.observedModelId !== requestedModelId) identityEvidence = "requested_only";
+		if (response.observedModelId !== requestedModelId) {
+			identityEvidence = "requested_only";
+		} else if (response.identityEvidence !== "openrouter_verified") {
+			identityEvidence = response.identityEvidence ?? "provider_response";
+		}
 		providerResponseId ??= response.providerResponseId;
 		turns.push(ResidentTurnSchema.parse({ turnIndex, residentId, requestedModelId, text: response.text, ending: turnIndex === input.brief.turnBudget - 1, effects: [] }));
 	}

@@ -2,7 +2,7 @@ import { PublishedSceneRevisionSchema, type GenerationAttempt, type ResidentTurn
 
 export function validateTracerCandidate(input: { brief: SceneBrief; attempt: GenerationAttempt; turns: ResidentTurn[]; revisionId: string }): { result: ValidationResult; revision?: ReturnType<typeof PublishedSceneRevisionSchema.parse> } {
 	const reject = (code: string, detail: string) => ({ result: { attemptId: input.attempt.attemptId, accepted: false, code, detail } });
-	if (input.attempt.identityEvidence === "requested_only") return reject("identity", "Independent provider identity evidence is required.");
+	if (input.attempt.identityEvidence !== "openrouter_verified") return reject("identity", "Verified direct OpenRouter identity evidence is required.");
 	if (input.turns.length !== input.brief.turnBudget) return reject("turn_budget", "Turn count must match the approved brief.");
 	for (const [index, turn] of input.turns.entries()) {
 		if (turn.turnIndex !== index || turn.residentId !== input.brief.speakerOrder[index]) return reject("speaker_order", "Application-owned speaker order changed.");
