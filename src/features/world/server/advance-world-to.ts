@@ -12,6 +12,13 @@ export type AdvanceWorldResult = {
 	throughSequence: number;
 	insertedEvents: number;
 	stateHash: string;
+	generationRequests?: CommittedGenerationRequest[];
+};
+
+export type CommittedGenerationRequest = {
+	sceneKey: string;
+	expectedWorldHead: number;
+	occurrenceKey: string;
 };
 
 export async function advanceWorldTo(
@@ -48,6 +55,7 @@ export async function advanceWorldTo(
 					throughSequence: head.state.throughSequence,
 					insertedEvents: 0,
 					stateHash: snapshot.stateHash,
+					generationRequests: [],
 				};
 			}
 
@@ -59,6 +67,7 @@ export async function advanceWorldTo(
 			).events;
 			let state = head.state;
 			let insertedEvents = 0;
+			const generationRequests: CommittedGenerationRequest[] = [];
 
 			for (const candidate of candidates) {
 				const event: WorldEvent = {
@@ -87,6 +96,13 @@ export async function advanceWorldTo(
 				if (inserted.length === 1) {
 					state = proposedState;
 					insertedEvents += 1;
+					if (event.type === "scene_generation_requested") {
+						generationRequests.push({
+							sceneKey: event.payload.sceneKey,
+							expectedWorldHead: event.payload.expectedWorldHead,
+							occurrenceKey: event.occurrenceKey,
+						});
+					}
 				}
 			}
 
@@ -108,6 +124,7 @@ export async function advanceWorldTo(
 				throughSequence: state.throughSequence,
 				insertedEvents,
 				stateHash: snapshot.stateHash,
+				generationRequests,
 			};
 		});
 	} finally {
