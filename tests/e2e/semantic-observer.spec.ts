@@ -403,7 +403,11 @@ test.describe("semantic observer UI consideration matrix", () => {
 		partial.scene.turns = partial.scene.turns.slice(0, 3);
 		await mockWorld(page, { snapshots: [activeSnapshot, partial] });
 		await page.goto("/");
+		await expect(page.locator(".dialogue-turn")).toHaveCount(6);
 		await page.evaluate(() => window.dispatchEvent(new Event("focus")));
+		await expect(
+			page.getByText("The live feed is having trouble.", { exact: false }),
+		).toBeVisible();
 		await expect(page.locator(".dialogue-turn")).toHaveCount(6);
 	});
 
