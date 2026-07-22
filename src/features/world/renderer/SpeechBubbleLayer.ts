@@ -48,7 +48,7 @@ function fitBubbleLines(text: string): [string, string] {
 export function createSpeechBubble(
 	state: RenderWorldState | null,
 ): SpeechBubble | null {
-	const turn = state?.scene?.activeTurn;
+	const turn = state?.showSpeechBubble ? state.scene?.activeTurn : null;
 	if (!turn) return null;
 	return {
 		speakerId: turn.speakerId,
@@ -63,4 +63,3 @@ export class SpeechBubbleLayer {
 		return createSpeechBubble(state);
 	}
 }
-

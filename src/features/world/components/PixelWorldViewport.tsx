@@ -4,6 +4,7 @@ import { projectSnapshotToRenderState } from "../renderer/renderer-bridge.ts";
 import type { RendererIntent } from "../renderer/renderer-types.ts";
 import type { RendererControlEnvelope } from "../renderer/renderer-types.ts";
 import type { PresentationMode } from "../client/presentation-types.ts";
+import type { ConnectionState } from "../client/presentation-types.ts";
 
 export function PixelWorldViewport({
 	snapshot,
@@ -13,6 +14,7 @@ export function PixelWorldViewport({
 	mode,
 	reducedMotion,
 	manualPan,
+	connection,
 	rendererControl,
 	onCameraSettled,
 	onPanBy,
@@ -24,6 +26,7 @@ export function PixelWorldViewport({
 	mode: PresentationMode;
 	reducedMotion: boolean;
 	manualPan: boolean;
+	connection: ConnectionState;
 	rendererControl: RendererControlEnvelope | null;
 	onCameraSettled: (
 		intent: Extract<RendererIntent, { type: "cameraSettled" }>,
@@ -52,6 +55,7 @@ export function PixelWorldViewport({
 		reducedMotion,
 		followedResidentId,
 		manualPan,
+		showSpeechBubble: connection === "connected",
 	});
 	const handleIntent = (intent: RendererIntent) => {
 		if (intent.type === "residentSelected") {
@@ -85,6 +89,10 @@ export function PixelWorldViewport({
 			data-through-sequence={snapshot.throughSequence}
 			data-state-hash={snapshot.stateHash}
 			data-scene-id={snapshot.scene?.id ?? "quiet"}
+			data-resident-locations={snapshot.residents
+				.map((resident) => `${resident.id}:${resident.roomId}`)
+				.sort()
+				.join("|")}
 			onKeyDown={(event) => {
 				const pan = handleKeyboardPan(event.key);
 				if (!pan) return;

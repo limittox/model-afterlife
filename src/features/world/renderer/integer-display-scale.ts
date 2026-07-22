@@ -24,7 +24,7 @@ export function sizeCanvasAtIntegerScale(
 	);
 	canvas.style.width = `${canvas.width * scale}px`;
 	canvas.style.height = `${canvas.height * scale}px`;
+	canvas.style.margin = "0";
 	canvas.dataset.displayScale = String(scale);
 	return scale;
 }
-

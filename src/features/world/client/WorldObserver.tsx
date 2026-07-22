@@ -46,7 +46,12 @@ export function WorldObserver() {
 	}, []);
 
 	return (
-		<main className="observer-shell">
+		<main
+			className="observer-shell"
+			data-acquisition-cursor={state.acquisitionCursor}
+			data-presentation-cursor={state.presentationCursor}
+			data-presentation-mode={state.mode}
+		>
 			<HomeStatusStrip
 				snapshot={snapshot}
 				mode={state.mode}
@@ -68,6 +73,7 @@ export function WorldObserver() {
 						mode={state.mode}
 						reducedMotion={reducedMotion}
 						manualPan={state.manualPan}
+						connection={state.connection}
 						rendererControl={rendererControl}
 						onFollow={(residentId, residentName) =>
 							dispatch({ type: "follow", residentId, residentName })

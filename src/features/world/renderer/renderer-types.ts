@@ -68,6 +68,7 @@ export type RenderWorldState = {
 	reducedMotion: boolean;
 	followedResidentId: string | null;
 	manualPan: boolean;
+	showSpeechBubble: boolean;
 	rooms: RenderRoom[];
 	residents: RenderResident[];
 	scene: RenderScene | null;

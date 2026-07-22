@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
@@ -7,6 +8,7 @@ export default defineConfig({
 	timeout: 30_000,
 	expect: { timeout: 6_000 },
 	reporter: "line",
+	globalSetup: "./tests/e2e/global-setup.ts",
 	use: {
 		baseURL: "http://127.0.0.1:3100",
 		trace: "retain-on-failure",

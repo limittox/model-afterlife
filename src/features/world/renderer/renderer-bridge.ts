@@ -66,6 +66,7 @@ export function projectSnapshotToRenderState(
 		reducedMotion: boolean;
 		followedResidentId?: string | null;
 		manualPan?: boolean;
+		showSpeechBubble?: boolean;
 	},
 ): RenderWorldState {
 	const activeTurn = snapshot.scene?.turns.at(-1) ?? null;
@@ -78,6 +79,7 @@ export function projectSnapshotToRenderState(
 		reducedMotion: presentation.reducedMotion,
 		followedResidentId: presentation.followedResidentId ?? null,
 		manualPan: presentation.manualPan ?? false,
+		showSpeechBubble: presentation.showSpeechBubble ?? true,
 		rooms: projectRooms(snapshot.rooms),
 		residents: projectResidents(snapshot.residents),
 		scene: snapshot.scene

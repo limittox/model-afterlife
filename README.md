@@ -1,6 +1,15 @@
 # Model Afterlife
 
-A shared, observer-only retirement home for superseded language models. Phase 1 begins with a real PostgreSQL-backed public world snapshot, a read-only route, and local presentation controls that cannot author canon.
+A shared, observer-only retirement home for superseded language models. Every browser watches one PostgreSQL-backed timeline; Phaser supplies the disposable pixel view while the complete status, transcript, and controls remain semantic React UI.
+
+The Phase 1 request path is:
+
+```text
+Trigger.dev wake-up -> deterministic catch-up -> PostgreSQL journal/projection
+                                              -> read-only snapshot/updates routes
+                                              -> React observer + local presentation
+                                              -> client-only Phaser renderer
+```
 
 ## Local full-stack run
 
@@ -25,7 +34,7 @@ Requirements: Node.js 24, Corepack, and Docker Desktop.
    corepack pnpm db:up
    ```
 
-4. Generate and review the migration, then use the repeatable migration and seed path:
+4. Generate and review migrations when the schema changes, then use the repeatable migration and seed path:
 
    ```powershell
    corepack pnpm db:generate
@@ -50,9 +59,30 @@ Requirements: Node.js 24, Corepack, and Docker Desktop.
    corepack pnpm dev
    ```
 
-The page reads a real row from `world_projection`. Pause, Resume, and Jump to live remain browser-local; the public API exposes only `GET /api/world/snapshot`.
+The page reads a real row from `world_projection`. The browser polls ordered updates only while it has a valid snapshot. Focus, reconnect, cursor gap, and Jump to live replace the local view from a fresh snapshot instead of replaying missed movement.
 
-For cloud development, replace the local values with a dedicated Neon development branch connection and remove `NEON_WS_PROXY`. Do not point `db:push` at production. Trigger.dev credentials are not required until the scheduled advancement work in Plan 02.
+Pause, Resume, follow, pan, zoom, Reset view, and Jump to live remain browser-local. Public world delivery is read-only:
+
+- `GET /api/world/snapshot` returns one coherent canonical head.
+- `GET /api/world/updates?after=<sequence>` returns bounded contiguous updates or requests snapshot replacement.
+- No visitor route writes world time, resident locations, schedules, relationships, or scene outcomes.
+
+The canvas is supplementary. Room names, current status, complete dialogue, recovery copy, focus state, and every control remain available in the DOM. The renderer uses original generated geometry on a 16px source grid, integer display scaling, and a closed local-intent bridge.
+
+## Full verification
+
+The Playwright project starts Docker services, applies reviewed migrations, seeds only when no canonical projection exists, and starts Next.js. It includes a real two-browser database convergence case plus controlled recovery and UI-state cases:
+
+```powershell
+corepack pnpm exec playwright test tests/e2e/semantic-observer.spec.ts tests/e2e/shared-home.spec.ts
+corepack pnpm test
+corepack pnpm rebuild-world -- --check
+corepack pnpm lint
+corepack pnpm typecheck
+corepack pnpm build
+```
+
+The shared-home suite advances the deterministic service directly, proves one paused viewer buffers while another reaches the new head, and verifies that local camera actions leave the second viewer and database hash unchanged.
 
 ## Scheduled world clock
 
@@ -74,3 +104,15 @@ corepack pnpm trigger:dev
 ```
 
 The task has a two-minute queue TTL, three bounded attempts, a 60-second maximum duration, and one-at-a-time task concurrency. Database uniqueness remains the source of truth even when provider-level delivery is repeated.
+
+## Optional cloud deployment
+
+Use separate development and production resources; never reuse the local `db:push` path for production.
+
+1. Create a Neon branch and apply the reviewed migrations with `MIGRATION_DATABASE_URL`.
+2. Configure the Vercel project with `DATABASE_URL` and no local `NEON_WS_PROXY`.
+3. Configure Trigger.dev with the same server-only database URL, `TRIGGER_PROJECT_REF`, and `TRIGGER_SECRET_KEY`.
+4. Deploy the Next.js app to Vercel and the task in `src/trigger/world-clock.ts` to Trigger.dev.
+5. Verify `/api/world/snapshot`, run one scheduled catch-up, and confirm `corepack pnpm rebuild-world -- --check` against a safe verification branch before promoting production changes.
+
+Neon and Trigger credentials are server-only. They must never use a `NEXT_PUBLIC_` prefix or enter the renderer bundle.

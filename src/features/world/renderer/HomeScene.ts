@@ -84,6 +84,14 @@ export class HomeScene extends Phaser.Scene {
 
 	private renderState(state: RenderWorldState): void {
 		const priorSceneId = this.lastSceneId;
+		const bubble = createSpeechBubble(state);
+		this.game.canvas.dataset.bubbleCount = bubble ? "1" : "0";
+		this.game.canvas.dataset.bubbleLines = bubble
+			? String(bubble.lines.filter(Boolean).length)
+			: "0";
+		this.game.canvas.dataset.bubbleText = bubble?.lines.join(" ") ?? "";
+		this.game.canvas.dataset.idleMotion = state.reducedMotion ? "held" : "7fps";
+		this.game.canvas.dataset.speakerMarker = "static";
 		this.children.removeAll(true);
 		this.residentVisuals = [];
 		this.residentBodies.clear();
@@ -136,7 +144,7 @@ export class HomeScene extends Phaser.Scene {
 		const roomLabel =
 			room.label.length > 20 ? `${room.label.slice(0, 17).trimEnd()}...` : room.label;
 		this.add
-			.text(room.x + 8, room.y + 6, roomLabel, {
+			.text(room.x + 8, room.y + 10, roomLabel, {
 				fontFamily: "Pixelify Sans, sans-serif",
 				fontSize: "10px",
 				color: this.tokens.colors.text,
@@ -262,6 +270,7 @@ export class HomeScene extends Phaser.Scene {
 			manualPan: state.manualPan,
 		});
 		if (!transition) return;
+		this.game.canvas.dataset.cameraDuration = String(transition.durationMs);
 		this.cameras.main.stopFollow();
 		this.cameras.main.setZoom(transition.zoom);
 		if (transition.durationMs === 0) {
@@ -387,7 +396,7 @@ export class HomeScene extends Phaser.Scene {
 		if (!speaker) return;
 
 		const x = Phaser.Math.Clamp(speaker.x - 60, 4, HOME_WIDTH - 124);
-		const y = Phaser.Math.Clamp(speaker.y - 72, 4, HOME_HEIGHT - 52);
+		const y = Phaser.Math.Clamp(speaker.y - 48, 4, HOME_HEIGHT - 52);
 		const graphics = this.add.graphics().setDepth(8);
 		graphics.fillStyle(colorNumber(this.tokens.colors.text), 1);
 		graphics.fillRect(x, y, 120, 35);

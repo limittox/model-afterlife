@@ -24,7 +24,7 @@ export function createWorldGame(
 		fps: { target: 8, forceSetTimeOut: true },
 		scale: {
 			mode: Phaser.Scale.ScaleModes.NONE,
-			autoCenter: Phaser.Scale.Center.CENTER_BOTH,
+			autoCenter: Phaser.Scale.Center.NO_CENTER,
 			autoRound: true,
 		},
 		scene: [new HomeScene(bridge, tokens)],
