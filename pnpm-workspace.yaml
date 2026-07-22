@@ -31,3 +31,7 @@ minimumReleaseAgeExclude:
   - trigger.dev@4.5.6
   - '@opentelemetry/core@2.10.0'
   - postcss@8.5.22
+  - '@ai-sdk/anthropic@4.0.18'
+  - '@ai-sdk/gateway@4.0.26'
+  - '@ai-sdk/google@4.0.21'
+  - ai@7.0.34

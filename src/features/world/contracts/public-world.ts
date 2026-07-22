@@ -28,7 +28,7 @@ const CompleteSceneSchema = z.object({
 	startedAtTick: z.number().int().nonnegative(),
 	durationTicks: z.number().int().positive(),
 	presentationDurationMs: z.number().int().positive(),
-	turns: z.array(DialogueTurnSchema).min(4).max(8),
+	turns: z.array(DialogueTurnSchema).min(4).max(10),
 });
 
 const QuietStatusSchema = z.object({
