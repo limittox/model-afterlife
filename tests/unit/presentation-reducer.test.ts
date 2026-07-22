@@ -139,6 +139,50 @@ describe("presentationReducer", () => {
 		expect(state.lastValidSnapshot).toEqual(snapshot(8));
 	});
 
+	it("does not let an older snapshot response rewind a newer update", () => {
+		let state = createInitialPresentationState(snapshot(10));
+		state = presentationReducer(state, {
+			type: "recovery-requested",
+			reason: "focus",
+		});
+		state = presentationReducer(state, {
+			type: "update-accepted",
+			update: update(11),
+		});
+		state = presentationReducer(state, {
+			type: "snapshot-accepted",
+			snapshot: snapshot(10),
+			reason: "focus",
+		});
+
+		expect(state.acquisitionCursor).toBe(11);
+		expect(state.presentationCursor).toBe(11);
+		expect(state.lastValidSnapshot).toEqual(snapshot(11));
+	});
+
+	it("turns paused-buffer overflow into a durable snapshot request", () => {
+		let state = createInitialPresentationState(snapshot(1));
+		state = presentationReducer(state, { type: "pause" });
+		for (let sequence = 2; sequence <= 101; sequence += 1) {
+			state = presentationReducer(state, {
+				type: "update-accepted",
+				update: update(sequence),
+			});
+		}
+		state = presentationReducer(state, {
+			type: "update-accepted",
+			update: update(102),
+		});
+		const generation = state.snapshotRequestGeneration;
+		state = presentationReducer(state, { type: "connection-restored" });
+
+		expect(state.needsFreshSnapshot).toBe(true);
+		expect(state.snapshotRequestGeneration).toBe(generation);
+		expect(state.snapshotRequestGeneration).toBeGreaterThan(0);
+		expect(state.connection).toBe("reconnecting");
+		expect(state.acquisitionCursor).toBe(101);
+	});
+
 	it("unfollows on deliberate manual pan and announces the local change", () => {
 		let state = createInitialPresentationState(snapshot(2));
 		state = presentationReducer(state, {

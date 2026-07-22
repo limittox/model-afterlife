@@ -29,6 +29,8 @@ export type PresentationState = {
 	connection: ConnectionState;
 	announcement: string | null;
 	needsFreshSnapshot: boolean;
+	snapshotRequestGeneration: number;
+	snapshotReason: SnapshotReason;
 	errorMessage: string | null;
 };
 
@@ -37,8 +39,9 @@ export type PresentationAction =
 			type: "snapshot-accepted";
 			snapshot: PublicWorldSnapshot;
 			reason: SnapshotReason;
+			requestGeneration?: number;
 	  }
-	| { type: "snapshot-rejected" }
+	| { type: "snapshot-rejected"; requestGeneration?: number }
 	| { type: "connection-restored" }
 	| { type: "update-accepted"; update: PublicWorldUpdate }
 	| { type: "recovery-requested"; reason: RecoveryReason }

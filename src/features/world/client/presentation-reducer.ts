@@ -24,15 +24,24 @@ export function createInitialPresentationState(
 		connection: snapshot ? "connected" : "opening",
 		announcement: null,
 		needsFreshSnapshot: snapshot === null,
+		snapshotRequestGeneration: 0,
+		snapshotReason: "bootstrap",
 		errorMessage: null,
 	};
 }
 
-function requestRecovery(state: PresentationState): PresentationState {
+function requestRecovery(
+	state: PresentationState,
+	reason: PresentationState["snapshotReason"],
+	forceNewRequest = false,
+): PresentationState {
+	if (state.needsFreshSnapshot && !forceNewRequest) return state;
 	return {
 		...state,
 		connection: state.lastValidSnapshot ? "reconnecting" : "opening",
 		needsFreshSnapshot: true,
+		snapshotRequestGeneration: state.snapshotRequestGeneration + 1,
+		snapshotReason: reason,
 		errorMessage: null,
 	};
 }
@@ -43,6 +52,15 @@ export function presentationReducer(
 ): PresentationState {
 	switch (action.type) {
 		case "snapshot-accepted": {
+			if (
+				(action.requestGeneration !== undefined &&
+					action.requestGeneration !== state.snapshotRequestGeneration) ||
+				action.snapshot.throughSequence < state.acquisitionCursor ||
+				(state.lastValidSnapshot !== null &&
+					action.snapshot.worldId !== state.lastValidSnapshot.worldId)
+			) {
+				return state;
+			}
 			const cursor = action.snapshot.throughSequence;
 			return {
 				...state,
@@ -59,6 +77,12 @@ export function presentationReducer(
 			};
 		}
 		case "snapshot-rejected":
+			if (
+				action.requestGeneration !== undefined &&
+				action.requestGeneration !== state.snapshotRequestGeneration
+			) {
+				return state;
+			}
 			return {
 				...state,
 				connection: state.lastValidSnapshot ? "reconnecting" : "error",
@@ -68,6 +92,7 @@ export function presentationReducer(
 					: "The home couldn’t load. Try loading again.",
 			};
 		case "connection-restored":
+			if (state.needsFreshSnapshot) return state;
 			return {
 				...state,
 				connection: "connected",
@@ -75,7 +100,7 @@ export function presentationReducer(
 			};
 		case "update-accepted": {
 			if (action.update.sequence !== state.acquisitionCursor + 1) {
-				return requestRecovery(state);
+				return requestRecovery(state, "gap");
 			}
 
 			if (state.mode === "live") {
@@ -85,13 +110,15 @@ export function presentationReducer(
 					presentationCursor: action.update.sequence,
 					lastValidSnapshot: action.update.snapshot,
 					presentedSnapshot: action.update.snapshot,
-					connection: "connected",
-					needsFreshSnapshot: false,
+					connection: state.needsFreshSnapshot
+						? "reconnecting"
+						: "connected",
+					needsFreshSnapshot: state.needsFreshSnapshot,
 					errorMessage: null,
 				};
 			}
 			if (state.bufferedUpdates.length >= MAX_BUFFERED_UPDATES) {
-				return requestRecovery(state);
+				return requestRecovery(state, "gap");
 			}
 
 			return {
@@ -99,13 +126,15 @@ export function presentationReducer(
 				acquisitionCursor: action.update.sequence,
 				lastValidSnapshot: action.update.snapshot,
 				bufferedUpdates: [...state.bufferedUpdates, action.update],
-				connection: "connected",
-				needsFreshSnapshot: false,
+				connection: state.needsFreshSnapshot
+					? "reconnecting"
+					: "connected",
+				needsFreshSnapshot: state.needsFreshSnapshot,
 				errorMessage: null,
 			};
 		}
 		case "recovery-requested":
-			return requestRecovery(state);
+			return requestRecovery(state, action.reason, true);
 		case "pause":
 			return state.presentedSnapshot ? { ...state, mode: "paused" } : state;
 		case "resume":
@@ -130,9 +159,9 @@ export function presentationReducer(
 			};
 		}
 		case "jump-live-requested":
-			return requestRecovery(state);
+			return requestRecovery(state, "jump-live", true);
 		case "retry":
-			return requestRecovery(state);
+			return requestRecovery(state, "retry", true);
 		case "follow":
 			return {
 				...state,

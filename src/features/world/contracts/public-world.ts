@@ -64,22 +64,81 @@ export const PublicWorldSnapshotSchema = z
 
 export type PublicWorldSnapshot = z.infer<typeof PublicWorldSnapshotSchema>;
 
-export const PublicWorldUpdateSchema = z.object({
-	schemaVersion: z.literal(PUBLIC_WORLD_SCHEMA_VERSION),
-	sequence: z.number().int().positive(),
-	logicalTick: z.number().int().nonnegative(),
-	stateHash: z.string().regex(/^[a-f0-9]{64}$/),
-	snapshot: PublicWorldSnapshotSchema,
-});
+export const PublicWorldUpdateSchema = z
+	.object({
+		schemaVersion: z.literal(PUBLIC_WORLD_SCHEMA_VERSION),
+		sequence: z.number().int().positive(),
+		logicalTick: z.number().int().nonnegative(),
+		stateHash: z.string().regex(/^[a-f0-9]{64}$/),
+		snapshot: PublicWorldSnapshotSchema,
+	})
+	.superRefine((update, context) => {
+		for (const [field, matches] of [
+			["sequence", update.sequence === update.snapshot.throughSequence],
+			["logicalTick", update.logicalTick === update.snapshot.logicalTick],
+			["stateHash", update.stateHash === update.snapshot.stateHash],
+		] as const) {
+			if (!matches) {
+				context.addIssue({
+					code: "custom",
+					message: `Update ${field} must match its snapshot.`,
+					path: [field],
+				});
+			}
+		}
+	});
 
-export const PublicWorldUpdatesSchema = z.object({
-	schemaVersion: z.literal(PUBLIC_WORLD_SCHEMA_VERSION),
-	fromSequence: z.number().int().nonnegative(),
-	throughSequence: z.number().int().nonnegative(),
-	hasMore: z.boolean(),
-	requiresSnapshot: z.boolean(),
-	updates: z.array(PublicWorldUpdateSchema).max(100),
-});
+export const PublicWorldUpdatesSchema = z
+	.object({
+		schemaVersion: z.literal(PUBLIC_WORLD_SCHEMA_VERSION),
+		fromSequence: z.number().int().nonnegative(),
+		throughSequence: z.number().int().nonnegative(),
+		hasMore: z.boolean(),
+		requiresSnapshot: z.boolean(),
+		updates: z.array(PublicWorldUpdateSchema).max(100),
+	})
+	.superRefine((envelope, context) => {
+		if (envelope.requiresSnapshot) {
+			if (envelope.updates.length > 0 || envelope.hasMore) {
+				context.addIssue({
+					code: "custom",
+					message: "Snapshot recovery envelopes cannot include updates.",
+					path: ["updates"],
+				});
+			}
+			return;
+		}
+
+		let expectedSequence = envelope.fromSequence + 1;
+		const worldId = envelope.updates[0]?.snapshot.worldId;
+		for (const [index, update] of envelope.updates.entries()) {
+			if (update.sequence !== expectedSequence) {
+				context.addIssue({
+					code: "custom",
+					message: "Updates must be contiguous from fromSequence.",
+					path: ["updates", index, "sequence"],
+				});
+			}
+			if (worldId !== undefined && update.snapshot.worldId !== worldId) {
+				context.addIssue({
+					code: "custom",
+					message: "Every update must describe the same world.",
+					path: ["updates", index, "snapshot", "worldId"],
+				});
+			}
+			expectedSequence = update.sequence + 1;
+		}
+
+		const expectedHead =
+			envelope.updates.at(-1)?.sequence ?? envelope.fromSequence;
+		if (envelope.throughSequence !== expectedHead) {
+			context.addIssue({
+				code: "custom",
+				message: "throughSequence must match the last included update.",
+				path: ["throughSequence"],
+			});
+		}
+	});
 
 export type PublicWorldUpdate = z.infer<typeof PublicWorldUpdateSchema>;
 export type PublicWorldUpdates = z.infer<typeof PublicWorldUpdatesSchema>;

@@ -10,7 +10,7 @@ import {
 	createInitialPresentationState,
 	presentationReducer,
 } from "./presentation-reducer.ts";
-import type { RecoveryReason, SnapshotReason } from "./presentation-types.ts";
+import type { RecoveryReason } from "./presentation-types.ts";
 
 class WorldFeedRequestError extends Error {}
 class WorldSchemaMismatchError extends Error {}
@@ -53,15 +53,19 @@ export function useWorldFeed() {
 	const [state, dispatch] = useReducer(presentationReducer, undefined, () =>
 		createInitialPresentationState(),
 	);
-	const snapshotReason = useRef<SnapshotReason>("bootstrap");
-	const snapshotWasFetching = useRef(true);
 	const handledUpdatesAt = useRef(0);
+	const handledSnapshotAt = useRef(0);
 
 	const snapshotQuery = useQuery({
-		queryKey: ["world", "snapshot"],
-		queryFn: fetchSnapshot,
-		refetchOnWindowFocus: "always",
-		refetchOnReconnect: "always",
+		queryKey: ["world", "snapshot", state.snapshotRequestGeneration],
+		queryFn: async () => ({
+			snapshot: await fetchSnapshot(),
+			requestGeneration: state.snapshotRequestGeneration,
+			reason: state.snapshotReason,
+		}),
+		enabled: state.needsFreshSnapshot,
+		refetchOnWindowFocus: false,
+		refetchOnReconnect: false,
 	});
 
 	const updatesQuery = useQuery({
@@ -83,34 +87,51 @@ export function useWorldFeed() {
 						? { type: "retry" }
 						: { type: "recovery-requested", reason },
 			);
-			snapshotReason.current = reason;
-			snapshotWasFetching.current = true;
-			void snapshotQuery.refetch();
 		},
-		[snapshotQuery.refetch],
+		[],
 	);
 
 	useEffect(() => {
-		if (snapshotQuery.isFetching) {
-			snapshotWasFetching.current = true;
+		const result = snapshotQuery.data;
+		if (
+			!result ||
+			snapshotQuery.dataUpdatedAt <= handledSnapshotAt.current
+		) {
 			return;
 		}
-		if (snapshotQuery.data && snapshotWasFetching.current) {
-			snapshotWasFetching.current = false;
-			dispatch({
-				type: "snapshot-accepted",
-				snapshot: snapshotQuery.data,
-				reason: snapshotReason.current,
-			});
-			snapshotReason.current = "focus";
+		handledSnapshotAt.current = snapshotQuery.dataUpdatedAt;
+		if (
+			result.requestGeneration !== state.snapshotRequestGeneration ||
+			result.snapshot.throughSequence < state.acquisitionCursor ||
+			(state.lastValidSnapshot !== null &&
+				result.snapshot.worldId !== state.lastValidSnapshot.worldId)
+		) {
+			requestRecovery("gap");
+			return;
 		}
-	}, [snapshotQuery.data, snapshotQuery.isFetching]);
+		dispatch({
+			type: "snapshot-accepted",
+			snapshot: result.snapshot,
+			reason: result.reason,
+			requestGeneration: result.requestGeneration,
+		});
+	}, [
+		requestRecovery,
+		snapshotQuery.data,
+		snapshotQuery.dataUpdatedAt,
+		state.acquisitionCursor,
+		state.lastValidSnapshot,
+		state.snapshotRequestGeneration,
+	]);
 
 	useEffect(() => {
 		if (snapshotQuery.isError) {
-			dispatch({ type: "snapshot-rejected" });
+			dispatch({
+				type: "snapshot-rejected",
+				requestGeneration: state.snapshotRequestGeneration,
+			});
 		}
-	}, [snapshotQuery.isError]);
+	}, [snapshotQuery.isError, state.snapshotRequestGeneration]);
 
 	useEffect(() => {
 		const updates = updatesQuery.data;
@@ -146,16 +167,10 @@ export function useWorldFeed() {
 
 	useEffect(() => {
 		function handleFocus() {
-			dispatch({ type: "recovery-requested", reason: "focus" });
-			snapshotReason.current = "focus";
-			snapshotWasFetching.current = true;
-			void snapshotQuery.refetch();
+			requestRecovery("focus");
 		}
 		function handleOnline() {
-			dispatch({ type: "recovery-requested", reason: "reconnect" });
-			snapshotReason.current = "reconnect";
-			snapshotWasFetching.current = true;
-			void snapshotQuery.refetch();
+			requestRecovery("reconnect");
 		}
 		window.addEventListener("focus", handleFocus);
 		window.addEventListener("online", handleOnline);
@@ -163,7 +178,7 @@ export function useWorldFeed() {
 			window.removeEventListener("focus", handleFocus);
 			window.removeEventListener("online", handleOnline);
 		};
-	}, [snapshotQuery.refetch]);
+	}, [requestRecovery]);
 
 	useEffect(() => {
 		if (state.mode !== "behind-live" || state.bufferedUpdates.length === 0) {
