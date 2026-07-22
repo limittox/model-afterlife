@@ -1,5 +1,76 @@
 export const WORLD_SCHEMA_VERSION = 1 as const;
 
+export const HISTORICAL_CLAIM_CATEGORIES = [
+	"documented",
+	"reported",
+	"exaggeration",
+] as const;
+
+export type HistoricalClaimCategory =
+	(typeof HISTORICAL_CLAIM_CATEGORIES)[number];
+
+export type HistoricalClaimVersion = {
+	claimVersionId: string;
+	claimId: string;
+	versionKey: string;
+	residentId: string;
+	stableOrder: number;
+	category: HistoricalClaimCategory;
+	statement: string;
+	scope: {
+		residentId: string;
+		exactModelIds: string[];
+	};
+	source: {
+		title: string;
+		url: string;
+		accessedOn: string;
+	};
+	confidence: "high" | "medium";
+	editorialStatus: "approved" | "rejected";
+};
+
+export type CharacterTrait = {
+	id: string;
+	stableOrder: number;
+	active: boolean;
+	label: string;
+	guidance: string;
+	approvedClaimIds: string[];
+};
+
+export type CharacterBibleVersion = {
+	bibleVersionId: string;
+	versionKey: string;
+	residentId: string;
+	role: string;
+	routines: string[];
+	traits: CharacterTrait[];
+	dignityNotes: string;
+	avoidanceNotes: string;
+	promptSubset: string;
+};
+
+export type LaunchResident = {
+	id: string;
+	displayOrder: number;
+	displayName: string;
+	role: string;
+	routines: string[];
+	visualVariantId: string;
+	requestedModelId: string;
+	canonicalModelId: string;
+	approvedUpstream: string;
+	requiredQuantization?: "fp8";
+	transport: "openrouter";
+	adapterVersion: "@openrouter/ai-sdk-provider@3.0.0";
+	routingPolicyVersion: "strict-openrouter-v1";
+	modelVersionId: string;
+	modelVersionKey: string;
+	bibleVersionKey: string;
+	claimSetVersion: string;
+};
+
 export type WorldRoomId =
 	| "common-room"
 	| "memory-garden"

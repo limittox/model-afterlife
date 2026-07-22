@@ -1,8 +1,13 @@
 import { execFileSync } from "node:child_process";
-import { eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 import { createWorldDatabase } from "../../src/db/client.ts";
-import { worldProjection } from "../../src/db/schema.ts";
+import {
+	characterBibleVersions,
+	historicalClaimVersions,
+	residentModelVersions,
+	worldProjection,
+} from "../../src/db/schema.ts";
 import { rebuildProjection } from "../../src/features/world/domain/replay.ts";
 import { createProvisionalWorld } from "../../src/features/world/fixtures/provisional-world.ts";
 import { toPublicWorldSnapshot } from "../../src/features/world/server/to-public-snapshot.ts";
@@ -35,6 +40,65 @@ async function writeCanonicalHead(
 }
 
 describe("database seeding", () => {
+	it("seeds the six versioned residents and editorial ledger idempotently", async () => {
+		const readCounts = async () => {
+			const { db, close } = createWorldDatabase();
+			try {
+				const [[models], [bibles], [claims], modelRows, bibleRows, claimRows] = await Promise.all([
+					db.select({ value: count() }).from(residentModelVersions),
+					db.select({ value: count() }).from(characterBibleVersions),
+					db.select({ value: count() }).from(historicalClaimVersions),
+					db
+						.select({
+							residentId: residentModelVersions.residentId,
+							exactModelId: residentModelVersions.exactModelId,
+						})
+						.from(residentModelVersions)
+						.orderBy(residentModelVersions.residentId),
+					db.select({ content: characterBibleVersions.content }).from(characterBibleVersions),
+					db.select({ content: historicalClaimVersions.content }).from(historicalClaimVersions),
+				]);
+				return {
+					models: models?.value ?? 0,
+					bibles: bibles?.value ?? 0,
+					claims: claims?.value ?? 0,
+					modelRows,
+					bibleRows,
+					claimRows,
+				};
+			} finally {
+				await close();
+			}
+		};
+
+		const before = await readCounts();
+		expect(before.models).toBe(6);
+		expect(before.bibles).toBe(6);
+		expect(before.claims).toBe(18);
+
+		execFileSync(
+			process.execPath,
+			["--experimental-strip-types", "scripts/seed-world.ts"],
+			{ cwd: process.cwd(), env: process.env, stdio: "pipe" },
+		);
+		const after = await readCounts();
+		expect(after).toEqual(before);
+		expect(after.modelRows.map((row) => row.exactModelId).sort()).toEqual(
+			[
+				"anthropic/claude-sonnet-4.5",
+				"cohere/command-r-plus-08-2024",
+				"google/gemini-2.5-pro",
+				"meta-llama/llama-3.3-70b-instruct",
+				"openai/gpt-3.5-turbo-0613",
+				"qwen/qwen-2.5-7b-instruct",
+			].sort(),
+		);
+		for (const row of [...after.bibleRows, ...after.claimRows]) {
+			const serialized = JSON.stringify(row.content);
+			expect(serialized).toBe(serialized.normalize("NFC"));
+		}
+	});
+
 	it("persists one internally coherent deployment-time seed event", async () => {
 		const [seedEvent] = await readCommittedWorldEvents(CANONICAL_WORLD_ID);
 

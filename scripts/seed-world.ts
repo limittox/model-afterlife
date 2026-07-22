@@ -1,10 +1,18 @@
 import { eq } from "drizzle-orm";
 import { createWorldDatabase } from "../src/db/client.ts";
-import { worldEvents, worldProjection, worlds } from "../src/db/schema.ts";
+import {
+	characterBibleVersions,
+	historicalClaimVersions,
+	residentModelVersions,
+	worldEvents,
+	worldProjection,
+	worlds,
+} from "../src/db/schema.ts";
 import { targetTickFor } from "../src/features/world/domain/clock.ts";
 import { WORLD_EPOCH_MS } from "../src/features/world/fixtures/provisional-world.ts";
 import {
 	CANONICAL_WORLD_ID,
+	createEditorialSeedData,
 	createWorldInitializedEvent,
 	SEED_OCCURRENCE_KEY,
 } from "../src/features/world/server/seed-data.ts";
@@ -15,6 +23,20 @@ export async function seedWorld(): Promise<void> {
 
 	try {
 		await db.transaction(async (transaction) => {
+			const editorialSeed = createEditorialSeedData();
+			await transaction
+				.insert(residentModelVersions)
+				.values(editorialSeed.residentModelVersions)
+				.onConflictDoNothing();
+			await transaction
+				.insert(characterBibleVersions)
+				.values(editorialSeed.characterBibleVersions)
+				.onConflictDoNothing();
+			await transaction
+				.insert(historicalClaimVersions)
+				.values(editorialSeed.historicalClaimVersions)
+				.onConflictDoNothing();
+
 			await transaction
 				.insert(worlds)
 				.values({ worldId: CANONICAL_WORLD_ID })
