@@ -25,7 +25,7 @@ const brief = SceneBriefSchema.parse({
 	],
 	locationId: "common-room",
 	premise: "A strict transport check.",
-	allowedFactIds: ["claim-transport"],
+	allowedFactIds: ["gpt35-context-and-functions"],
 	tone: "warm",
 	turnBudget: 4,
 	permittedOutcome: "quiet ending",

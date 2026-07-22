@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
-import { RESIDENT_PROVIDER_PROFILES } from "../../src/features/world/generation/provider-registry.ts";
+import type { ResidentProviderProfile } from "../../src/features/world/generation/provider-registry.ts";
 
 async function loadAdmissionRunner() {
 	try {
@@ -12,7 +12,7 @@ async function loadAdmissionRunner() {
 	}
 }
 
-function catalogEvidence(profile: (typeof RESIDENT_PROVIDER_PROFILES)[number]) {
+function catalogEvidence(profile: ResidentProviderProfile) {
 	return {
 		checkedAt: "2026-07-23T02:00:00.000Z",
 		modelId: profile.requestedModelId,
@@ -26,7 +26,7 @@ function catalogEvidence(profile: (typeof RESIDENT_PROVIDER_PROFILES)[number]) {
 	};
 }
 
-function sample(profile: (typeof RESIDENT_PROVIDER_PROFILES)[number], ordinal: number) {
+function sample(profile: ResidentProviderProfile, ordinal: number) {
 	return {
 		generationId: `gen-${profile.residentId}-${ordinal}`,
 		requestedModelId: profile.requestedModelId,

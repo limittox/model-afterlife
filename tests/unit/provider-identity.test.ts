@@ -75,8 +75,8 @@ describe("resident admission identity", () => {
 		const identity = await loadProviderIdentity();
 		expect(identity, "provider identity module must exist").toBeDefined();
 		const input = validInput();
-		if (patch.sample) Object.assign(input.sample, patch.sample);
-		if (patch.catalogEvidence?.endpoint) {
+		if ("sample" in patch) Object.assign(input.sample, patch.sample);
+		if ("catalogEvidence" in patch) {
 			Object.assign(input.catalogEvidence.endpoint, patch.catalogEvidence.endpoint);
 		}
 		expect(() => identity?.validateAdmissionSample(input)).toThrow(/admission|OpenRouter|route|usage|schema|quantization/i);

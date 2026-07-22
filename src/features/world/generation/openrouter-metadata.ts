@@ -53,6 +53,30 @@ export type OpenRouterVerifiedEvidence = {
 	routeAttempt: 1;
 };
 
+export type OpenRouterIdentityErrorCode =
+	| "generation-id-missing"
+	| "router-metadata-missing"
+	| "model-request-mismatch"
+	| "route-not-direct"
+	| "model-identity-mismatch"
+	| "pipeline-transformation"
+	| "route-upstream-mismatch"
+	| "route-attempt-mismatch";
+
+export class OpenRouterIdentityError extends Error {
+	readonly code: OpenRouterIdentityErrorCode;
+
+	constructor(code: OpenRouterIdentityErrorCode, message: string) {
+		super(message);
+		this.name = "OpenRouterIdentityError";
+		this.code = code;
+	}
+}
+
+function reject(code: OpenRouterIdentityErrorCode, message: string): never {
+	throw new OpenRouterIdentityError(code, message);
+}
+
 export function validateOpenRouterMetadata(input: {
 	profile: ResidentProviderProfile;
 	generationId: string | undefined;
@@ -60,25 +84,25 @@ export function validateOpenRouterMetadata(input: {
 	metadata: unknown;
 }): OpenRouterVerifiedEvidence {
 	if (!input.generationId?.trim()) {
-		throw new Error("OpenRouter generation ID is required for authorship evidence.");
+		reject("generation-id-missing", "OpenRouter generation ID is required for authorship evidence.");
 	}
 
 	const parsed = OpenRouterMetadataSchema.safeParse(input.metadata);
 	if (!parsed.success) {
-		throw new Error("OpenRouter router metadata is missing or malformed.");
+		reject("router-metadata-missing", "OpenRouter router metadata is missing or malformed.");
 	}
 	const metadata = parsed.data;
 	if (metadata.requested !== input.profile.requestedModelId) {
-		throw new Error("OpenRouter requested model does not match the exact profile.");
+		reject("model-request-mismatch", "OpenRouter requested model does not match the exact profile.");
 	}
 	if (metadata.strategy !== "direct" || metadata.attempt !== 1) {
-		throw new Error("OpenRouter route was not direct on its first attempt.");
+		reject("route-not-direct", "OpenRouter route was not direct on its first attempt.");
 	}
 	if (input.responseModelId !== input.profile.canonicalModelId) {
-		throw new Error("OpenRouter response model does not match the canonical profile.");
+		reject("model-identity-mismatch", "OpenRouter response model does not match the canonical profile.");
 	}
 	if ((metadata.pipeline?.length ?? 0) !== 0) {
-		throw new Error("OpenRouter materially transformed the resident response.");
+		reject("pipeline-transformation", "OpenRouter materially transformed the resident response.");
 	}
 
 	const selected = metadata.endpoints.available.filter(
@@ -89,7 +113,7 @@ export function validateOpenRouterMetadata(input: {
 		selected[0]?.provider !== input.profile.selectedUpstreamName ||
 		selected[0]?.model !== input.profile.canonicalModelId
 	) {
-		throw new Error("OpenRouter selected an unexpected model or upstream.");
+		reject("route-upstream-mismatch", "OpenRouter selected an unexpected model or upstream.");
 	}
 
 	if (
@@ -98,7 +122,7 @@ export function validateOpenRouterMetadata(input: {
 		metadata.attempts[0]?.model !== input.profile.canonicalModelId ||
 		metadata.attempts[0]?.status !== 200
 	) {
-		throw new Error("OpenRouter attempt evidence does not prove one approved route.");
+		reject("route-attempt-mismatch", "OpenRouter attempt evidence does not prove one approved route.");
 	}
 
 	return {

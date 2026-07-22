@@ -7,6 +7,19 @@ export type ProviderTurnResponse = {
 	identityEvidence?: "openrouter_verified" | "provider_response" | "requested_only";
 	finishReason?: string;
 	usage?: { inputTokens: number; outputTokens: number };
+	provenance?: {
+		generationId: string;
+		requestedModelId: string;
+		canonicalModelId: string;
+		selectedModelId: string;
+		selectedUpstream: string;
+		strategy: "direct";
+		routeAttempt: 1;
+		pipeline: [];
+		usage: { inputTokens: number; outputTokens: number; cost?: number };
+		warningCodes: string[];
+		filterStatus: "clear" | "filtered";
+	};
 };
 
 export interface ResidentTurnProvider {
@@ -16,8 +29,6 @@ export interface ResidentTurnProvider {
 		residentId: string;
 		requestedModelId: string;
 		priorTurns: readonly string[];
-		residentGuidance?: string;
-		allowedClaims?: readonly { id: string; text: string }[];
 		relationships?: readonly {
 			residentId: string;
 			dimension: string;

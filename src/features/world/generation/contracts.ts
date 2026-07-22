@@ -13,7 +13,7 @@ export const SceneBriefSchema = strictObject({
 	speakerOrder: z.array(nonBlank).min(4).max(10),
 	locationId: nonBlank,
 	premise: nonBlank,
-	allowedFactIds: z.array(nonBlank).min(1),
+	allowedFactIds: z.array(nonBlank).max(24),
 	tone: nonBlank,
 	turnBudget: z.number().int().min(4).max(10),
 	permittedOutcome: nonBlank,

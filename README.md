@@ -69,6 +69,22 @@ Pause, Resume, follow, pan, zoom, Reset view, and Jump to live remain browser-lo
 
 The canvas is supplementary. Room names, current status, complete dialogue, recovery copy, focus state, and every control remain available in the DOM. The renderer uses original generated geometry on a 16px source grid, integer display scaling, and a closed local-intent bridge.
 
+## Resident admission canaries
+
+The offline conformance suite is safe to run without provider credentials:
+
+```powershell
+corepack pnpm test -- tests/unit/resident-prompt.test.ts tests/unit/provider-identity.test.ts tests/integration/resident-admission.test.ts
+```
+
+The live admission gate makes exactly five bounded generation calls for each of the six launch residents. It incurs OpenRouter usage charges and fails closed on any model, upstream, quantization, metadata, schema, privacy, or usage mismatch. Put the key only in the server-side `.env` file; never paste it into command output or browser code.
+
+```powershell
+corepack pnpm check:resident-admission -- --live --samples=5
+```
+
+The command writes only sanitized provenance, latency, cost, and text hashes to `evals/results/phase-02-live-admission.json`. It does not persist prompts, response text, authorization headers, or the API key.
+
 ## Full verification
 
 The Playwright project starts Docker services, applies reviewed migrations, seeds only when no canonical projection exists, and starts Next.js. It includes a real two-browser database convergence case plus controlled recovery and UI-state cases:

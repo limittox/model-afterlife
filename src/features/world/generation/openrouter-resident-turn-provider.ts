@@ -1,7 +1,7 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { generateText, Output } from "ai";
 import { z } from "zod";
-import { buildResidentPrompt } from "./build-resident-prompt.ts";
+import { buildLaunchResidentPrompt } from "./build-resident-prompt.ts";
 import { validateOpenRouterMetadata } from "./openrouter-metadata.ts";
 import { providerProfileFor } from "./provider-registry.ts";
 import type {
@@ -30,10 +30,41 @@ type GenerateResult = {
 	response: { id?: string; modelId: string; body?: unknown };
 	providerMetadata?: unknown;
 	finishReason: unknown;
-	usage: { inputTokens: number; outputTokens: number };
+	usage: { inputTokens?: number; outputTokens?: number };
+	warnings?: unknown[];
 };
 
 type Generate = (options: Record<string, unknown>) => Promise<GenerateResult>;
+
+function finishReasonFor(value: unknown): string {
+	if (typeof value === "string") return value;
+	if (value && typeof value === "object") {
+		const record = value as Record<string, unknown>;
+		if (typeof record.unified === "string") return record.unified;
+		if (typeof record.raw === "string") return record.raw;
+	}
+	return JSON.stringify(value);
+}
+
+function warningCodesFor(warnings: unknown[] | undefined): string[] {
+	return (warnings ?? []).map((warning) => {
+		if (warning && typeof warning === "object") {
+			const type = (warning as Record<string, unknown>).type;
+			if (typeof type === "string" && type.trim()) return type;
+		}
+		return "provider-warning";
+	});
+}
+
+function costFromProviderMetadata(metadata: unknown): number | undefined {
+	if (!metadata || typeof metadata !== "object") return undefined;
+	const openrouter = (metadata as Record<string, unknown>).openrouter;
+	if (!openrouter || typeof openrouter !== "object") return undefined;
+	const usage = (openrouter as Record<string, unknown>).usage;
+	if (!usage || typeof usage !== "object") return undefined;
+	const cost = (usage as Record<string, unknown>).cost;
+	return typeof cost === "number" && Number.isFinite(cost) ? cost : undefined;
+}
 
 export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 	private readonly router: ReturnType<RouterFactory>;
@@ -77,12 +108,9 @@ export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 		const model = this.router(profile.requestedModelId, {
 			extraBody: { provider },
 		});
-		const prompts = buildResidentPrompt({
+		const prompts = buildLaunchResidentPrompt({
 			brief: input.brief,
 			residentId: input.residentId,
-			residentGuidance:
-				input.residentGuidance ?? "Write one brief, grounded dialogue turn.",
-			allowedClaims: input.allowedClaims ?? [],
 			relationships: input.relationships ?? [],
 			memories: input.memories ?? [],
 			priorTurns: input.priorTurns.map((text, index) => ({
@@ -109,6 +137,13 @@ export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 			},
 		});
 		const output = ModelTurnOutputSchema.parse(result.output);
+		if (
+			output.approvedClaimIds.some(
+				(claimId) => !prompts.approvedClaimIds.includes(claimId),
+			)
+		) {
+			throw new Error("Resident turn referenced a claim outside its active approved context.");
+		}
 		const responseBody = result.response.body as
 			| { openrouter_metadata?: unknown }
 			| undefined;
@@ -119,16 +154,35 @@ export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 			metadata: responseBody?.openrouter_metadata,
 		});
 
+		const finishReason = finishReasonFor(result.finishReason);
+		const usage = {
+			inputTokens: result.usage.inputTokens ?? 0,
+			outputTokens: result.usage.outputTokens ?? 0,
+		};
+		const cost = costFromProviderMetadata(result.providerMetadata);
 		return {
 			text: output.text,
 			providerResponseId: evidence.generationId,
 			observedModelId: evidence.selectedModelId,
 			identityEvidence: evidence.evidenceKind,
-			finishReason:
-				typeof result.finishReason === "string"
-					? result.finishReason
-					: JSON.stringify(result.finishReason),
-			usage: result.usage,
+			finishReason,
+			usage,
+			provenance: {
+				generationId: evidence.generationId,
+				requestedModelId: evidence.requestedModelId,
+				canonicalModelId: evidence.canonicalModelId,
+				selectedModelId: evidence.selectedModelId,
+				selectedUpstream: evidence.selectedUpstream,
+				strategy: evidence.strategy,
+				routeAttempt: evidence.routeAttempt,
+				pipeline: [],
+				usage: { ...usage, ...(cost === undefined ? {} : { cost }) },
+				warningCodes: warningCodesFor(result.warnings),
+				filterStatus:
+					finishReason === "content-filter" || finishReason === "content_filter"
+						? "filtered"
+						: "clear",
+			},
 		};
 	}
 }
