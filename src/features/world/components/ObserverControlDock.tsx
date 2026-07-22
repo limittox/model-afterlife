@@ -13,6 +13,7 @@ export function ObserverControlDock({
 	onZoomIn,
 	onZoomOut,
 	onReset,
+	onPan,
 	onPause,
 	onResume,
 	onJumpLive,
@@ -26,6 +27,7 @@ export function ObserverControlDock({
 	onZoomIn: () => void;
 	onZoomOut: () => void;
 	onReset: () => void;
+	onPan: (dx: number, dy: number) => void;
 	onPause: () => void;
 	onResume: () => void;
 	onJumpLive: () => void;
@@ -81,6 +83,27 @@ export function ObserverControlDock({
 				>
 					Reset view
 				</button>
+				{[
+					["Pan left", "<", -16, 0],
+					["Pan up", "^", 0, -16],
+					["Pan down", "v", 0, 16],
+					["Pan right", ">", 16, 0],
+				].map(([label, icon, dx, dy]) => (
+					<button
+						className="pan-button"
+						type="button"
+						key={String(label)}
+						onClick={() => onPan(Number(dx), Number(dy))}
+						disabled={cameraControlsDisabled}
+						aria-label={String(label)}
+						title={String(label)}
+						aria-describedby={
+							cameraControlsDisabled ? "control-disabled-reason" : undefined
+						}
+					>
+						<span aria-hidden="true">{icon}</span>
+					</button>
+				))}
 			</fieldset>
 
 			{followedResidentName ? (

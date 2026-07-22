@@ -514,6 +514,46 @@ test.describe("semantic observer UI consideration matrix", () => {
 });
 
 test.describe("local playback and recovery", () => {
+	test("camera dock follows, manually unfollows, clamps integer zoom, and resets locally", async ({
+		page,
+	}) => {
+		await openSnapshot(page, activeSnapshot);
+		const resident = activeSnapshot.residents[0];
+		const world = page.locator(".pixel-world");
+		const canvas = page.locator(".phaser-world-host canvas");
+		const canonicalHash = await world.getAttribute("data-state-hash");
+		const follow = page.getByRole("button", {
+			name: `Follow ${resident.name}`,
+		});
+
+		await follow.focus();
+		await follow.press("Enter");
+		await expect(
+			page.getByRole("button", {
+				name: `Stop following ${resident.name}`,
+			}),
+		).toBeVisible();
+		await expect(canvas).toHaveAttribute("data-camera-zoom", "2");
+
+		await page.getByRole("button", { name: "Pan right" }).click();
+		await expect(
+			page.getByRole("button", {
+				name: `Stop following ${resident.name}`,
+			}),
+		).toHaveCount(0);
+		await expect(page.locator("[aria-live='polite']")).toContainText(
+			`Stopped following ${resident.name}`,
+		);
+
+		await page.getByRole("button", { name: "Zoom in" }).click();
+		await expect(canvas).toHaveAttribute("data-camera-zoom", "3");
+		await page.getByRole("button", { name: "Reset view" }).click();
+		await expect(canvas).toHaveAttribute("data-camera-zoom", "1");
+		await expect(canvas).toHaveAttribute("data-camera-x", "176");
+		await expect(canvas).toHaveAttribute("data-camera-y", "128");
+		await expect(world).toHaveAttribute("data-state-hash", canonicalHash ?? "");
+	});
+
 	test("Pause continues acquisition and Resume advances from the paused presentation", async ({
 		page,
 	}) => {

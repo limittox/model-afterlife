@@ -2,6 +2,7 @@ import type { PublicWorldSnapshot } from "../contracts/public-world.ts";
 import { PixelWorld } from "../renderer/PixelWorld.tsx";
 import { projectSnapshotToRenderState } from "../renderer/renderer-bridge.ts";
 import type { RendererIntent } from "../renderer/renderer-types.ts";
+import type { RendererControlEnvelope } from "../renderer/renderer-types.ts";
 import type { PresentationMode } from "../client/presentation-types.ts";
 
 export function PixelWorldViewport({
@@ -11,6 +12,10 @@ export function PixelWorldViewport({
 	onManualPan,
 	mode,
 	reducedMotion,
+	manualPan,
+	rendererControl,
+	onCameraSettled,
+	onPanBy,
 }: {
 	snapshot: PublicWorldSnapshot | null;
 	followedResidentId: string | null;
@@ -18,6 +23,12 @@ export function PixelWorldViewport({
 	onManualPan: () => void;
 	mode: PresentationMode;
 	reducedMotion: boolean;
+	manualPan: boolean;
+	rendererControl: RendererControlEnvelope | null;
+	onCameraSettled: (
+		intent: Extract<RendererIntent, { type: "cameraSettled" }>,
+	) => void;
+	onPanBy: (dx: number, dy: number) => void;
 }) {
 	if (!snapshot) {
 		return (
@@ -39,13 +50,30 @@ export function PixelWorldViewport({
 	const renderState = projectSnapshotToRenderState(snapshot, {
 		mode,
 		reducedMotion,
+		followedResidentId,
+		manualPan,
 	});
 	const handleIntent = (intent: RendererIntent) => {
 		if (intent.type === "residentSelected") {
 			onFollow(intent.residentId, intent.residentName);
 		} else if (intent.type === "manualPanStarted") {
 			onManualPan();
+		} else {
+			onCameraSettled(intent);
 		}
+	};
+	const handleKeyboardPan = (key: string) => {
+		const offsets: Record<string, { dx: number; dy: number }> = {
+			ArrowUp: { dx: 0, dy: -16 },
+			w: { dx: 0, dy: -16 },
+			ArrowDown: { dx: 0, dy: 16 },
+			s: { dx: 0, dy: 16 },
+			ArrowLeft: { dx: -16, dy: 0 },
+			a: { dx: -16, dy: 0 },
+			ArrowRight: { dx: 16, dy: 0 },
+			d: { dx: 16, dy: 0 },
+		};
+		return offsets[key] ?? null;
 	};
 
 	return (
@@ -57,6 +85,12 @@ export function PixelWorldViewport({
 			data-through-sequence={snapshot.throughSequence}
 			data-state-hash={snapshot.stateHash}
 			data-scene-id={snapshot.scene?.id ?? "quiet"}
+			onKeyDown={(event) => {
+				const pan = handleKeyboardPan(event.key);
+				if (!pan) return;
+				event.preventDefault();
+				onPanBy(pan.dx, pan.dy);
+			}}
 		>
 			<div className="world-summary visually-hidden">
 				<p className="scene-label">Shared home · tick {snapshot.logicalTick}</p>
@@ -81,15 +115,18 @@ export function PixelWorldViewport({
 								"d",
 							].includes(event.key)
 						) {
-							event.preventDefault();
-							onManualPan();
-						}
+								event.preventDefault();
+							}
 					}}
 				>
 					Explore home view with keyboard
 				</button>
 			</div>
-			<PixelWorld state={renderState} onIntent={handleIntent} />
+			<PixelWorld
+				state={renderState}
+				onIntent={handleIntent}
+				control={rendererControl}
+			/>
 			<fieldset className="room-grid visually-hidden">
 				<legend className="visually-hidden">Rooms and residents</legend>
 				{snapshot.rooms.map((room) => {

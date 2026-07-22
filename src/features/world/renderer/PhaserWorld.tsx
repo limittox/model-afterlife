@@ -6,6 +6,7 @@ import { sizeCanvasAtIntegerScale } from "./integer-display-scale.ts";
 import { RendererBridge } from "./renderer-bridge.ts";
 import { disposeWorldGame } from "./renderer-lifecycle.ts";
 import type {
+	RendererControlEnvelope,
 	RendererIntent,
 	RenderWorldState,
 } from "./renderer-types.ts";
@@ -14,9 +15,11 @@ import { PRESENTATION_TOKENS } from "./renderer-types.ts";
 export default function PhaserWorld({
 	state,
 	onIntent,
+	control,
 }: {
 	state: RenderWorldState;
 	onIntent: (intent: RendererIntent) => void;
+	control: RendererControlEnvelope | null;
 }) {
 	const hostRef = useRef<HTMLDivElement>(null);
 	const bridgeRef = useRef<RendererBridge | null>(null);
@@ -53,6 +56,10 @@ export default function PhaserWorld({
 	useEffect(() => {
 		bridgeRef.current?.setState(state);
 	}, [state]);
+
+	useEffect(() => {
+		if (control) bridgeRef.current?.sendControl(control.control);
+	}, [control]);
 
 	return (
 		<div

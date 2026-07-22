@@ -1,8 +1,10 @@
 import Phaser from "phaser";
+import { CameraController, type CameraViewState } from "./CameraController.ts";
 import { createSpeechBubble } from "./SpeechBubbleLayer.ts";
 import type { RendererBridge } from "./renderer-bridge.ts";
 import type {
 	PresentationTokens,
+	RendererControl,
 	RenderResident,
 	RenderRoom,
 	RenderWorldState,
@@ -23,7 +25,14 @@ export class HomeScene extends Phaser.Scene {
 	private readonly bridge: RendererBridge;
 	private readonly tokens: PresentationTokens;
 	private unsubscribe: (() => void) | null = null;
+	private unsubscribeControls: (() => void) | null = null;
 	private residentVisuals: ResidentVisual[] = [];
+	private readonly residentBodies = new Map<string, Phaser.GameObjects.Container>();
+	private readonly cameraController = new CameraController();
+	private lastSceneId: string | null = null;
+	private hasRendered = false;
+	private dragPoint: { x: number; y: number } | null = null;
+	private dragging = false;
 
 	constructor(bridge: RendererBridge, tokens: PresentationTokens) {
 		super({ key: "HomeScene" });
@@ -36,9 +45,27 @@ export class HomeScene extends Phaser.Scene {
 		this.cameras.main.setRoundPixels(true);
 		this.renderState(this.bridge.getState());
 		this.unsubscribe = this.bridge.subscribe((state) => this.renderState(state));
+		this.unsubscribeControls = this.bridge.subscribeControls((control) =>
+			this.handleControl(control),
+		);
+		this.input.on(Phaser.Input.Events.POINTER_DOWN, this.handlePointerDown);
+		this.input.on(Phaser.Input.Events.POINTER_MOVE, this.handlePointerMove);
+		this.input.on(Phaser.Input.Events.POINTER_UP, this.handlePointerUp);
+		this.input.on(Phaser.Input.Events.POINTER_UP_OUTSIDE, this.handlePointerUp);
+		this.input.on(Phaser.Input.Events.POINTER_WHEEL, this.handleWheel);
 		this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
 			this.unsubscribe?.();
 			this.unsubscribe = null;
+			this.unsubscribeControls?.();
+			this.unsubscribeControls = null;
+			this.input.off(Phaser.Input.Events.POINTER_DOWN, this.handlePointerDown);
+			this.input.off(Phaser.Input.Events.POINTER_MOVE, this.handlePointerMove);
+			this.input.off(Phaser.Input.Events.POINTER_UP, this.handlePointerUp);
+			this.input.off(
+				Phaser.Input.Events.POINTER_UP_OUTSIDE,
+				this.handlePointerUp,
+			);
+			this.input.off(Phaser.Input.Events.POINTER_WHEEL, this.handleWheel);
 		});
 	}
 
@@ -56,14 +83,26 @@ export class HomeScene extends Phaser.Scene {
 	}
 
 	private renderState(state: RenderWorldState): void {
+		const priorSceneId = this.lastSceneId;
 		this.children.removeAll(true);
 		this.residentVisuals = [];
+		this.residentBodies.clear();
 		this.drawFloor();
 		for (const room of state.rooms) this.drawRoom(room, state);
 		for (const [index, resident] of state.residents.entries()) {
 			this.drawResident(resident, index, state);
 		}
 		this.drawSpeechBubble(state);
+		this.applyFollowState(state);
+		this.lastSceneId = state.scene?.id ?? null;
+		if (
+			this.hasRendered &&
+			state.scene !== null &&
+			state.scene.id !== priorSceneId
+		) {
+			this.frameCurrentScene(state);
+		}
+		this.hasRendered = true;
 	}
 
 	private drawFloor(): void {
@@ -95,7 +134,7 @@ export class HomeScene extends Phaser.Scene {
 		this.drawStructuralCue(graphics, room);
 
 		const roomLabel =
-			room.label.length > 20 ? `${room.label.slice(0, 19).trimEnd()}â€¦` : room.label;
+			room.label.length > 20 ? `${room.label.slice(0, 17).trimEnd()}...` : room.label;
 		this.add
 			.text(room.x + 8, room.y + 6, roomLabel, {
 				fontFamily: "Pixelify Sans, sans-serif",
@@ -186,7 +225,157 @@ export class HomeScene extends Phaser.Scene {
 			});
 		});
 		body.add(target);
+		this.residentBodies.set(resident.id, body);
 		this.residentVisuals.push({ body, baseY: resident.y, index });
+	}
+
+	private applyFollowState(state: RenderWorldState): void {
+		if (!state.followedResidentId) {
+			if (this.cameraController.getState().followedResidentId) {
+				this.cameraController.stopFollowing();
+				this.cameras.main.stopFollow();
+			}
+			return;
+		}
+		const resident = state.residents.find(
+			(candidate) => candidate.id === state.followedResidentId,
+		);
+		const body = this.residentBodies.get(state.followedResidentId);
+		if (!resident || !body) return;
+		const wasFollowing =
+			this.cameraController.getState().followedResidentId === resident.id;
+		const view = this.cameraController.followResident(resident);
+		this.cameras.main.setZoom(view.zoom);
+		this.cameras.main.startFollow(body, true, 0.12, 0.12);
+		if (!wasFollowing) this.emitSettled("automatic");
+	}
+
+	private frameCurrentScene(state: RenderWorldState): void {
+		if (!state.scene) return;
+		const speakers = state.residents.filter((resident) =>
+			state.scene?.participantIds.includes(resident.id),
+		);
+		const transition = this.cameraController.frameSceneSpeakers(speakers, {
+			mode: state.mode,
+			reducedMotion: state.reducedMotion,
+			followedResidentId: state.followedResidentId,
+			manualPan: state.manualPan,
+		});
+		if (!transition) return;
+		this.cameras.main.stopFollow();
+		this.cameras.main.setZoom(transition.zoom);
+		if (transition.durationMs === 0) {
+			this.cameras.main.centerOn(transition.centerX, transition.centerY);
+			this.emitSettled("automatic");
+			return;
+		}
+		this.cameras.main.pan(
+			transition.centerX,
+			transition.centerY,
+			transition.durationMs,
+			"Quad.easeOut",
+			true,
+		);
+		this.time.delayedCall(transition.durationMs, () =>
+			this.emitSettled("automatic"),
+		);
+	}
+
+	private handleControl(control: RendererControl): void {
+		switch (control.type) {
+			case "zoomBy": {
+				this.beginManualCameraChange();
+				const current = this.cameraController.getState();
+				this.applyView(
+					this.cameraController.setIntegerZoom(current.zoom + control.delta),
+				);
+				this.finishManualCameraChange();
+				break;
+			}
+			case "panBy":
+				this.beginManualCameraChange();
+				this.applyView(
+					this.cameraController.panBy(control.dx, control.dy),
+				);
+				this.finishManualCameraChange();
+				break;
+			case "resetView":
+				this.cameras.main.stopFollow();
+				this.applyView(this.cameraController.resetEstablishingView());
+				this.emitSettled("reset");
+				break;
+		}
+	}
+
+	private readonly handlePointerDown = (pointer: Phaser.Input.Pointer) => {
+		this.dragPoint = { x: pointer.x, y: pointer.y };
+		this.dragging = false;
+	};
+
+	private readonly handlePointerMove = (pointer: Phaser.Input.Pointer) => {
+		if (!pointer.isDown || !this.dragPoint) return;
+		const dx = pointer.x - this.dragPoint.x;
+		const dy = pointer.y - this.dragPoint.y;
+		if (Math.abs(dx) + Math.abs(dy) < 2) return;
+		if (!this.dragging) this.beginManualCameraChange();
+		this.dragging = true;
+		const zoom = this.cameraController.getState().zoom;
+		this.applyView(this.cameraController.panBy(-dx / zoom, -dy / zoom));
+		this.dragPoint = { x: pointer.x, y: pointer.y };
+	};
+
+	private readonly handlePointerUp = () => {
+		if (this.dragging) this.finishManualCameraChange();
+		this.dragPoint = null;
+		this.dragging = false;
+	};
+
+	private readonly handleWheel = (
+		_pointer: Phaser.Input.Pointer,
+		_gameObjects: Phaser.GameObjects.GameObject[],
+		_deltaX: number,
+		deltaY: number,
+	) => {
+		this.beginManualCameraChange();
+		const current = this.cameraController.getState();
+		this.applyView(
+			this.cameraController.setIntegerZoom(
+				current.zoom + (deltaY < 0 ? 1 : -1),
+			),
+		);
+		this.finishManualCameraChange();
+	};
+
+	private beginManualCameraChange(): void {
+		this.cameras.main.stopFollow();
+		this.cameraController.stopFollowing();
+		this.bridge.emit({ type: "manualPanStarted" });
+	}
+
+	private finishManualCameraChange(): void {
+		this.cameraController.finishManualPan();
+		this.emitSettled("manual");
+	}
+
+	private applyView(view: CameraViewState): void {
+		this.cameras.main.setZoom(view.zoom);
+		this.cameras.main.centerOn(view.centerX, view.centerY);
+	}
+
+	private emitSettled(
+		reason: "manual" | "automatic" | "reset",
+	): void {
+		const view = this.cameraController.getState();
+		this.game.canvas.dataset.cameraX = String(Math.round(view.centerX));
+		this.game.canvas.dataset.cameraY = String(Math.round(view.centerY));
+		this.game.canvas.dataset.cameraZoom = String(view.zoom);
+		this.bridge.emit({
+			type: "cameraSettled",
+			x: view.centerX,
+			y: view.centerY,
+			zoom: view.zoom,
+			reason,
+		});
 	}
 
 	private drawSpeechBubble(state: RenderWorldState): void {

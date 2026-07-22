@@ -158,6 +158,12 @@ export function presentationReducer(
 			};
 		case "manual-pan-ended":
 			return { ...state, manualPan: false };
+		case "camera-settled":
+			return {
+				...state,
+				manualPan: false,
+				announcement: action.announcement ?? state.announcement,
+			};
 		case "clear-announcement":
 			return { ...state, announcement: null };
 	}

@@ -66,6 +66,8 @@ export type RenderWorldState = {
 	stateHash: string;
 	mode: PresentationMode;
 	reducedMotion: boolean;
+	followedResidentId: string | null;
+	manualPan: boolean;
 	rooms: RenderRoom[];
 	residents: RenderResident[];
 	scene: RenderScene | null;
@@ -79,5 +81,15 @@ export type RendererIntent =
 			x: number;
 			y: number;
 			zoom: number;
+			reason: "manual" | "automatic" | "reset";
 	  };
 
+export type RendererControl =
+	| { type: "zoomBy"; delta: -1 | 1 }
+	| { type: "panBy"; dx: number; dy: number }
+	| { type: "resetView" };
+
+export type RendererControlEnvelope = {
+	sequence: number;
+	control: RendererControl;
+};

@@ -2,16 +2,19 @@ import type { PresentationMode } from "../client/presentation-types.ts";
 import type { PublicWorldSnapshot } from "../contracts/public-world.ts";
 import type {
 	RendererIntent,
+	RendererControl,
 	RenderWorldState,
 } from "./renderer-types.ts";
 import { projectResidents, projectRooms } from "./world-layout.ts";
 
 type BridgeListener = (state: RenderWorldState) => void;
 type IntentHandler = (intent: RendererIntent) => void;
+type ControlListener = (control: RendererControl) => void;
 
 export class RendererBridge {
 	private state: RenderWorldState;
 	private readonly listeners = new Set<BridgeListener>();
+	private readonly controlListeners = new Set<ControlListener>();
 	private intentHandler: IntentHandler;
 
 	constructor(initialState: RenderWorldState, onIntent: IntentHandler) {
@@ -41,14 +44,29 @@ export class RendererBridge {
 		return () => this.listeners.delete(listener);
 	}
 
+	sendControl(control: RendererControl): void {
+		for (const listener of this.controlListeners) listener(control);
+	}
+
+	subscribeControls(listener: ControlListener): () => void {
+		this.controlListeners.add(listener);
+		return () => this.controlListeners.delete(listener);
+	}
+
 	destroy(): void {
 		this.listeners.clear();
+		this.controlListeners.clear();
 	}
 }
 
 export function projectSnapshotToRenderState(
 	snapshot: PublicWorldSnapshot,
-	presentation: { mode: PresentationMode; reducedMotion: boolean },
+	presentation: {
+		mode: PresentationMode;
+		reducedMotion: boolean;
+		followedResidentId?: string | null;
+		manualPan?: boolean;
+	},
 ): RenderWorldState {
 	const activeTurn = snapshot.scene?.turns.at(-1) ?? null;
 	return {
@@ -58,6 +76,8 @@ export function projectSnapshotToRenderState(
 		stateHash: snapshot.stateHash,
 		mode: presentation.mode,
 		reducedMotion: presentation.reducedMotion,
+		followedResidentId: presentation.followedResidentId ?? null,
+		manualPan: presentation.manualPan ?? false,
 		rooms: projectRooms(snapshot.rooms),
 		residents: projectResidents(snapshot.residents),
 		scene: snapshot.scene
@@ -75,4 +95,3 @@ export function projectSnapshotToRenderState(
 			: null,
 	};
 }
-

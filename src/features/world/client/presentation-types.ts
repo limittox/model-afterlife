@@ -51,4 +51,5 @@ export type PresentationAction =
 	| { type: "unfollow" }
 	| { type: "manual-pan-started" }
 	| { type: "manual-pan-ended" }
+	| { type: "camera-settled"; announcement: string | null }
 	| { type: "clear-announcement" };
