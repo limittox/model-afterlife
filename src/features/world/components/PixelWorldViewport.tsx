@@ -1,15 +1,23 @@
 import type { PublicWorldSnapshot } from "../contracts/public-world.ts";
+import { PixelWorld } from "../renderer/PixelWorld.tsx";
+import { projectSnapshotToRenderState } from "../renderer/renderer-bridge.ts";
+import type { RendererIntent } from "../renderer/renderer-types.ts";
+import type { PresentationMode } from "../client/presentation-types.ts";
 
 export function PixelWorldViewport({
 	snapshot,
 	followedResidentId,
 	onFollow,
 	onManualPan,
+	mode,
+	reducedMotion,
 }: {
 	snapshot: PublicWorldSnapshot | null;
 	followedResidentId: string | null;
 	onFollow: (residentId: string, residentName: string) => void;
 	onManualPan: () => void;
+	mode: PresentationMode;
+	reducedMotion: boolean;
 }) {
 	if (!snapshot) {
 		return (
@@ -28,14 +36,29 @@ export function PixelWorldViewport({
 
 	const primaryLocation =
 		snapshot.scene?.locationId ?? snapshot.quiet?.locationId ?? null;
+	const renderState = projectSnapshotToRenderState(snapshot, {
+		mode,
+		reducedMotion,
+	});
+	const handleIntent = (intent: RendererIntent) => {
+		if (intent.type === "residentSelected") {
+			onFollow(intent.residentId, intent.residentName);
+		} else if (intent.type === "manualPanStarted") {
+			onManualPan();
+		}
+	};
 
 	return (
 		<section
 			className="pixel-world"
 			aria-labelledby="home-view-heading"
-			onPointerDown={onManualPan}
+			data-world-id={snapshot.worldId}
+			data-logical-tick={snapshot.logicalTick}
+			data-through-sequence={snapshot.throughSequence}
+			data-state-hash={snapshot.stateHash}
+			data-scene-id={snapshot.scene?.id ?? "quiet"}
 		>
-			<div className="world-summary">
+			<div className="world-summary visually-hidden">
 				<p className="scene-label">Shared home · tick {snapshot.logicalTick}</p>
 				<h2 id="home-view-heading">A compact home, quietly carrying on</h2>
 				<p>
@@ -66,7 +89,8 @@ export function PixelWorldViewport({
 					Explore home view with keyboard
 				</button>
 			</div>
-			<fieldset className="room-grid">
+			<PixelWorld state={renderState} onIntent={handleIntent} />
+			<fieldset className="room-grid visually-hidden">
 				<legend className="visually-hidden">Rooms and residents</legend>
 				{snapshot.rooms.map((room) => {
 					const residents = snapshot.residents.filter(

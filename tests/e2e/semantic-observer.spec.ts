@@ -476,7 +476,9 @@ test.describe("semantic observer UI consideration matrix", () => {
 	}) => {
 		await openSnapshot(page, longSnapshot);
 		const name = longSnapshot.residents[0].name;
-		await page.getByRole("button", { name: `Follow ${name}` }).click();
+		const followButton = page.getByRole("button", { name: `Follow ${name}` });
+		await followButton.focus();
+		await followButton.press("Enter");
 		const chip = page.getByRole("button", { name: `Stop following ${name}` });
 		await expect(chip).toHaveAttribute("title", `Stop following ${name}`);
 		await expect(chip.locator(".focus-chip-name")).toHaveCSS(

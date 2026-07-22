@@ -277,14 +277,27 @@ h3 {
 .pixel-world {
 	position: absolute;
 	inset: 0;
-	display: grid;
+	display: block;
 	min-width: 0;
 	min-height: 0;
-	grid-template-rows: auto minmax(0, 1fr);
-	gap: var(--space-lg);
 	overflow: hidden;
-	padding: var(--space-xl);
 	background: var(--color-dominant);
+}
+
+.phaser-world-host,
+.pixel-renderer-loading {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	overflow: hidden;
+}
+
+.phaser-world-host canvas {
+	display: block;
+	max-width: 100%;
+	max-height: 100%;
+	image-rendering: pixelated;
 }
 
 .pixel-world-empty {
@@ -335,6 +348,21 @@ h3 {
 	margin: 0;
 	border: 0;
 	padding: 0;
+}
+
+.room-grid.visually-hidden:focus-within {
+	position: absolute;
+	z-index: 6;
+	top: var(--space-md);
+	right: var(--space-md);
+	width: min(520px, calc(100% - var(--space-xl)));
+	height: auto;
+	margin: 0;
+	clip: auto;
+	overflow: visible;
+	white-space: normal;
+	background: var(--color-dominant);
+	box-shadow: 0 0 0 1px var(--color-border);
 }
 
 .home-room {
@@ -604,7 +632,7 @@ h3 {
 	}
 
 	.pixel-world {
-		padding: var(--space-md);
+		min-height: 440px;
 	}
 
 	.world-controls {

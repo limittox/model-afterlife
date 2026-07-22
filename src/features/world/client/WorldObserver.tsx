@@ -11,6 +11,7 @@ import { useWorldFeed } from "./use-world-feed.ts";
 export function WorldObserver() {
 	const { state, dispatch, jumpToLive, retry } = useWorldFeed();
 	const [zoom, setZoom] = useState(100);
+	const [reducedMotion, setReducedMotion] = useState(false);
 	const snapshot = state.presentedSnapshot;
 	const followedResidentName = snapshot?.residents.find(
 		(resident) => resident.id === state.followedResidentId,
@@ -24,6 +25,14 @@ export function WorldObserver() {
 		);
 		return () => window.clearTimeout(timeout);
 	}, [dispatch, state.announcement]);
+
+	useEffect(() => {
+		const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+		const update = () => setReducedMotion(query.matches);
+		update();
+		query.addEventListener("change", update);
+		return () => query.removeEventListener("change", update);
+	}, []);
 
 	return (
 		<main className="observer-shell">
@@ -45,6 +54,8 @@ export function WorldObserver() {
 					<PixelWorldViewport
 						snapshot={snapshot}
 						followedResidentId={state.followedResidentId}
+						mode={state.mode}
+						reducedMotion={reducedMotion}
 						onFollow={(residentId, residentName) =>
 							dispatch({ type: "follow", residentId, residentName })
 						}
