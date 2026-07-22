@@ -741,7 +741,7 @@ test.describe("local playback and recovery", () => {
 	test("observer presentation source issues GET requests only and exposes no canonical write", async () => {
 		const clientDirectory = path.resolve("src/features/world/client");
 		const source = await Promise.all(
-			["ObserverSkeleton.tsx", "WorldObserver.tsx", "use-world-feed.ts"].map(
+			["WorldObserver.tsx", "use-world-feed.ts"].map(
 				(file) => readFile(path.join(clientDirectory, file), "utf8"),
 			),
 		);

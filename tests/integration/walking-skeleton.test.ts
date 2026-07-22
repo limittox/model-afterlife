@@ -3,9 +3,9 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import * as snapshotRoute from "../../src/app/api/world/snapshot/route.ts";
 import {
-	reduceObserverPresentation,
-	type ObserverPresentationState,
-} from "../../src/features/world/client/ObserverSkeleton.tsx";
+	createInitialPresentationState,
+	presentationReducer,
+} from "../../src/features/world/client/presentation-reducer.ts";
 import { PublicWorldSnapshotSchema } from "../../src/features/world/contracts/public-world.ts";
 import { readCurrentStateHash } from "../../src/features/world/server/read-current-snapshot.ts";
 
@@ -26,8 +26,7 @@ describe("PostgreSQL-backed observer walking skeleton", () => {
 			throughSequence: first.throughSequence,
 			stateHash: first.stateHash,
 		});
-		expect(first.scene).toBeNull();
-		expect(first.quiet).not.toBeNull();
+		expect((first.scene === null) !== (first.quiet === null)).toBe(true);
 	});
 
 	it("keeps pause, resume, and jump-live presentation state local", async () => {
@@ -35,21 +34,19 @@ describe("PostgreSQL-backed observer walking skeleton", () => {
 		const snapshot = PublicWorldSnapshotSchema.parse(await response.json());
 		const hashBefore = await readCurrentStateHash();
 
-		let presentation: ObserverPresentationState = {
-			mode: "live",
-			snapshot,
-		};
-		presentation = reduceObserverPresentation(presentation, { type: "pause" });
+		let presentation = createInitialPresentationState(snapshot);
+		presentation = presentationReducer(presentation, { type: "pause" });
 		expect(presentation.mode).toBe("paused");
 
-		presentation = reduceObserverPresentation(presentation, { type: "resume" });
+		presentation = presentationReducer(presentation, { type: "resume" });
 		expect(presentation.mode).toBe("live");
 
-		presentation = reduceObserverPresentation(presentation, {
-			type: "jump-live",
+		presentation = presentationReducer(presentation, {
+			type: "snapshot-accepted",
 			snapshot,
+			reason: "jump-live",
 		});
-		expect(presentation.snapshot.stateHash).toBe(hashBefore);
+		expect(presentation.presentedSnapshot?.stateHash).toBe(hashBefore);
 		expect(await readCurrentStateHash()).toBe(hashBefore);
 	});
 
@@ -59,10 +56,15 @@ describe("PostgreSQL-backed observer walking skeleton", () => {
 		const routeDirectory = path.resolve("src/app/api/world/snapshot");
 		expect(await readdir(routeDirectory)).toEqual(["route.ts"]);
 
-		const clientSource = await readFile(
-			path.resolve("src/features/world/client/ObserverSkeleton.tsx"),
-			"utf8",
-		);
+		const clientSource = (
+			await Promise.all(
+				[
+					"src/features/world/client/WorldObserver.tsx",
+					"src/features/world/client/use-world-feed.ts",
+					"src/features/world/client/presentation-reducer.ts",
+				].map((file) => readFile(path.resolve(file), "utf8")),
+			)
+		).join("\n");
 		expect(clientSource).not.toMatch(
 			/DATABASE_URL|TRIGGER_SECRET_KEY|createWorldDatabase|worldProjection/,
 		);
