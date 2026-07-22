@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: Shared Watchable Home
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-07-22T09:11:43.584Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-07-22T09:34:43.989Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 01 (Shared Watchable Home) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-07-22 — Phase 01 execution started
 
-Progress: [███░░░░░░░] 25%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [███░░░░░░░] 25%
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | Phase 01 P01 | 20 min | 2 tasks | 32 files |
+| Phase 01 P02 | 22 min | 3 tasks | 35 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,10 @@ Recent decisions affecting current work:
 - [Phase 01]: Use Neon serverless through the official local WebSocket proxy for app queries; reserve node-postgres for Drizzle tooling. — Keeps runtime parity with cloud while preserving reliable local schema commands.
 - [Phase 01]: Keep disposable schema push and migration-managed application databases separate. — Prevents drizzle-kit push from bypassing the repeatable migration journal.
 - [Phase 01]: Pin compatible patched transitive dependency overrides in pnpm-workspace.yaml. — Leaves no known production vulnerabilities while retaining the approved top-level stack.
+- [Phase 01]: Emit a deterministic quiet event on every otherwise-empty logical tick. — Keeps direct advancement, chunked advancement, and journal replay identical.
+- [Phase 01]: Serialize overlapping world advancement through a PostgreSQL row lock with per-world occurrence and sequence uniqueness. — Makes the database the canonical duplicate-delivery and ordering boundary.
+- [Phase 01]: Treat Trigger.dev as a bounded wake-up source only. — The supplied timestamp selects a target tick and PostgreSQL catches up all missing ticks atomically.
+- [Phase 01]: Run singleton-world database test files sequentially while retaining explicit concurrent calls inside tests. — Prevents cross-file interference without weakening concurrency coverage.
 
 ### Pending Todos
 
@@ -94,6 +99,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T09:11:43.573Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-07-22T09:34:21.582Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None

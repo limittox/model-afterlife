@@ -8,13 +8,13 @@
 ### World and Continuity
 
 - [ ] **WRLD-01**: Every visitor observes the same canonical home timeline rather than a session-specific world.
-- [ ] **WRLD-02**: The home advances schedules, resident locations, event eligibility, and relationship state while no visitor is watching.
+- [x] **WRLD-02**: The home advances schedules, resident locations, event eligibility, and relationship state while no visitor is watching.
 - [ ] **WRLD-03**: A returning or reconnecting visitor receives the current canonical state without replaying missed animations or creating divergent state.
 - [ ] **WRLD-04**: The home contains one compact, immediately readable environment with distinct functional areas and meaningful quiet routines.
 - [ ] **WRLD-05**: The simulation enforces event cooldowns, scene budgets, and cast rotation so activity remains varied without becoming constant.
 - [ ] **WRLD-06**: A failed or delayed dialogue-generation attempt leaves canonical world state healthy and produces an understandable quiet or curated fallback beat.
 - [ ] **WRLD-07**: Reprocessing a world tick, event, or publication job cannot duplicate a canonical event, scene, or relationship change.
-- [ ] **WRLD-08**: Operators can replay canonical events to reproduce world state and rebuild public projections deterministically.
+- [x] **WRLD-08**: Operators can replay canonical events to reproduce world state and rebuild public projections deterministically.
 
 ### Residents and Historical Grounding
 
@@ -152,13 +152,13 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | WRLD-01 | Phase 1 | Pending |
-| WRLD-02 | Phase 1 | Pending |
+| WRLD-02 | Phase 1 | Complete |
 | WRLD-03 | Phase 1 | Pending |
 | WRLD-04 | Phase 1 | Pending |
 | WRLD-05 | Phase 2 | Pending |
 | WRLD-06 | Phase 2 | Pending |
 | WRLD-07 | Phase 2 | Pending |
-| WRLD-08 | Phase 1 | Pending |
+| WRLD-08 | Phase 1 | Complete |
 | RSID-01 | Phase 2 | Pending |
 | RSID-02 | Phase 2 | Pending |
 | RSID-03 | Phase 2 | Pending |
@@ -224,6 +224,7 @@
 | OPER-09 | Phase 4 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 71 total
 - Mapped to phases: 71
 - Unmapped: 0

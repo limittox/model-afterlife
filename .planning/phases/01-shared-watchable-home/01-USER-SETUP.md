@@ -11,6 +11,7 @@ Local execution is complete and needs no external account. Complete these items 
 | Status | Variable | Source | Add to |
 |--------|----------|--------|--------|
 | [ ] | `DATABASE_URL` | Neon Console → Project → dedicated development branch → Connection Details → pooled connection string | `.env.local` and deployment environment |
+| [ ] | `TRIGGER_PROJECT_REF` | Trigger.dev Dashboard → Model Afterlife development project → Project ref | `.env.local` and deployment environment |
 | [ ] | `TRIGGER_SECRET_KEY` | Trigger.dev Dashboard → Model Afterlife development project → API keys → development secret | `.env.local` and deployment environment |
 
 Keep `DATABASE_PURPOSE=development`. Remove the local `NEON_WS_PROXY` value when using Neon Cloud. Never use a production database for `db:push`; prefer reviewed migrations for shared environments.
@@ -36,8 +37,8 @@ Keep `DATABASE_PURPOSE=development`. Remove the local `NEON_WS_PROXY` value when
 
 - [ ] **Copy the Trigger.dev development secret**
   - Location: Trigger.dev Dashboard → Project → API keys
-  - Set: `TRIGGER_SECRET_KEY` to the development secret.
-  - Notes: The scheduled task is wired in Plan 02; the secret is not required for the completed local tracer.
+  - Set: `TRIGGER_PROJECT_REF` to the project ref and `TRIGGER_SECRET_KEY` to the development secret.
+  - Notes: Neither value is required for the local PostgreSQL scheduler-recovery tests.
 
 ## Verification
 
@@ -46,15 +47,17 @@ After completing setup, verify with:
 ```powershell
 corepack pnpm db:migrate
 corepack pnpm db:seed
-corepack pnpm test -- tests/integration/walking-skeleton.test.ts
+corepack pnpm test
+corepack pnpm rebuild-world -- --check
 corepack pnpm build
+corepack pnpm trigger:dev
 ```
 
 Expected results:
 
 - Migrations and the deterministic seed reach the dedicated Neon development branch.
-- The snapshot integration test and production build pass without `NEON_WS_PROXY`.
-- Trigger.dev verification begins with Plan 02's scheduled advancement task.
+- The integration suite, journal rebuild check, and production build pass without `NEON_WS_PROXY`.
+- The Trigger.dev development runner discovers `model-afterlife-world-clock` and its one-minute UTC schedule.
 
 ---
 
