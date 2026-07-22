@@ -149,17 +149,85 @@
 
 ## Traceability
 
-Roadmap phase mapping will be populated after the roadmap is approved.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| WRLD-01 through OPER-09 | Unmapped | Pending |
+| WRLD-01 | Phase 1 | Pending |
+| WRLD-02 | Phase 1 | Pending |
+| WRLD-03 | Phase 1 | Pending |
+| WRLD-04 | Phase 1 | Pending |
+| WRLD-05 | Phase 2 | Pending |
+| WRLD-06 | Phase 2 | Pending |
+| WRLD-07 | Phase 2 | Pending |
+| WRLD-08 | Phase 1 | Pending |
+| RSID-01 | Phase 2 | Pending |
+| RSID-02 | Phase 2 | Pending |
+| RSID-03 | Phase 2 | Pending |
+| RSID-04 | Phase 2 | Pending |
+| RSID-05 | Phase 3 | Pending |
+| RSID-06 | Phase 3 | Pending |
+| RSID-07 | Phase 4 | Pending |
+| RSID-08 | Phase 3 | Pending |
+| RELS-01 | Phase 2 | Pending |
+| RELS-02 | Phase 2 | Pending |
+| RELS-03 | Phase 2 | Pending |
+| RELS-04 | Phase 3 | Pending |
+| RELS-05 | Phase 2 | Pending |
+| SCEN-01 | Phase 2 | Pending |
+| SCEN-02 | Phase 2 | Pending |
+| SCEN-03 | Phase 2 | Pending |
+| SCEN-04 | Phase 2 | Pending |
+| SCEN-05 | Phase 2 | Pending |
+| SCEN-06 | Phase 2 | Pending |
+| SCEN-07 | Phase 2 | Pending |
+| SCEN-08 | Phase 2 | Pending |
+| SCEN-09 | Phase 2 | Pending |
+| SCEN-10 | Phase 2 | Pending |
+| VIEW-01 | Phase 1 | Pending |
+| VIEW-02 | Phase 1 | Pending |
+| VIEW-03 | Phase 1 | Pending |
+| VIEW-04 | Phase 1 | Pending |
+| VIEW-05 | Phase 1 | Pending |
+| VIEW-06 | Phase 1 | Pending |
+| VIEW-07 | Phase 3 | Pending |
+| VIEW-08 | Phase 1 | Pending |
+| RTRN-01 | Phase 3 | Pending |
+| RTRN-02 | Phase 3 | Pending |
+| RTRN-03 | Phase 3 | Pending |
+| RTRN-04 | Phase 3 | Pending |
+| RTRN-05 | Phase 3 | Pending |
+| RTRN-06 | Phase 3 | Pending |
+| TRNS-01 | Phase 2 | Pending |
+| TRNS-02 | Phase 2 | Pending |
+| TRNS-03 | Phase 2 | Pending |
+| TRNS-04 | Phase 3 | Pending |
+| TRNS-05 | Phase 4 | Pending |
+| TRNS-06 | Phase 3 | Pending |
+| ACCS-01 | Phase 3 | Pending |
+| ACCS-02 | Phase 3 | Pending |
+| ACCS-03 | Phase 3 | Pending |
+| ACCS-04 | Phase 3 | Pending |
+| ACCS-05 | Phase 3 | Pending |
+| ACCS-06 | Phase 3 | Pending |
+| ACCS-07 | Phase 3 | Pending |
+| SHAR-01 | Phase 3 | Pending |
+| SHAR-02 | Phase 3 | Pending |
+| SHAR-03 | Phase 3 | Pending |
+| SHAR-04 | Phase 3 | Pending |
+| OPER-01 | Phase 4 | Pending |
+| OPER-02 | Phase 4 | Pending |
+| OPER-03 | Phase 4 | Pending |
+| OPER-04 | Phase 4 | Pending |
+| OPER-05 | Phase 4 | Pending |
+| OPER-06 | Phase 4 | Pending |
+| OPER-07 | Phase 4 | Pending |
+| OPER-08 | Phase 4 | Pending |
+| OPER-09 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 71 total
-- Mapped to phases: 0
-- Unmapped: 71
+- Mapped to phases: 71
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-07-22*
-*Last updated: 2026-07-22 after initial definition*
+*Last updated: 2026-07-22 after roadmap mapping*
