@@ -1,4 +1,4 @@
-import { readCurrentSnapshot } from "@/features/world/server/read-current-snapshot";
+import { readCurrentSnapshot } from "@/features/world/server/read-snapshot";
 
 export async function GET(): Promise<Response> {
 	try {

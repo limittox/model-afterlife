@@ -107,7 +107,13 @@ export type RelationshipChangedEvent = WorldEventBase<
 	}
 >;
 
+export type WorldInitializedEvent = WorldEventBase<
+	"world_initialized",
+	{ state: WorldState }
+>;
+
 export type WorldEvent =
+	| WorldInitializedEvent
 	| ResidentLocationChangedEvent
 	| QuietRoutineStartedEvent
 	| SceneStartedEvent

@@ -27,6 +27,7 @@ const CompleteSceneSchema = z.object({
 	participantIds: z.array(z.string().min(1)).min(1),
 	startedAtTick: z.number().int().nonnegative(),
 	durationTicks: z.number().int().positive(),
+	presentationDurationMs: z.number().int().positive(),
 	turns: z.array(DialogueTurnSchema).min(1),
 });
 
@@ -62,3 +63,23 @@ export const PublicWorldSnapshotSchema = z
 	});
 
 export type PublicWorldSnapshot = z.infer<typeof PublicWorldSnapshotSchema>;
+
+export const PublicWorldUpdateSchema = z.object({
+	schemaVersion: z.literal(PUBLIC_WORLD_SCHEMA_VERSION),
+	sequence: z.number().int().positive(),
+	logicalTick: z.number().int().nonnegative(),
+	stateHash: z.string().regex(/^[a-f0-9]{64}$/),
+	snapshot: PublicWorldSnapshotSchema,
+});
+
+export const PublicWorldUpdatesSchema = z.object({
+	schemaVersion: z.literal(PUBLIC_WORLD_SCHEMA_VERSION),
+	fromSequence: z.number().int().nonnegative(),
+	throughSequence: z.number().int().nonnegative(),
+	hasMore: z.boolean(),
+	requiresSnapshot: z.boolean(),
+	updates: z.array(PublicWorldUpdateSchema).max(100),
+});
+
+export type PublicWorldUpdate = z.infer<typeof PublicWorldUpdateSchema>;
+export type PublicWorldUpdates = z.infer<typeof PublicWorldUpdatesSchema>;

@@ -27,6 +27,32 @@ export function reduceWorldEvent(
 	};
 
 	switch (event.type) {
+		case "world_initialized": {
+			return {
+				...event.payload.state,
+				logicalTick: event.logicalTick,
+				throughSequence: event.sequence,
+				rooms: event.payload.state.rooms.map((room) => ({ ...room })),
+				residents: event.payload.state.residents.map((resident) => ({
+					...resident,
+				})),
+				relationships: event.payload.state.relationships.map(
+					(relationship) => ({ ...relationship }),
+				),
+				scene: event.payload.state.scene
+					? {
+							...event.payload.state.scene,
+							participantIds: [...event.payload.state.scene.participantIds],
+							turns: event.payload.state.scene.turns.map((turn) => ({
+								...turn,
+							})),
+						}
+					: null,
+				quiet: event.payload.state.quiet
+					? { ...event.payload.state.quiet }
+					: null,
+			};
+		}
 		case "resident_location_changed": {
 			state.residents = state.residents.map((resident) =>
 				resident.id === event.payload.residentId

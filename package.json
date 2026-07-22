@@ -17,7 +17,7 @@
 		"test:e2e": "playwright test",
 		"db:up": "docker compose up -d db wsproxy",
 		"db:push": "drizzle-kit push --config drizzle.push.config.ts",
-		"db:generate": "drizzle-kit generate --name world_skeleton",
+		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:seed": "node --env-file-if-exists=.env --experimental-strip-types scripts/seed-world.ts"
 	},
