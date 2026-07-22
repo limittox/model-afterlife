@@ -1,9 +1,12 @@
-import { ObserverSkeleton } from "@/features/world/client/ObserverSkeleton";
-import { readCurrentSnapshot } from "@/features/world/server/read-current-snapshot";
+import { WorldObserver } from "@/features/world/client/WorldObserver";
+import { WorldQueryClient } from "@/features/world/client/world-query-client";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
-	const snapshot = await readCurrentSnapshot();
-	return <ObserverSkeleton initialSnapshot={snapshot} />;
+export default function HomePage() {
+	return (
+		<WorldQueryClient>
+			<WorldObserver />
+		</WorldQueryClient>
+	);
 }
