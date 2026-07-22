@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+	PublicWorldSnapshotSchema,
 	PublicWorldUpdatesSchema,
 	type PublicWorldSnapshot,
 } from "../../src/features/world/contracts/public-world.ts";
+import { createProvisionalWorld } from "../../src/features/world/fixtures/provisional-world.ts";
+import { toPublicWorldSnapshot } from "../../src/features/world/server/to-public-snapshot.ts";
 
 function snapshot(sequence: number): PublicWorldSnapshot {
 	return {
@@ -56,5 +59,77 @@ describe("public world update contract", () => {
 
 		expect(PublicWorldUpdatesSchema.safeParse(gap).success).toBe(false);
 		expect(PublicWorldUpdatesSchema.safeParse(wrongHead).success).toBe(false);
+	});
+});
+
+describe("published scene serialization", () => {
+	it("requires one exact public model/version label on every visible turn", () => {
+		const missingLabel = snapshot(20);
+		missingLabel.scene = {
+			id: "scene-without-labels",
+			premise: "A malformed public scene.",
+			locationId: "common-room",
+			participantIds: ["resident-a", "resident-b"],
+			startedAtTick: 20,
+			durationTicks: 1,
+			presentationDurationMs: 10_000,
+			turns: Array.from({ length: 4 }, (_, index) => ({
+				id: `turn-${index}`,
+				speakerId: index % 2 === 0 ? "resident-a" : "resident-b",
+				text: `Visible turn ${index + 1}.`,
+			})),
+		};
+		missingLabel.quiet = null;
+
+		expect(PublicWorldSnapshotSchema.safeParse(missingLabel).success).toBe(false);
+	});
+
+	it("whitelists exact labels while excluding every private generation field", () => {
+		const world = createProvisionalWorld();
+		world.throughSequence = 2;
+		world.scene = {
+			id: "accepted-public-scene",
+			premise: "Only accepted public fields cross the boundary.",
+			locationId: "common-room",
+			participantIds: ["former-giant", "masked-encoder"],
+			startedAtTick: 2,
+			durationTicks: 1,
+			presentationDurationMs: 10_000,
+			turns: Array.from({ length: 4 }, (_, index) => ({
+				id: `accepted-turn-${index}`,
+				speakerId: index % 2 === 0 ? "former-giant" : "masked-encoder",
+				exactModelId:
+					index % 2 === 0
+						? "openai/gpt-3.5-turbo-0613"
+						: "anthropic/claude-sonnet-4.5",
+				text: `Accepted turn ${index + 1}.`,
+				providerResponseId: "private-response",
+				rawResponse: "private-raw-output",
+				prompt: "private-prompt",
+				validationEvidence: "private-validator-detail",
+				usageCost: 12,
+				secret: "private-secret",
+			}) as never),
+		};
+		world.quiet = null;
+
+		const serialized = toPublicWorldSnapshot(world);
+		expect(serialized.scene?.turns.map((turn) => turn.exactModelId)).toEqual([
+			"openai/gpt-3.5-turbo-0613",
+			"anthropic/claude-sonnet-4.5",
+			"openai/gpt-3.5-turbo-0613",
+			"anthropic/claude-sonnet-4.5",
+		]);
+		const publicJson = JSON.stringify(serialized);
+		for (const privateField of [
+			"providerResponseId",
+			"rawResponse",
+			"prompt",
+			"validationEvidence",
+			"usageCost",
+			"secret",
+		]) {
+			expect(publicJson).not.toContain(privateField);
+		}
 	});
 });
