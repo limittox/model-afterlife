@@ -232,4 +232,38 @@ describe("generation Trigger task", () => {
 			result: { accepted: true, code: "accepted" },
 		});
 	});
+
+	it("persists provider failure privately before the runner starts a fresh attempt", async () => {
+		const taskModule = await loadGenerationTask();
+
+		expect(taskModule, "generation Trigger module must exist").toBeDefined();
+		const persistAttempt = vi.fn(async () => undefined);
+		const dependencies = taskModule?.createProductionGenerationDependencies({
+			loadBrief: async () => brief,
+			provider: {
+				generateTurn: async () => {
+					throw new Error("frozen provider timeout");
+				},
+			},
+			persistAttempt,
+			publish: async () => undefined,
+			recordQuiet: async () => undefined,
+		});
+
+		const result = await dependencies?.runAttempt({ brief, attemptOrdinal: 1 });
+
+		expect(result).toEqual({
+			status: "rejected",
+			disposition: "provider_failed",
+		});
+		expect(persistAttempt.mock.calls[0]?.[0]).toMatchObject({
+			attempt: {
+				attemptOrdinal: 1,
+				disposition: "provider_failed",
+				identityEvidence: "requested_only",
+			},
+			turns: [],
+			result: { accepted: false, code: "provider_failed" },
+		});
+	});
 });
