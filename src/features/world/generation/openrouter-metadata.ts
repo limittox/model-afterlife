@@ -1,0 +1,3 @@
+import { z } from "zod";
+export const OpenRouterMetadataSchema = z.object({ id: z.string().min(1), strategy: z.literal("direct"), attempt: z.literal(1), model: z.string().min(1), provider: z.string().min(1), pipeline: z.array(z.string()).default([]) }).passthrough();
+export function validateOpenRouterMetadata(value: unknown, expected: { model: string; upstream: string }) { const data = OpenRouterMetadataSchema.parse(value); if (data.model !== expected.model || data.provider !== expected.upstream || data.pipeline.length) throw new Error("OpenRouter provenance did not match the strict profile."); return data; }
