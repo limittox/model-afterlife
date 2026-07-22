@@ -14,11 +14,10 @@ The retirement home must produce short, memorable, historically grounded charact
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Present one shared, persistent retirement-home timeline that advances even when no visitor is watching. — Phase 1
 
 ### Active
 
-- [ ] Present one shared, persistent retirement-home timeline that advances even when no visitor is watching.
 - [ ] Populate the initial home with six real, retired or clearly superseded landmark language models selected for distinct histories, limitations, and relationships.
 - [ ] Give every resident a sourced character bible that separates documented facts, cultural reputation, and fictional comic exaggeration.
 - [ ] Drive resident behavior through schedules, locations, relationships, and curated event triggers rather than unrestricted autonomous chatter.
@@ -74,12 +73,15 @@ The initial cast contains six real language-model identities. Exact residents wi
 | Make an ambient sitcom the primary experience | Entertainment and character continuity create the strongest reason to keep watching | — Pending |
 | Target an AI-aware internet audience first | Technical recognition makes the satire sharper without requiring mass-market exposition | — Pending |
 | Use curated simulation with constrained AI reactions | Authored triggers create meaningful scenes while AI supplies variation without uncontrolled chatter | — Pending |
-| Keep visitors observational | Preserves the independent-world illusion and prevents characters from collapsing into generic assistants | — Pending |
+| Keep visitors observational | Preserves the independent-world illusion and prevents characters from collapsing into generic assistants | ✓ Validated — Phase 1 observer controls remain browser-local and cannot affect canon |
 | Use real model identities | Recognizable histories make the jokes specific and give the experience educational value | — Pending |
 | Reconstruct residents with a modern model | Provides reliable availability and consistent orchestration for v1 | — Pending |
 | Start with six landmark language models | A small ensemble supports memorable characterization and tractable relationship design | — Pending |
-| Maintain one shared persistent timeline | Continuity, missed events, and changing relationships create reasons to return | — Pending |
+| Maintain one shared persistent timeline | Continuity, missed events, and changing relationships create reasons to return | ✓ Validated — Phase 1 deterministic journal, catch-up, replay, and two-viewer convergence |
 | Prioritize desktop web | The pixel environment and passive viewing experience benefit from screen space while remaining broadly accessible | — Pending |
+| Keep canonical time and outcomes server-owned | Browser-independent advancement and exact replay require one authoritative deterministic boundary | ✓ Validated — Phase 1 PostgreSQL journal and projection |
+| Keep React semantic and Phaser disposable | Accessibility and meaning stay in semantic DOM while the pixel renderer remains a local view | ✓ Validated — Phase 1 observer and renderer split |
+| Replace from current snapshots after gaps | Returning visitors should catch up to canon without replaying missed movement | ✓ Validated — Phase 1 recovery and reconnect evidence |
 
 ## Evolution
 
@@ -99,4 +101,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-07-22 after initialization*
+*Last updated: 2026-07-22 after Phase 1*

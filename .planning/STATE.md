@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 01
-current_phase_name: Shared Watchable Home
-status: verifying
-stopped_at: Completed 01-04-PLAN.md
-last_updated: "2026-07-22T10:45:32.728Z"
+current_phase: 2
+current_phase_name: Grounded Ensemble and Safe Scenes
+status: planning
+stopped_at: Phase 1 complete, ready to discuss Phase 2
+last_updated: "2026-07-22T11:44:54.830Z"
 last_activity: 2026-07-22
-last_activity_desc: Phase 01 execution started
+last_activity_desc: Phase 1 complete, transitioned to Phase 2
 progress:
-  total_phases: 1
+  total_phases: 4
   completed_phases: 1
   total_plans: 4
   completed_plans: 4
@@ -23,35 +23,35 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-22)
 
 **Core value:** The retirement home must produce short, memorable, historically grounded character moments that make visitors want to keep watching and return later to see what changed.
-**Current focus:** Phase 01 — Shared Watchable Home
+**Current focus:** Phase 2 — Grounded Ensemble and Safe Scenes
 
 ## Current Position
 
-Phase: 01 (Shared Watchable Home) — EXECUTING
-Plan: 4 of 4
-Status: Phase complete — ready for verification
-Last activity: 2026-07-22 — Phase 01 execution started
+Phase: 2 — Grounded Ensemble and Safe Scenes
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-07-22 — Phase 1 complete, transitioned to Phase 2
 
-Progress: [██████████] 100%
+Progress: [████████████████████] 4/4 plans (100%)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 0
-- Average duration: -
-- Total execution time: 0.0 hours
+- Total plans completed: 4
+- Average duration: 28 min
+- Total execution time: 1.9 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 1 | 4 | 111 min | 28 min |
 
 **Recent Trend:**
 
-- Last 5 plans: none
-- Trend: No execution data
+- Last 4 plans: 20 min, 22 min, 34 min, 35 min
+- Trend: Increased as the phase moved from the database tracer to browser and visual integration
 
 *Updated after each plan completion*
 **Per-Plan Metrics:**
@@ -70,25 +70,11 @@ Progress: [██████████] 100%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- [Roadmap]: Use four coarse vertical MVP phases rather than horizontal technical layers.
-- [Phase 1]: Prove a shared watchable canonical home before generated dialogue or production presentation.
-- [Phase 2]: Historical grounding and scene governance precede expansion of the return and sharing surfaces.
-- [Phase 3]: Retention comes from recaps, continuity, accessibility, and sharing rather than gamification.
-- [Phase 01]: Use Neon serverless through the official local WebSocket proxy for app queries; reserve node-postgres for Drizzle tooling. — Keeps runtime parity with cloud while preserving reliable local schema commands.
-- [Phase 01]: Keep disposable schema push and migration-managed application databases separate. — Prevents drizzle-kit push from bypassing the repeatable migration journal.
-- [Phase 01]: Pin compatible patched transitive dependency overrides in pnpm-workspace.yaml. — Leaves no known production vulnerabilities while retaining the approved top-level stack.
-- [Phase 01]: Emit a deterministic quiet event on every otherwise-empty logical tick. — Keeps direct advancement, chunked advancement, and journal replay identical.
-- [Phase 01]: Serialize overlapping world advancement through a PostgreSQL row lock with per-world occurrence and sequence uniqueness. — Makes the database the canonical duplicate-delivery and ordering boundary.
-- [Phase 01]: Treat Trigger.dev as a bounded wake-up source only. — The supplied timestamp selects a target tick and PostgreSQL catches up all missing ticks atomically.
-- [Phase 01]: Run singleton-world database test files sequentially while retaining explicit concurrent calls inside tests. — Prevents cross-file interference without weakening concurrency coverage.
-- [Phase 01]: Keep live acquisition, visible presentation, and bounded complete-update buffering in one explicit reducer. — Pause cannot stop canonical acquisition or mix visitor state into canon.
-- [Phase 01]: Distinguish transport failure from malformed or schema-invalid feed data. — Outages preserve cached state with a warning; invalid data is refused and replaced.
-- [Phase 01]: Preserve status, world, scene, controls DOM order independent of visual dock positioning. — Keyboard and assistive-technology order must follow the approved semantic hierarchy.
-- [Phase 01]: Self-host official Google Fonts WOFF2 builds tied to recorded upstream revisions. — Provides stable local fonts with license, source, and hash provenance.
-- [Phase 01]: Keep React as semantic and local-presentation authority while Phaser receives serializable view state and emits only three closed local intents. — Prevents the disposable renderer from becoming domain authority.
-- [Phase 01]: Author the provisional home as provider-neutral geometric code on a 16px source grid with CSS owning integer-scaled canvas centering. — Keeps the art original, replaceable, and crisp at supported desktop widths.
-- [Phase 01]: Suppress supplementary resident bubbles during connection trouble while retaining the last valid home and semantic transcript. — Avoids presenting stale or infrastructure state as resident canon.
-- [Phase 01]: Migrate on every Playwright run but seed only when no canonical projection exists. — Repeated verification must not rewind a projection beneath an immutable journal.
+- [Phase 1]: Prove the shared canonical home before adding generated dialogue or the production cast.
+- [Phase 1]: Make PostgreSQL journal ordering, occurrence uniqueness, and exact replay the authority for browser-independent canon.
+- [Phase 1]: Keep React authoritative for semantic meaning and local presentation while Phaser remains a disposable renderer with three closed intents.
+- [Phase 1]: Recover from focus, reconnect, cursor gaps, and Jump-live by replacing from a fresh snapshot instead of replaying missed movement.
+- [Phase 1]: Preserve the last valid home during transport trouble while suppressing stale supplementary speech and rejecting malformed feed data.
 
 ### Pending Todos
 
@@ -97,6 +83,7 @@ None yet.
 ### Blockers/Concerns
 
 - [Phase 2]: Final cast, retirement taxonomy, source policy, dialogue model, and comedy eval thresholds require phase-specific research.
+- [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
 
 ## Deferred Items
@@ -109,6 +96,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T10:45:32.716Z
-Stopped at: Completed 01-04-PLAN.md
+Last session: 2026-07-22T11:44:54.830Z
+Stopped at: Phase 1 complete, ready to discuss Phase 2
 Resume file: None

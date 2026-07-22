@@ -13,7 +13,7 @@ Model Afterlife reaches v1 through four vertical increments. It first proves tha
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Shared Watchable Home** - Prove one persistent canonical home that multiple visitors can watch, navigate, pause, and rejoin.
+- [x] **Phase 1: Shared Watchable Home** - Prove one persistent canonical home that multiple visitors can watch, navigate, pause, and rejoin. (completed 2026-07-22)
 - [ ] **Phase 2: Grounded Ensemble and Safe Scenes** - Introduce six source-grounded residents whose bounded generated scenes and relationships can safely become canon.
 - [ ] **Phase 3: Return Loop and Inclusive Presentation** - Turn trustworthy scenes into an original, accessible experience worth revisiting, exploring, and sharing.
 - [ ] **Phase 4: Safe Public Operation** - Make the complete experience measurable, recoverable, cost-bounded, correctable, and ready for public release review.
@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Quiet periods, loading, reconnection, and unavailable-scene states remain watchable and explain what is happening instead of leaving an indefinite spinner or frozen home.
   5. Rebuilding from the canonical event history reproduces the same public state, while client-side time or outcome changes never alter canon.
 
-**Plans:** 4/4 plans executed
+**Plans:** 4/4 plans complete
 
 Plans:
 **Wave 1**
@@ -111,7 +111,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Shared Watchable Home | 4/4 | In Progress|  |
+| 1. Shared Watchable Home | 4/4 | Complete    | 2026-07-22 |
 | 2. Grounded Ensemble and Safe Scenes | 0/TBD | Not started | - |
 | 3. Return Loop and Inclusive Presentation | 0/TBD | Not started | - |
 | 4. Safe Public Operation | 0/TBD | Not started | - |

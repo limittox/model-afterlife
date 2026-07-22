@@ -1,8 +1,9 @@
 ---
 phase: 01-shared-watchable-home
 verified: 2026-07-22T11:39:01Z
-status: human_needed
-score: 4/5 roadmap must-haves verified
+status: passed
+score: 5/5 roadmap must-haves verified
+human_verified: 2026-07-22T11:44:09Z
 behavior_unverified: 0
 overrides_applied: 0
 human_verification:
@@ -18,8 +19,8 @@ human_verification:
 
 **Phase Goal:** Visitors can observe and control the presentation of one compact home whose canonical timeline advances independently of every browser.
 **Verified:** 2026-07-22T11:39:01Z
-**Status:** human_needed
-**Re-verification:** No — initial verification
+**Status:** passed
+**Re-verification:** Human UAT approved both judgment-tier checks on 2026-07-22
 
 ## Goal Achievement
 
@@ -28,12 +29,12 @@ human_verification:
 | # | Roadmap truth | Status | Evidence |
 |---|---|---|---|
 | 1 | Two visitors share home time, resident locations, and primary scene; reconnecting or returning catches up without replaying missed movement. | VERIFIED | `tests/e2e/shared-home.spec.ts:83` compares two isolated real-database contexts by world ID, tick, sequence, hash, locations, and scene, then advances canon and proves local pause/camera isolation plus convergence. Recovery paths are exercised in `tests/e2e/semantic-observer.spec.ts:625-686`. The definitive browser gate is 50/50. |
-| 2 | The compact home makes functional areas, current location, speakers, premise, live/paused state, one primary scene, and quiet routines immediately understandable. | UNCERTAIN — HUMAN | The facts are present and wired in `HomeStatusStrip`, `PixelWorldViewport`, `SceneCard`, `DialogueTranscript`, and `HomeScene`; semantic/layout tests cover them. “Immediately understandable,” calm focal hierarchy, originality, and the non-game-like dock prohibition remain visual judgments. The UI audit scored 14/24 and specifically flags the full-width ASCII-direction dock. |
+| 2 | The compact home makes functional areas, current location, speakers, premise, live/paused state, one primary scene, and quiet routines immediately understandable. | VERIFIED — HUMAN UAT | Automated semantic/layout evidence establishes the facts, and the product owner approved the consolidated 1280×720 visual-composition check. The UI audit's dock concern remains recorded as non-blocking polish debt. |
 | 3 | A desktop visitor can pan, zoom, follow/unfollow, reset, pause/read/resume, and jump live without influencing residents. | VERIFIED | Local reducer transitions are exercised in `presentation-reducer.test.ts`; camera/follow/reset/framing in `renderer-bridge.test.ts`; timed pause/resume in `semantic-observer.spec.ts:374-396`; and cross-viewer non-influence in `shared-home.spec.ts:83-157`. The client issues GET requests only. |
 | 4 | Quiet, loading, reconnection, and unavailable-scene states remain watchable and explanatory rather than indefinitely spinning or freezing. | VERIFIED with UI warning | `ConnectionBanner`, `PixelWorldViewport`, and `SceneRail` render explicit quiet/loading/retry/unavailable states; partial scenes are rejected whole and cached state remains visible. The 50/50 browser gate covers these states. The no-cache hard-error banner is correct, but the viewport and rail simultaneously retain “Opening the home…” copy; this is a clarity warning, not an indefinite spinner/frozen-home failure. |
 | 5 | Canonical event replay reproduces public state, while client-side time or outcome changes never alter canon. | VERIFIED | Pure/property tests cover deterministic direct-vs-chunked advancement, same-tick sequence ordering, dedupe, canonical serialization, and replay. PostgreSQL tests cover row locking, contiguous journal writes, duplicate wakes, exact replay/hash equality, and read-only public routes. `rebuild-world -- --check` definitively matched sequence and hash. |
 
-**Score:** 4/5 roadmap truths verified; 1 judgment-dependent truth requires human confirmation. No truth is present-but-behavior-unverified: the state transitions and ordering invariants have behavioral tests.
+**Score:** 5/5 roadmap truths verified after 2/2 human UAT checks passed. No truth is present-but-behavior-unverified: the state transitions and ordering invariants have behavioral tests.
 
 ### Plan-Specific Must-Haves
 
@@ -45,7 +46,7 @@ The three repeated prohibitions resolve as follows:
 |---|---|---|
 | Observer controls must not alter canonical state or affect other visitors. | VERIFIED | GET-only client source, unchanged database hash, and two-context isolation test. |
 | Failures/outages must not become resident dialogue or silently replay old canon. | VERIFIED | Error-state semantic components, bubble suppression during connection trouble, whole-scene Zod validation, and browser state-matrix coverage. |
-| Interface/art must not mimic a game action bar, operations dashboard, provider logos, or copied assets. | HUMAN NEEDED | Source has no provider/remote/copy assets, but the screenshot and UI audit flag the full-width ASCII directional dock as potentially game-like. This is the judgment-tier remainder. |
+| Interface/art must not mimic a game action bar, operations dashboard, provider logos, or copied assets. | VERIFIED — HUMAN UAT | Source has no provider/remote/copy assets, and the product owner approved the consolidated visual-prohibition check. The UI audit's dock concern remains non-blocking polish debt. |
 
 ### Required Artifacts
 
@@ -108,13 +109,13 @@ No migration/tooling probe script or PLAN-declared `probe-*.sh` exists for this 
 | WRLD-01 | 01, 02, 04 | SATISFIED | Canonical projection plus two-viewer convergence and stable snapshot identity. |
 | WRLD-02 | 02 | SATISFIED | Scheduled browser-independent catch-up advances time, locations, eligibility, relationships, and quiet/scene state. |
 | WRLD-03 | 02, 03, 04 | SATISFIED | Fresh-snapshot replacement on gap/focus/reconnect/jump-live without movement replay. |
-| WRLD-04 | 04 | NEEDS HUMAN | Four structural named zones and routines exist; immediate readability and meaningful calmness require visual confirmation. |
+| WRLD-04 | 04 | SATISFIED — HUMAN UAT | Four structural named zones and routines exist; the product owner approved immediate readability and calmness. |
 | WRLD-08 | 02 | SATISFIED | Exact journal replay/hash/sequence rebuild evidence. |
-| VIEW-01 | 01, 03, 04 | NEEDS HUMAN | All required facts are present; immediate identifiability and hierarchy remain judgment-dependent. |
+| VIEW-01 | 01, 03, 04 | SATISFIED — HUMAN UAT | All required facts are present; the product owner approved immediate identifiability and hierarchy. |
 | VIEW-02 | 03, 04 | SATISFIED | Exactly one complete scene, speaker identity, short-turn playback, and full semantic transcript. |
 | VIEW-03 | 04 | SATISFIED | Pan, integer zoom, follow/unfollow, reset, and jump-live covered across unit/E2E tests. |
 | VIEW-04 | 01, 03, 04 | SATISFIED | Local pause/read/resume and fresh jump-live with continued acquisition. |
-| VIEW-05 | 04 | NEEDS HUMAN | Several subdued routines and one-scene rendering are implemented; non-competition is a visual hierarchy judgment. |
+| VIEW-05 | 04 | SATISFIED — HUMAN UAT | Several subdued routines and one-scene rendering are implemented; the product owner approved the visual hierarchy. |
 | VIEW-06 | 03, 04 | SATISFIED with warning | Quiet/loading/reconnecting/unavailable/retry behavior is present and tested; hard-error/loading copy overlap should be judged in UAT. |
 | VIEW-08 | 01, 02, 03, 04 | SATISFIED | Server-owned snapshots/updates only; client has no time/outcome or mutation authority. |
 
@@ -129,7 +130,7 @@ No Phase 1 requirement is orphaned: all 12 roadmap IDs appear in PLAN frontmatte
 | `PixelWorldViewport.tsx` and `SceneRail.tsx` | No-cache hard failure retains loading copy while error banner shows retry | WARNING | Mixed messaging, but no indefinite spinner or frozen home. |
 | `HomeStatusStrip.tsx`, `HomeScene.ts`, `globals.css` | UI-audit typography, accent-reservation, inert-location-button, and spacing deviations | WARNING | UI-contract polish issues; none removes a Phase 1 capability or canonical invariant. |
 
-### Human Verification Required
+### Human Verification Completed
 
 #### 1. Consolidated living-television and visual-prohibition check
 
@@ -139,6 +140,8 @@ No Phase 1 requirement is orphaned: all 12 roadmap IDs appear in PLAN frontmatte
 
 **Why human:** This consolidates both deferred PLAN human checks, WRLD-04/VIEW-01/VIEW-05 visual judgment, and the unresolved visual prohibition.
 
+**Result:** Passed — approved by the product owner on 2026-07-22.
+
 #### 2. Perceived liveness and recovery clarity
 
 **Test:** Observe ordinary five-second live updates, Pause, Resume, Jump to live, and reconnect/focus recovery.
@@ -147,9 +150,11 @@ No Phase 1 requirement is orphaned: all 12 roadmap IDs appear in PLAN frontmatte
 
 **Why human:** Automated evidence proves state transitions and ordering, but not perceived liveness or copy clarity in real time.
 
+**Result:** Passed — approved by the product owner on 2026-07-22.
+
 ### Gaps Summary
 
-No automated blocker was found. The phase goal's canonical-world and observer-control mechanics are implemented and behaviorally proven. Status remains `human_needed` because the roadmap uses immediate-readability language, the plans defer two visual/experience checks, and the judgment-tier non-game-like/original-art prohibition cannot be silently passed. The UI audit's remaining mechanical warnings are real polish issues, but they do not independently falsify the Phase 1 goal or any canonical invariant.
+No automated or human-UAT blocker remains. The phase goal's canonical-world and observer-control mechanics are implemented and behaviorally proven, and both judgment-tier checks passed. The UI audit's remaining mechanical warnings are recorded polish issues, but they do not falsify the Phase 1 goal or any canonical invariant.
 
 ### Verification Notes
 
