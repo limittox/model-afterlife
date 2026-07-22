@@ -69,12 +69,12 @@ Plans:
   4. Failed, delayed, retried, duplicated, or provider-blocked generation cannot corrupt or duplicate canon: visitors receive a quiet, curated, or cached beat, while operators can inspect private attempts and immutable published revisions with their inputs, versions, validation, usage, and effects.
   5. Wherever residents or historical categories appear, visitors can see that dialogue is a staged fictional interaction authored turn-by-turn by the identified resident model APIs, not autonomous communication; the project is not provider-affiliated; and supporting material is labelled as documented fact, reported reputation, or comic exaggeration.
 
-**Plans:** 4 plans
+**Plans:** 1/4 plans executed
 
 Plans:
 **Wave 1**
 
-- [ ] 02-01-PLAN.md - Prove the private-attempt-to-atomic-publication production tracer and honest observer states.
+- [x] 02-01-PLAN.md - Prove the private-attempt-to-atomic-publication production tracer and honest observer states.
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -129,6 +129,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Shared Watchable Home | 4/4 | Complete    | 2026-07-22 |
-| 2. Grounded Ensemble and Safe Scenes | 0/TBD | Not started | - |
+| 2. Grounded Ensemble and Safe Scenes | 1/4 | In Progress|  |
 | 3. Return Loop and Inclusive Presentation | 0/TBD | Not started | - |
 | 4. Safe Public Operation | 0/TBD | Not started | - |

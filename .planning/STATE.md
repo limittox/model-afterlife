@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: Phase 02 Plan 01 tracer approved; strict OpenRouter amendment applied before Task 2
-last_updated: "2026-07-22T14:17:25.708Z"
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-07-22T15:39:32.987Z"
 last_activity: 2026-07-23
-last_activity_desc: Strict OpenRouter one-key architecture approved during Phase 02 execution
+last_activity_desc: Completed Phase 02 Plan 01 production scene tracer
 progress:
   total_phases: 2
   completed_phases: 1
   total_plans: 8
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -28,30 +28,31 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
-Plan: 1 of 4
-Status: Executing Phase 02
-Last activity: 2026-07-23 — Strict OpenRouter one-key architecture approved during Phase 02 execution
+Plan: 2 of 4
+Status: Ready to execute
+Last activity: 2026-07-23 — Completed Phase 02 Plan 01 production scene tracer
 
-Progress: [██████████░░░░░░░░░░] 4/8 plans (50%)
+Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 4
-- Average duration: 28 min
-- Total execution time: 1.9 hours
+- Total plans completed: 5
+- Average duration: 30 min
+- Total execution time: 2.5 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 | 4 | 111 min | 28 min |
+| 2 | 1 | 39 min | 39 min |
 
 **Recent Trend:**
 
-- Last 4 plans: 20 min, 22 min, 34 min, 35 min
-- Trend: Increased as the phase moved from the database tracer to browser and visual integration
+- Last 4 plans: 22 min, 34 min, 35 min, 39 min
+- Trend: Increased as the work moved from the shared-home foundation into the production generation tracer
 
 *Updated after each plan completion*
 **Per-Plan Metrics:**
@@ -62,6 +63,7 @@ Progress: [██████████░░░░░░░░░░] 4/8 pla
 | Phase 01 P02 | 22 min | 3 tasks | 35 files |
 | Phase 01 P03 | 34 min | 3 tasks | 27 files |
 | Phase 01 P04 | 35 min | 3 tasks | 23 files |
+| Phase 02 P01 | 39 min | 3 tasks | 57 files |
 
 ## Accumulated Context
 
@@ -77,6 +79,9 @@ Recent decisions affecting current work:
 - [Phase 1]: Preserve the last valid home during transport trouble while suppressing stale supplementary speech and rejecting malformed feed data.
 - [Phase 2]: Route all resident and backstage-judge inference through one strict OpenRouter transport; pin exact/canonical model slugs and approved upstreams, disable fallback, validate router metadata, and pause rather than substitute.
 - [Phase 2]: Replace unavailable OpenRouter `openai/gpt-3.5-turbo-0125` with the exact callable `openai/gpt-3.5-turbo-0613` snapshot; no mutable GPT-3.5 alias is permitted.
+- [Phase 02]: Resident and judge inference uses one strict OpenRouter transport with exact model/upstream profiles and verified direct first-attempt metadata.
+- [Phase 02]: Only openrouter_verified turns can publish; attempt two restarts from the immutable brief and failed candidates yield a persistent quiet disposition.
+- [Phase 02]: Public scenes require exact per-turn model labels and persistent staged-fiction and non-affiliation disclosure.
 
 ### Pending Todos
 
@@ -98,6 +103,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T14:13:11.077Z
-Stopped at: Phase 02 Plan 01 tracer approved; strict OpenRouter amendment applied before Task 2
-Resume file: .planning/phases/02-grounded-ensemble-and-safe-scenes/02-01-PLAN.md
+Last session: 2026-07-22T15:39:15.673Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None
