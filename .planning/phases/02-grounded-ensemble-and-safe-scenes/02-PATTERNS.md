@@ -24,7 +24,7 @@ Provider calls and private attempts live outside the pure reducer. Only one succ
 | `src/features/scenes/contracts/*.ts` | Brief, turn, attempt, validation and revision contracts | `src/features/world/contracts/public-world.ts` | Schema-first, no partial public scene, 4-10 complete turns |
 | `src/features/scenes/domain/eligibility.ts` | Pure cooldown/balance selection | `src/features/world/domain/advance.ts` | Explicit inputs, stable ordering, no time/random/database/provider access |
 | `src/features/scenes/domain/validation.ts` | Pure deterministic validation | `src/features/world/domain/canonical.ts`, `events.ts` | Total deterministic functions and exhaustive typed results |
-| `src/features/scenes/providers/provider-registry.ts` | Direct AI SDK provider registry | No Phase 1 analog | Follow `02-AI-SPEC.md`/`02-RESEARCH.md`; dependency injection and fake language models in tests |
+| `src/features/scenes/providers/provider-registry.ts` | Exact model/upstream registry for one strict OpenRouter transport | No Phase 1 analog | Follow `02-AI-SPEC.md`/`02-RESEARCH.md`; dependency injection and fake language models in tests |
 | `src/features/scenes/providers/generate-resident-turn.ts` | One exact resident turn call | No Phase 1 analog | One bounded call, `maxRetries: 0`, no tools/streaming, preserve raw identity evidence |
 | `src/features/scenes/server/scene-attempt-repository.ts` | Private attempt persistence | `src/features/world/server/world-repository.ts` | Open/close database per operation, typed selects/inserts, no private records in public routes |
 | `src/features/scenes/server/publish-scene-revision.ts` | Atomic canon boundary | `src/features/world/server/advance-world-to.ts` | Lock canonical world, derive candidate state, insert unique event/revision/effects, update projection in one transaction |
@@ -90,7 +90,7 @@ The React transcript, labels and disclosures remain the accessible source of tru
 
 ### Provider identity evidence
 
-Create a provider-normalized result containing requested ID, resolved/returned ID, response ID, usage and an explicit evidence kind. AI SDK `response.modelId` may fall back to the requested ID; the adapter must not mistake that fallback for provider-returned proof.
+Create a provider-normalized result containing requested and canonical slugs, selected upstream/model, OpenRouter generation ID, strategy, route attempt, pipeline, usage/cost, and an explicit evidence kind. Only validated direct, first-attempt router metadata over an approved route qualifies as `openrouter_verified`; the adapter must not mistake a requested/top-level model ID for proof.
 
 ### Private attempt isolation
 
@@ -136,7 +136,7 @@ The judge is a separate application role with no resident ID and no publication 
 - Do not call providers from `advance.ts`, reducers, repository transactions, public routes, or client code.
 - Do not let Trigger.dev retry count become scene attempt count.
 - Do not insert relationship changes during candidate generation.
-- Do not use aliases, gateways, or hidden fallback models.
+- Do not use mutable aliases, OpenRouter automatic routing, hidden model/provider fallbacks, or responses missing validated router metadata.
 - Do not expose raw response bodies, prompts, validation evidence, provider response IDs, cost or source excerpts publicly.
 - Do not add a second scene/provenance endpoint when the canonical snapshot can carry the minimal public fields.
 - Do not redesign the Phase 1 observer; make the smallest semantic and visual extensions required by RSID/TRNS.
@@ -144,4 +144,4 @@ The judge is a separate application role with no resident ID and no publication 
 
 ## Pattern Map Completion
 
-Phase 2 has strong analogs for contracts, pure domain rules, PostgreSQL canonical writes, Trigger adapters, public projection and observer presentation. Direct provider orchestration, private attempts, admission canaries and AI evaluation are new and must follow `02-AI-SPEC.md` plus `02-RESEARCH.md` rather than inventing framework-specific agent behavior.
+Phase 2 has strong analogs for contracts, pure domain rules, PostgreSQL canonical writes, Trigger adapters, public projection and observer presentation. Strict OpenRouter orchestration, private attempts, admission canaries and AI evaluation are new and must follow `02-AI-SPEC.md` plus `02-RESEARCH.md` rather than inventing framework-specific agent behavior.

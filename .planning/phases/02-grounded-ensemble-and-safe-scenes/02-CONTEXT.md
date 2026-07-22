@@ -3,6 +3,8 @@
 **Gathered:** 2026-07-22
 **Status:** Ready for planning
 
+**Architecture amendment (approved 2026-07-23):** All resident and backstage-judge inference uses OpenRouter with one server-only `OPENROUTER_API_KEY`. This amendment supersedes every earlier reference to five direct provider credentials or direct provider adapters. OpenRouter is transport only: each resident still calls one exact allowlisted model slug, routing is restricted to an approved upstream provider, provider/model fallback is disabled, required parameters must be supported, and router metadata must prove the selected route before a turn can publish.
+
 <domain>
 ## Phase Boundary
 
@@ -14,12 +16,12 @@ Phase 2 replaces the provisional archetypes and authored sample dialogue with ex
 ## Implementation Decisions
 
 ### Resident Runtime and Admission
-- **D-01:** Each resident is powered by the actual designated model/version through its available API and authors only that resident's dialogue turns. A single current model must not impersonate and write the whole ensemble. This later decision supersedes earlier project wording that assumed all residents would be reconstructed by one modern model. — **Reversibility:** costly — Changing this later would replace the multi-provider turn protocol, provenance model, prompt contracts, and failure handling that define the phase.
+- **D-01:** Each resident is powered by the actual designated model/version through OpenRouter and authors only that resident's dialogue turns. A single current model must not impersonate and write the whole ensemble. OpenRouter may broker the request but may not substitute the designated model. This later decision supersedes earlier project wording that assumed all residents would be reconstructed by one modern model. — **Reversibility:** costly — Changing this later would replace the multi-model turn protocol, provenance model, prompt contracts, and failure handling that define the phase.
 - **D-02:** Do not lock the six launch residents during discussion. Phase research must recommend the exact six after checking current API availability, historical significance, clear supersession, version stability, source quality, technical distinctiveness, and ensemble variety.
 - **D-03:** A resident is eligible when its exact model/version is clearly superseded but remains callable through a supported API. Models whose APIs are shut down or no longer accessible are ineligible for the live launch cast.
 - **D-04:** Claude 3.5 Sonnet is a representative candidate, not a pre-approved cast member. Research must verify the precise model identifier, continued API availability, provider lifecycle status, and suitability before selection.
-- **D-05:** Pin exact model identifiers wherever providers permit it and record the requested model identifier plus any returned or resolved version metadata for every attempt. A mutable family alias alone is insufficient evidence that the intended historical version authored a line.
-- **D-06:** An unavailable resident API must never be silently replaced by another model. Temporary failure produces a quiet, curated, or cached beat; only dialogue genuinely produced by the designated resident model may be presented as that model participating live.
+- **D-05:** Pin an exact OpenRouter model slug and its current canonical slug, restrict the request to an approved upstream provider route, and record the requested/canonical model plus OpenRouter's selected provider, endpoint evidence, attempt count, pipeline transformations, generation ID, and usage for every turn. Mutable aliases, `auto`, `:free`, `:extended`, unverified requested-only identity, and materially transformed responses are insufficient evidence.
+- **D-06:** OpenRouter model/provider fallback is disabled. An unavailable exact model or approved upstream provider must never be silently replaced. Temporary failure produces a quiet, curated, or cached beat; only dialogue proven to come from the designated model over an approved route may be presented as that model participating live.
 
 ### Historical Grounding and Characterization
 - **D-07:** Every recurring trait is backed by a versioned character bible and claim ledger that separates documented fact, reported or cultural reputation, and fictional comic exaggeration. Each claim records sources, confidence, applicable model/version, and access date.
@@ -47,12 +49,12 @@ Phase 2 replaces the provisional archetypes and authored sample dialogue with ex
 
 ### Transparency
 - **D-23:** Explain that scenes are fictional, prompted interactions between designated model APIs, not evidence of consciousness, private feelings, autonomous intent, or unprompted communication.
-- **D-24:** Persistently identify the project as independent and unaffiliated with the model providers. Public scene data must preserve the exact model/version provenance for each resident's contributions.
+- **D-24:** Persistently identify the project as independent and unaffiliated with OpenRouter, model creators, and serving providers. Public scene data preserves the exact model/version label; private provenance additionally preserves OpenRouter and upstream serving-route evidence.
 - **D-25:** Keep documented facts, reported reputation, and fictional exaggeration visibly distinct wherever Phase 2 exposes historical categories; the live dialogue surface may remain concise while retaining traceable metadata for later profile and provenance views.
 
 ### The Agent's Discretion
-- Phase research may choose the exact six residents and provider mix within D-02 through D-05. It should prefer a cast with genuinely distinct architectures, eras, capabilities, voices, and comic possibilities rather than selecting six near-identical chat models.
-- The planner may choose provider-adapter boundaries, job orchestration, exact bounded context format, validator implementation, numerical cooldowns, cast-balance weights, and concise disclosure placement, provided the locked authorship, provenance, pacing, safety, and canon rules above remain true.
+- Phase research may choose the exact six residents and approved OpenRouter upstream routes within D-02 through D-05. It should prefer a cast with genuinely distinct architectures, eras, capabilities, voices, and comic possibilities rather than selecting six near-identical chat models.
+- The planner may choose the OpenRouter adapter boundary, job orchestration, exact bounded context format, validator implementation, numerical cooldowns, cast-balance weights, and concise disclosure placement, provided the locked authorship, provenance, pacing, safety, and canon rules above remain true.
 - The planner may determine whether non-dialogue scene planning and semantic validation are fully deterministic, model-assisted, or hybrid. No assisting model gains dialogue authorship, publication authority, application tools, or canonical mutation rights.
 
 </decisions>

@@ -114,6 +114,18 @@
 
 ---
 
+## Runtime Architecture Amendment — 2026-07-23
+
+| Option | Description | Selected |
+|--------|-------------|----------|
+| Strict OpenRouter | One server-only key, exact model/canonical slugs, approved upstream routes, fallback disabled, and router metadata verified before publication | ✓ |
+| Five direct provider APIs | Separate credentials and adapters for OpenAI, Anthropic, Google, Cohere, and Together | |
+
+**User's choice:** “Use Open Router.”
+**Notes:** OpenRouter is a broker only; actual designated resident models still author their own turns. Default routing, mutable aliases, provider/model fallback, missing route metadata, and material pipeline transformations fail closed. The zero-endpoint GPT-3.5 `0125` record is replaced by exact callable `openai/gpt-3.5-turbo-0613` rather than an alias.
+
+---
+
 ## The Agent's Discretion
 
 - Research may recommend the exact six models and provider mix within the user's superseded-but-callable admission rule.

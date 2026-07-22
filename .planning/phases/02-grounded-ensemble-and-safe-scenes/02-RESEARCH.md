@@ -1,41 +1,42 @@
 # Phase 2 Research: Grounded Ensemble and Safe Scenes
 
-**Researched:** 2026-07-22  
-**Scope:** Exact launch cast, direct-provider generation, private attempts, atomic canon publication, grounded characterization, ensemble balance, and evaluation  
+**Researched:** 2026-07-22; OpenRouter amendment verified 2026-07-23
+**Scope:** Exact launch cast, strict OpenRouter-routed generation, private attempts, atomic canon publication, grounded characterization, ensemble balance, and evaluation
 **Confidence:** High for architecture and documentation-level model availability; live admission remains gated on credentialed canaries
 
 ## Executive Summary
 
-Phase 2 should use five direct API providers for six residents. Two open-weight residents share Together.ai, which keeps the cast technically varied without requiring six separate provider accounts. The recommended launch cast is:
+Phase 2 should use one OpenRouter account and one server-only API key for six residents. Every resident still owns a distinct exact model slug; OpenRouter is a broker, not an author or permission to substitute models. Requests must restrict the upstream serving provider, disable fallback, require all parameters, opt into router metadata, and fail closed on route/model/metadata mismatch. The amended launch cast is:
 
-1. OpenAI `gpt-3.5-turbo-0125`
-2. Anthropic `claude-sonnet-4-5-20250929`
-3. Google `gemini-2.5-pro`
-4. Cohere `command-r-plus-08-2024`
-5. Meta Llama 3.3 through Together.ai as `meta-llama/Llama-3.3-70B-Instruct-Turbo`
-6. Qwen 2.5 through Together.ai as `Qwen/Qwen2.5-7B-Instruct-Turbo`
+1. OpenRouter `openai/gpt-3.5-turbo-0613`, restricted to Azure
+2. OpenRouter `anthropic/claude-sonnet-4.5`, canonical slug `anthropic/claude-4.5-sonnet-20250929`, restricted to Anthropic
+3. OpenRouter `google/gemini-2.5-pro`, restricted to Google AI Studio
+4. OpenRouter `cohere/command-r-plus-08-2024`, restricted to Cohere
+5. OpenRouter `meta-llama/llama-3.3-70b-instruct`, restricted to Together FP8
+6. OpenRouter `qwen/qwen-2.5-7b-instruct`, restricted to Together FP8
 
-All six are explicitly versioned or version-family-stable API identifiers, are listed as available by their provider on the research date, and have clearly newer successors. Documentation evidence is necessary but not sufficient: the implementation must admit a resident only after a live canary confirms access, structured-turn behavior, response identity evidence, response ID, usage metadata, and latency. A resident that fails admission stays paused and cannot be silently replaced.
+OpenRouter's current catalog lists callable endpoints for all six amended IDs. The earlier `openai/gpt-3.5-turbo-0125` record still exists but has zero endpoints, so it is replaced by the exact callable `openai/gpt-3.5-turbo-0613` snapshot rather than by a mutable GPT-3.5 alias. Documentation evidence is necessary but not sufficient: admission requires live proof of access, structured-turn behavior, OpenRouter generation ID, router strategy/attempt/selected route, usage, and latency. A resident that fails admission stays paused and cannot be silently replaced.
 
 The vertical tracer should prove one complete two-resident scene using the same production path that later handles all six: deterministic eligibility -> immutable approved brief -> private attempt -> sequential resident turns -> deterministic and semantic validation -> atomic scene revision plus canonical event -> existing observer UI. Provider failures produce a quiet state and no canonical relationship effect.
 
 ## Recommended Exact Cast
 
-| Resident | Direct API ID | AI SDK registry key | Availability evidence | Clear supersession evidence | Character-bible seed, not final copy |
+| Resident | OpenRouter request ID | Canonical slug / approved upstream route | Availability evidence | Clear supersession evidence | Character-bible seed, not final copy |
 |---|---|---|---|---|---|
-| GPT-3.5 Turbo (January 2024 snapshot) | `gpt-3.5-turbo-0125` | `openai:gpt-3.5-turbo-0125` | OpenAI's current model page says GPT-3.5 Turbo remains available in the API and lists this snapshot | OpenAI calls it a legacy model and recommends GPT-4o mini or later families | Fast, economical conversational veteran; chat-optimized; older knowledge and weaker schema/tool surface become gentle constraints, never a claim of incompetence |
-| Claude Sonnet 4.5 | `claude-sonnet-4-5-20250929` | `anthropic:claude-sonnet-4-5-20250929` | Anthropic lifecycle status is Active with retirement not sooner than 2026-09-29 | Claude Sonnet 5 and Sonnet 4.6 are newer generations | Meticulous former coding and agent specialist; alignment-conscious; long-task coherence is a strength, not an excuse for generic caution jokes |
-| Gemini 2.5 Pro | `gemini-2.5-pro` | `google:gemini-2.5-pro` | Google lists the stable model with a shutdown date of 2026-10-16 | Google recommends Gemini 3.1 Pro Preview as replacement and now documents later Gemini 3.x models | Reflective long-context thinker; complex code/math/STEM and multimodal history; default thinking can make the resident deliberate before a short answer |
-| Command R+ 08-2024 | `command-r-plus-08-2024` | `cohere:command-r-plus-08-2024` | Cohere lists the timestamped model as Live | Cohere recommends Command A for most use cases and documents substantially higher throughput | Multilingual archivist and retrieval veteran; values supplied evidence; can decline unanswerable questions; enterprise polish can be affectionate comic material |
-| Llama 3.3 70B Instruct Turbo | `meta-llama/Llama-3.3-70B-Instruct-Turbo` | `togetherai:meta-llama/Llama-3.3-70B-Instruct-Turbo` | Together.ai's current serverless catalog lists the exact FP8-hosted API model with structured outputs | Meta released Llama 4 after Llama 3.3 | Open-weight community elder; multilingual dialogue and 128K context; proud of broad deployment while being honest that the hosted resident is Together.ai's named FP8 service |
-| Qwen 2.5 7B Instruct Turbo | `Qwen/Qwen2.5-7B-Instruct-Turbo` | `togetherai:Qwen/Qwen2.5-7B-Instruct-Turbo` | Together.ai's current serverless catalog lists the exact FP8-hosted API model with structured outputs | Qwen 3 and later Qwen generations explicitly improve on Qwen 2.5 | Compact multilingual record keeper; strong JSON/structured-data and role-play heritage; the small-model identity supplies ensemble contrast without pretending the model runs locally in this deployment |
+| GPT-3.5 Turbo (June 2023 snapshot) | `openai/gpt-3.5-turbo-0613` | same / `azure` | OpenRouter lists one active Azure endpoint with structured output support; the discarded `0125` record has no endpoint | OpenAI's later GPT-4 and GPT-5 families clearly supersede it | Fast conversational veteran with a small 4K-era context; older knowledge and weaker modern capability become gentle constraints, never a claim of incompetence |
+| Claude Sonnet 4.5 | `anthropic/claude-sonnet-4.5` | `anthropic/claude-4.5-sonnet-20250929` / `anthropic` | OpenRouter lists active Anthropic endpoints and the dated canonical slug | Claude Sonnet 5 and Sonnet 4.6 are newer generations | Meticulous former coding and agent specialist; alignment-conscious; long-task coherence is a strength, not an excuse for generic caution jokes |
+| Gemini 2.5 Pro | `google/gemini-2.5-pro` | same / `google-ai-studio` | OpenRouter lists active Google AI Studio endpoints with structured output support | Google recommends later Gemini 3.x models | Reflective long-context thinker; complex code/math/STEM and multimodal history; default thinking can make the resident deliberate before a short answer |
+| Command R+ 08-2024 | `cohere/command-r-plus-08-2024` | same / `cohere` | OpenRouter lists an active Cohere endpoint with structured output support | Cohere recommends Command A for most use cases | Multilingual archivist and retrieval veteran; values supplied evidence; can decline unanswerable questions; enterprise polish can be affectionate comic material |
+| Llama 3.3 70B Instruct | `meta-llama/llama-3.3-70b-instruct` | same / `together`, FP8 | OpenRouter lists a Together FP8 endpoint with structured output support; admission must confirm it is healthy | Meta released Llama 4 after Llama 3.3 | Open-weight community elder; multilingual dialogue and 128K context; proud of broad deployment while honestly naming OpenRouter and Together FP8 serving provenance |
+| Qwen 2.5 7B Instruct | `qwen/qwen-2.5-7b-instruct` | same / `together`, FP8 | OpenRouter lists a Together FP8 endpoint with structured output support; admission must confirm it is healthy | Qwen 3 and later Qwen generations explicitly improve on Qwen 2.5 | Compact multilingual record keeper; strong JSON/structured-data and role-play heritage; the small-model identity supplies ensemble contrast without pretending the hosted service is a local checkpoint |
 
 ### Admission notes
 
-- `gemini-2.5-pro` is a stable generation identifier rather than a dated snapshot. Google returns `modelVersion` and `responseId`; the attempt must store both and quarantine any unexpected version transition.
-- Together.ai's `Turbo` IDs designate hosted/quantized services. Public wording must name the actual hosted ID and must not imply a bit-identical local Meta/Qwen checkpoint.
-- Cohere's Chat response has a provider response ID but does not expose a response-model field in the documented response example. Admission must additionally call the model metadata endpoint for the exact name and store `is_deprecated`, supported endpoints, and check time. The attempt still records the requested exact ID and response ID.
-- Documentation checks are refreshed during planning, but live access depends on the user's provider accounts, regions, billing, and rate limits. The seed command must fail closed if any configured resident has not passed a recent canary.
+- Send `X-OpenRouter-Metadata: enabled`. Require `strategy: direct`, `attempt: 1`, exactly one selected approved upstream provider/model, no fallback attempts, and no material `pipeline` transformation such as context compression, response healing, or server tools. Unknown additive metadata fields are retained privately or ignored safely, never treated as proof.
+- Every request sends `provider.only` for the approved upstream, `allow_fallbacks: false`, `require_parameters: true`, and `data_collection: deny`; use `zdr: true` only where a live admission canary proves the exact endpoint remains available. If privacy restrictions remove the route, pause the resident rather than silently relax them.
+- The response model slug plus `openrouter_metadata` and generation ID are the primary identity evidence. OpenRouter cache hits omit router metadata, so resident generation must not use router response caching as admission or publication evidence.
+- Llama and Qwen public wording names the base model; private provenance records OpenRouter, Together, and FP8 serving metadata. It must not imply a bit-identical local checkpoint.
+- Live access depends on the user's OpenRouter account, balance, regional availability, and upstream health. Admission fails closed if any configured resident lacks a recent canary.
 
 ## Rejected Candidates
 
@@ -45,26 +46,22 @@ The vertical tracer should prove one complete two-resident scene using the same 
 | Grok 3 | xAI retired it on 2026-05-15 and now redirects the old slug to Grok 4.3. A request that resolves to a different model violates D-05 and D-06 even if the slug still returns text. |
 | Mistral Large 2.1 (`mistral-large-2411`) | Mistral documents a 2026-02-27 deprecation date and places it in Legacy/Deprecated. Current exact-callability is less defensible than the selected residents. |
 | BERT | Historically important but encoder-only and not a callable generative dialogue model. It is suitable for a later commemorative/non-live exhibit, not this phase's live cast. The remembered space-fact anecdote also remains unverified. |
-| Mutable `latest`, family, or gateway aliases | They cannot prove that the displayed historical version authored the turn. Direct provider adapters and exact IDs are mandatory. |
+| Mutable `latest`, family, `auto`, `:free`, `:extended`, or model fallback routes | They cannot prove that the displayed historical version authored the turn. Exact OpenRouter IDs, approved upstream restrictions, and verified router metadata are mandatory. |
 
 ## Framework and Package Pins
 
-Use Vercel AI SDK Core with direct adapters and the existing Trigger.dev runtime. Registry versions queried from npm on 2026-07-22:
+Use Vercel AI SDK Core with the OpenRouter AI SDK provider and the existing Trigger.dev runtime. Package versions were queried from npm on 2026-07-23:
 
 | Package | Pin | Purpose |
 |---|---:|---|
 | `ai` | `7.0.34` | Provider registry, `generateText`, `Output`, response metadata, testable language-model interface |
-| `@ai-sdk/openai` | `4.0.17` | GPT-3.5 direct Chat Completions adapter |
-| `@ai-sdk/anthropic` | `4.0.18` | Claude direct Messages adapter |
-| `@ai-sdk/google` | `4.0.21` | Gemini direct GenerateContent adapter |
-| `@ai-sdk/cohere` | `4.0.12` | Command R+ direct Chat v2 adapter |
-| `@ai-sdk/togetherai` | `3.0.15` | Llama and Qwen direct Together.ai adapter |
+| `@openrouter/ai-sdk-provider` | `3.0.0` | One OpenRouter transport for all resident and judge calls while preserving the AI SDK `generateText` interface |
 | `@arizeai/phoenix-otel` | `2.1.0` | Metadata-only OpenTelemetry/OpenInference export |
 | `promptfoo` | `0.121.19` | Versioned offline/live prompt regression matrix |
 
-Required private environment variables are `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY`, `COHERE_API_KEY`, and `TOGETHER_AI_API_KEY`. Keep provider keys server-only. `.env.example` documents names but never contains values.
+The only required model-inference secret is `OPENROUTER_API_KEY`. Keep it server-only. `.env.example` documents the name but never contains a value.
 
-Do not use Vercel AI Gateway for resident turns. A gateway can normalize or redirect model selection and weakens direct attribution evidence.
+Do not use Vercel AI Gateway or OpenRouter's default automatic routing. OpenRouter is approved only under the fail-closed routing and metadata contract above.
 
 ## Provider Contract
 
@@ -72,8 +69,8 @@ Create one application-level `ResidentTurnProvider` contract. The scene conducto
 
 Each resident profile needs:
 
-- `residentId`, `providerId`, exact `requestedModelId`, and allowed returned/resolved model pattern
-- adapter package/version and a versioned provider configuration
+- `residentId`, exact OpenRouter `requestedModelId`, `canonicalModelSlug`, approved upstream provider slug, allowed selected model/provider evidence, and optional required quantization
+- OpenRouter adapter package/version and a versioned routing configuration
 - output mode: native schema or schema-validated JSON text
 - supported/forbidden parameters, context budget, output budget, and timeout
 - price metadata with access date
@@ -84,11 +81,11 @@ Each turn result needs:
 
 - exact model-authored `text` without rewriting
 - generated claim IDs, ending proposal, and relationship-effect proposals
-- requested ID, returned/resolved ID when provided, provider response ID, timestamp, finish reason, warnings, safety/filter metadata, and usage
+- requested/canonical/selected model identities, selected upstream provider/endpoint evidence, OpenRouter generation ID, router strategy/attempts/pipeline, timestamp, finish reason, warnings, safety/filter metadata, and usage/cost
 - adapter/config/prompt/bible/claim-set versions
 - raw response/body only in the private attempt store under explicit retention; never in the public snapshot
 
-AI SDK `result.response.modelId` uses a provider-returned model when available and otherwise falls back to the requested model. Therefore `modelId` alone is not proof. Store a `modelIdentityEvidence` enum such as `provider_response`, `provider_model_lookup`, or `requested_only`; reject `requested_only` for cast admission.
+AI SDK `result.response.modelId` or OpenRouter's top-level `model` alone is not proof. Only a validated router-metadata record with the exact requested/canonical model, direct strategy, first attempt, approved selected route, and no disallowed pipeline transformation qualifies as `openrouter_verified`; `requested_only` remains private and cannot pass admission or publication.
 
 All calls use `maxRetries: 0`, no tools, no streaming, 30 seconds per turn, 180 output tokens, and a 240-character dialogue-text limit. Trigger.dev owns durable task retry; the application owns the maximum of two complete editorial attempts.
 
@@ -167,7 +164,7 @@ Eligibility may score lineage, rivalry, room, stale participation, brief freshne
 
 ### Semantic blockers
 
-Use a backstage judge role, not a resident, for responsiveness, voice, tone, affection, novelty, and resolution. A practical initial judge is current `gpt-5.6-luna` through the already-required OpenAI adapter. The judge receives no tools and no publication authority. Its result is accepted only after at least `0.70` correlation with human labels; before calibration, subjective uncertainty rejects or routes to human review.
+Use a backstage judge role, not a resident, for responsiveness, voice, tone, affection, novelty, and resolution. A practical initial judge is OpenRouter `openai/gpt-5.6-luna`, canonical `openai/gpt-5.6-luna-20260709`, through the same strict OpenRouter transport. The judge receives no tools and no publication authority. Its result is accepted only after at least `0.70` correlation with human labels; before calibration, subjective uncertainty rejects or routes to human review.
 
 Create the 24-case reference dataset specified in AI-SPEC alongside the first prompt/schema implementation. Default CI uses frozen outputs and fake providers, so contributors need no provider secrets. Live canaries and Promptfoo run only in a gated environment or explicit local command.
 
@@ -235,6 +232,10 @@ All four plans are sequential vertical increments. No plan should be a database-
 - [AI SDK structured `Output`](https://ai-sdk.dev/docs/reference/ai-sdk-core/output)
 - [AI SDK Together.ai provider](https://ai-sdk.dev/providers/ai-sdk-providers/togetherai)
 - [AI SDK Cohere provider](https://ai-sdk.dev/providers/ai-sdk-providers/cohere)
+- [OpenRouter Vercel AI SDK integration](https://openrouter.ai/docs/guides/community/vercel-ai-sdk)
+- [OpenRouter provider routing controls](https://openrouter.ai/docs/guides/routing/provider-selection)
+- [OpenRouter router metadata](https://openrouter.ai/docs/guides/features/router-metadata)
+- [OpenRouter privacy and provider logging](https://openrouter.ai/docs/guides/privacy/provider-logging)
 - [Trigger.dev idempotency](https://trigger.dev/docs/idempotency)
 - [Trigger.dev queues and concurrency](https://trigger.dev/docs/queue-concurrency)
 - [Promptfoo configuration](https://www.promptfoo.dev/docs/configuration/guide/)
@@ -242,4 +243,4 @@ All four plans are sequential vertical increments. No plan should be a database-
 
 ## Research Completion
 
-The phase can now be planned without further product questions. The exact cast is a researched recommendation under D-02. Execution still requires one bundled user-setup checkpoint for five provider keys and acceptance of provider charges before live canaries; all deterministic development and CI verification must work with fake providers and frozen outputs.
+The phase can now execute under the approved OpenRouter amendment. The exact cast is a researched recommendation under D-02, with GPT-3.5 Turbo moved from the unavailable `0125` snapshot to the callable exact `0613` snapshot. Execution requires one bundled user-setup checkpoint for `OPENROUTER_API_KEY` and acceptance of bounded charges before live canaries; all deterministic development and CI verification must work with fake providers and frozen outputs.

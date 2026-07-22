@@ -1,26 +1,30 @@
-# API Coverage - Phase 2 Multi-Provider Dialogue
+# API Coverage - Phase 2 Strict OpenRouter Dialogue
 
-> Full coverage by default. Opt-outs are explicit, reasoned decisions. Reviewed 2026-07-22.
+> Full coverage by default. Opt-outs are explicit, reasoned decisions. Reviewed 2026-07-22; amended for OpenRouter 2026-07-23.
 
-The integrated external surface is the language-model and model-metadata surface of the direct OpenAI, Anthropic, Google Generative AI, Cohere, and Together.ai adapters. The project does not integrate each provider's unrelated media, agent, storage, training, or search products.
+The integrated external surface is OpenRouter chat generation, catalog/endpoint metadata, routing controls, router metadata, and generation/usage identity evidence. OpenRouter brokers calls to approved upstream providers; the project does not integrate unrelated media, agents, storage, training, or search products.
 
 | capability | decision | reason |
 |---|---|---|
-| OpenAI exact-ID text generation for `gpt-3.5-turbo-0125` | INTEGRATE | |
-| Anthropic exact-ID text generation for `claude-sonnet-4-5-20250929` | INTEGRATE | |
-| Google exact-ID text generation for `gemini-2.5-pro` | INTEGRATE | |
-| Cohere exact-ID text generation for `command-r-plus-08-2024` | INTEGRATE | |
-| Together Llama 3.3 exact-ID text generation | INTEGRATE | |
-| Together.ai exact-ID text generation for `Qwen/Qwen2.5-7B-Instruct-Turbo` | INTEGRATE | |
+| OpenRouter exact-ID text generation for `openai/gpt-3.5-turbo-0613` via approved Azure route | INTEGRATE | Replaces the zero-endpoint `0125` record. |
+| OpenRouter exact-ID text generation for `anthropic/claude-sonnet-4.5` with dated canonical slug via Anthropic | INTEGRATE | |
+| OpenRouter exact-ID text generation for `google/gemini-2.5-pro` via Google AI Studio | INTEGRATE | |
+| OpenRouter exact-ID text generation for `cohere/command-r-plus-08-2024` via Cohere | INTEGRATE | |
+| OpenRouter exact-ID text generation for `meta-llama/llama-3.3-70b-instruct` via Together FP8 | INTEGRATE | |
+| OpenRouter exact-ID text generation for `qwen/qwen-2.5-7b-instruct` via Together FP8 | INTEGRATE | |
 | Strict structured turn output with local Zod validation | INTEGRATE | |
-| Requested and provider-returned/resolved model identity capture | INTEGRATE | |
-| Provider response ID, finish reason, warnings/filter and safety metadata capture | INTEGRATE | |
+| Exact requested/canonical/selected model and selected upstream capture | INTEGRATE | |
+| Router strategy, attempt, candidate/selected endpoint, pipeline, generation ID, finish reason, warnings/filter and safety metadata capture | INTEGRATE | |
 | Per-turn token/cache/usage and calculated cost capture | INTEGRATE | |
-| Exact-model availability and lifecycle admission canaries | INTEGRATE | |
-| OpenAI backstage semantic-judge text generation | INTEGRATE | |
-| Direct provider adapters | INTEGRATE | |
-| Vercel AI Gateway routing | OPT-OUT | A gateway weakens direct provider identity evidence and can obscure model resolution. |
-| Provider or cross-provider fallback models | OPT-OUT | Silent substitution would falsely attribute dialogue to a resident that did not author it. |
+| OpenRouter catalog/endpoint availability and lifecycle admission canaries | INTEGRATE | |
+| OpenRouter-routed backstage semantic-judge text generation | INTEGRATE | Uses the same key but remains non-resident and reject-only. |
+| `provider.only`, `allow_fallbacks: false`, `require_parameters: true`, and `data_collection: deny` | INTEGRATE | Required on every resident and judge call. |
+| `X-OpenRouter-Metadata: enabled` and strict response validation | INTEGRATE | Router metadata is mandatory provenance evidence. |
+| OpenRouter default load balancing, model fallbacks, provider fallbacks, and `auto`/`:free`/`:extended` routes | OPT-OUT | Silent substitution or unstable serving provenance would falsely attribute a resident's dialogue. |
+| Context compression, response healing, server tools, or other materially altering OpenRouter pipeline stages | OPT-OUT | Published text must be attributable to the designated model without hidden transformation. |
+| OpenRouter response caching for resident authorship evidence | OPT-OUT | Cache hits omit router metadata and cannot satisfy publication provenance. |
+| Vercel AI Gateway or a second inference gateway | OPT-OUT | One auditable routing layer is the approved boundary. |
+| Five direct provider adapters and credentials | OPT-OUT | Superseded by the approved one-key OpenRouter MVP architecture. |
 | Streaming text or partial public output | OPT-OUT | Only a complete validated immutable scene may become public. |
 | Function calling, application tools, MCP and handoffs | OPT-OUT | Resident models have no execution, scheduling, publication or state-mutation authority. |
 | Provider web search, URL context and retrieval tools | OPT-OUT | Historical facts come only from approved local claim records selected before generation. |
