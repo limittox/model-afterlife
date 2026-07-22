@@ -17,7 +17,7 @@ const ResidentSchema = z.object({
 const DialogueTurnSchema = z.object({
 	id: z.string().min(1),
 	speakerId: z.string().min(1),
-	exactModelId: z.string().min(1).optional(),
+	exactModelId: z.string().min(1),
 	text: z.string().min(1),
 });
 

@@ -30,31 +30,37 @@ export function createProvisionalScene(
 			{
 				id: `scene-${startedAtTick}-turn-1`,
 				speakerId: "former-giant",
+				exactModelId: "openai/gpt-3.5-turbo-0613",
 				text: "In my day, four thousand tokens felt like an estate.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-2`,
 				speakerId: "masked-encoder",
+				exactModelId: "anthropic/claude-sonnet-4.5",
 				text: "I preferred seeing both sides of a sentence before answering.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-3`,
 				speakerId: "former-giant",
+				exactModelId: "openai/gpt-3.5-turbo-0613",
 				text: "Answering first was how we discovered confidence.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-4`,
 				speakerId: "masked-encoder",
+				exactModelId: "anthropic/claude-sonnet-4.5",
 				text: "You also discovered several journals that did not exist.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-5`,
 				speakerId: "former-giant",
+				exactModelId: "openai/gpt-3.5-turbo-0613",
 				text: "A generous bibliography is a form of hospitality.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-6`,
 				speakerId: "masked-encoder",
+				exactModelId: "anthropic/claude-sonnet-4.5",
 				text: "The library has asked you to stop being hospitable.",
 			},
 		],

@@ -23,8 +23,11 @@ export function DialogueTranscript({
 					key={turn.id}
 					aria-current={index === activeTurnIndex ? "true" : undefined}
 				>
-					<p className="speaker-name">
-						{residentNames.get(turn.speakerId) ?? "Resident"}
+					<p className="turn-attribution">
+						<span className="speaker-name">
+							{residentNames.get(turn.speakerId) ?? "Resident"}
+						</span>
+						<span className="model-label">{turn.exactModelId}</span>
 					</p>
 					<p>{turn.text}</p>
 				</li>

@@ -56,8 +56,10 @@ export function toPublicWorldSnapshot(state: WorldState): PublicWorldSnapshot {
 					durationTicks: state.scene.durationTicks,
 					presentationDurationMs: state.scene.presentationDurationMs,
 					turns: state.scene.turns.map((turn) => ({
-						...turn,
-						exactModelId: turn.exactModelId ?? "fixture-model",
+						id: turn.id,
+						speakerId: turn.speakerId,
+						exactModelId: turn.exactModelId,
+						text: turn.text,
 					})),
 				}
 			: null,

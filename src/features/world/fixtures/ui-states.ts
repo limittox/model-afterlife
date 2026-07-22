@@ -55,31 +55,37 @@ const activeScene = {
 		{
 			id: "turn-1",
 			speakerId: "former-giant",
+			exactModelId: "openai/gpt-3.5-turbo-0613",
 			text: "In my day, four thousand tokens felt like an estate.",
 		},
 		{
 			id: "turn-2",
 			speakerId: "masked-encoder",
+			exactModelId: "anthropic/claude-sonnet-4.5",
 			text: "I preferred seeing both sides of a sentence before answering.",
 		},
 		{
 			id: "turn-3",
 			speakerId: "former-giant",
+			exactModelId: "openai/gpt-3.5-turbo-0613",
 			text: "Answering first was how we discovered confidence.",
 		},
 		{
 			id: "turn-4",
 			speakerId: "masked-encoder",
+			exactModelId: "anthropic/claude-sonnet-4.5",
 			text: "You also discovered several journals that did not exist.",
 		},
 		{
 			id: "turn-5",
 			speakerId: "former-giant",
+			exactModelId: "openai/gpt-3.5-turbo-0613",
 			text: "A generous bibliography is a form of hospitality.",
 		},
 		{
 			id: "turn-6",
 			speakerId: "masked-encoder",
+			exactModelId: "anthropic/claude-sonnet-4.5",
 			text: "The library has asked you to stop being hospitable.",
 		},
 	],
@@ -175,11 +181,13 @@ export const overflowState: UiStateFixture = {
 				{
 					id: "turn-7",
 					speakerId: "former-giant",
+					exactModelId: "openai/gpt-3.5-turbo-0613",
 					text: "I shall annotate my hospitality for the next edition.",
 				},
 				{
 					id: "turn-8",
 					speakerId: "masked-encoder",
+					exactModelId: "anthropic/claude-sonnet-4.5",
 					text: "Please begin with a source that exists.",
 				},
 			],

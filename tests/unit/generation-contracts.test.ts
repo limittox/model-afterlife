@@ -21,6 +21,10 @@ describe("Phase 2 public scene contract", () => {
 			turns: Array.from({ length: 10 }, (_, index) => ({
 				id: `turn-${index}`,
 				speakerId: index % 2 === 0 ? "atlas" : "ember",
+				exactModelId:
+					index % 2 === 0
+						? "openai/gpt-3.5-turbo-0613"
+						: "anthropic/claude-sonnet-4.5",
 				text: `Validated tracer turn ${index + 1}.`,
 			})),
 		};

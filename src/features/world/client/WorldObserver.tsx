@@ -6,6 +6,7 @@ import { HomeStatusStrip } from "../components/HomeStatusStrip.tsx";
 import { ObserverControlDock } from "../components/ObserverControlDock.tsx";
 import { PixelWorldViewport } from "../components/PixelWorldViewport.tsx";
 import { SceneRail } from "../components/SceneRail.tsx";
+import { TransparencyNotice } from "../components/TransparencyNotice.tsx";
 import { useWorldFeed } from "./use-world-feed.ts";
 import { useScenePlayback } from "./use-scene-playback.ts";
 import type {
@@ -59,6 +60,7 @@ export function WorldObserver() {
 				mode={state.mode}
 				connection={state.connection}
 			/>
+			<TransparencyNotice />
 			<p className="desktop-notice" role="note">
 				For the full home view and camera controls, visit on a wider screen.
 			</p>
