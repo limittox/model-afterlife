@@ -77,9 +77,7 @@ describe("strict OpenRouter resident provider", () => {
 			response: {
 				id: "gen-provider-1",
 				modelId: "openai/gpt-3.5-turbo-0613",
-			},
-			providerMetadata: {
-				openrouter: {
+				body: {
 					openrouter_metadata: {
 						requested: "openai/gpt-3.5-turbo-0613",
 						strategy: "direct",
@@ -105,6 +103,7 @@ describe("strict OpenRouter resident provider", () => {
 					},
 				},
 			},
+			providerMetadata: { openrouter: { provider: "Azure" } },
 			finishReason: "stop",
 			usage: { inputTokens: 20, outputTokens: 8 },
 		}));
@@ -141,6 +140,7 @@ describe("strict OpenRouter resident provider", () => {
 			maxOutputTokens: 180,
 			maxRetries: 0,
 			timeout: { totalMs: 30_000 },
+			include: { responseBody: true },
 		});
 		expect(options).not.toHaveProperty("tools");
 		expect(options).not.toHaveProperty("toolChoice");
