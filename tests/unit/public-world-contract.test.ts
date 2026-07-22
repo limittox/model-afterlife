@@ -64,22 +64,24 @@ describe("public world update contract", () => {
 
 describe("published scene serialization", () => {
 	it("requires one exact public model/version label on every visible turn", () => {
-		const missingLabel = snapshot(20);
-		missingLabel.scene = {
-			id: "scene-without-labels",
-			premise: "A malformed public scene.",
-			locationId: "common-room",
-			participantIds: ["resident-a", "resident-b"],
-			startedAtTick: 20,
-			durationTicks: 1,
-			presentationDurationMs: 10_000,
-			turns: Array.from({ length: 4 }, (_, index) => ({
-				id: `turn-${index}`,
-				speakerId: index % 2 === 0 ? "resident-a" : "resident-b",
-				text: `Visible turn ${index + 1}.`,
-			})),
+		const missingLabel = {
+			...snapshot(20),
+			scene: {
+				id: "scene-without-labels",
+				premise: "A malformed public scene.",
+				locationId: "common-room",
+				participantIds: ["resident-a", "resident-b"],
+				startedAtTick: 20,
+				durationTicks: 1,
+				presentationDurationMs: 10_000,
+				turns: Array.from({ length: 4 }, (_, index) => ({
+					id: `turn-${index}`,
+					speakerId: index % 2 === 0 ? "resident-a" : "resident-b",
+					text: `Visible turn ${index + 1}.`,
+				})),
+			},
+			quiet: null,
 		};
-		missingLabel.quiet = null;
 
 		expect(PublicWorldSnapshotSchema.safeParse(missingLabel).success).toBe(false);
 	});
