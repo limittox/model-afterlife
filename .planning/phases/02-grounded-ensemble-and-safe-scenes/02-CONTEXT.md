@@ -65,7 +65,7 @@ Phase 2 replaces the provisional archetypes and authored sample dialogue with ex
 ### Product Intent and Phase Scope
 - `.planning/PROJECT.md` — Defines the observer-only ambient ensemble, shared persistent timeline, historically grounded comedy, and product boundaries. D-01 through D-06 above supersede its earlier single-model reconstruction assumption.
 - `.planning/ROADMAP.md` — Defines the Phase 2 goal, mapped requirements, and five success criteria.
-- `.planning/REQUIREMENTS.md` — Defines Phase 2 requirements WRLD-05 through WRLD-07, RSID-01 through RSID-04, RELS-01 through RELS-03 and RELS-05, SCEN-01 through SCEN-10, and TRNS-01 through TRNS-03. Its reconstruction-only wording must be reconciled with D-01 before implementation while retaining the same safety and disclosure intent.
+- `.planning/REQUIREMENTS.md` — Defines Phase 2 requirements WRLD-05 through WRLD-07, RSID-01 through RSID-04, RELS-01 through RELS-03 and RELS-05, SCEN-01 through SCEN-10, and TRNS-01 through TRNS-03. Its generation and disclosure wording was reconciled with D-01 during AI contract design while retaining the same safety intent.
 
 ### Established Experience and Architecture
 - `.planning/phases/01-shared-watchable-home/01-CONTEXT.md` — Locks the compact observer experience, one-primary-scene presentation, quiet routines, local-only viewer controls, and honest recovery states that Phase 2 must preserve.
