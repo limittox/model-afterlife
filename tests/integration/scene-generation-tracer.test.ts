@@ -29,7 +29,7 @@ describe("private-to-canonical scene tracer", () => {
 		expect(after.snapshot.scene?.turns).toHaveLength(4);
 		expect(after.snapshot.scene?.turns.map((turn) => turn.exactModelId)).toEqual(["former-giant-model-v1", "masked-encoder-model-v1", "former-giant-model-v1", "masked-encoder-model-v1"]);
 		const publicKeys = JSON.stringify(after.snapshot);
-		for (const privateKey of ["attemptId", "providerResponseId", "rawResponse", "validationResult", "usage", "secret"]) expect(publicKeys).not.toContain(`\"${privateKey}\"`);
+		for (const privateKey of ["attemptId", "providerResponseId", "rawResponse", "validationResult", "usage", "secret"]) expect(publicKeys).not.toContain(`"${privateKey}"`);
 		const { db, close } = createWorldDatabase();
 		try {
 			expect(await db.select().from(generationAttempts)).toHaveLength(1);

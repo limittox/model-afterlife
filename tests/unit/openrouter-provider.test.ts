@@ -58,6 +58,7 @@ describe("strict OpenRouter resident provider", () => {
 		const providerModule = await loadProvider();
 
 		expect(providerModule, "OpenRouter provider module must exist").toBeDefined();
+		if (!providerModule) throw new Error("OpenRouter provider module is missing.");
 		const model = Symbol("strict-openrouter-model");
 		const modelFactory = vi.fn(() => model);
 		const createRouter = vi.fn((configuration: unknown) => {
@@ -107,7 +108,7 @@ describe("strict OpenRouter resident provider", () => {
 			finishReason: "stop",
 			usage: { inputTokens: 20, outputTokens: 8 },
 		}));
-		const provider = new providerModule!.OpenRouterResidentTurnProvider({
+		const provider = new providerModule.OpenRouterResidentTurnProvider({
 			apiKey: "test-key",
 			createRouter,
 			generateText,
