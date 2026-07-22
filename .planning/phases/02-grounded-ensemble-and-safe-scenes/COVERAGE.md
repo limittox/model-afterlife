@@ -10,7 +10,7 @@ The integrated external surface is the language-model and model-metadata surface
 | Anthropic exact-ID text generation for `claude-sonnet-4-5-20250929` | INTEGRATE | |
 | Google exact-ID text generation for `gemini-2.5-pro` | INTEGRATE | |
 | Cohere exact-ID text generation for `command-r-plus-08-2024` | INTEGRATE | |
-| Together.ai exact-ID text generation for `meta-llama/Llama-3.3-70B-Instruct-Turbo` | INTEGRATE | |
+| Together Llama 3.3 exact-ID text generation | INTEGRATE | |
 | Together.ai exact-ID text generation for `Qwen/Qwen2.5-7B-Instruct-Turbo` | INTEGRATE | |
 | Strict structured turn output with local Zod validation | INTEGRATE | |
 | Requested and provider-returned/resolved model identity capture | INTEGRATE | |

@@ -4,15 +4,15 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 2
 current_phase_name: Grounded Ensemble and Safe Scenes
-status: planning
-stopped_at: Phase 2 context gathered
-last_updated: "2026-07-22T13:30:03.140Z"
+status: executing
+stopped_at: Phase 2 planned; ready to execute
+last_updated: "2026-07-22T14:12:26.084Z"
 last_activity: 2026-07-22
-last_activity_desc: Phase 1 complete, transitioned to Phase 2
+last_activity_desc: Phase 2 planned in 4 sequential plans
 progress:
   total_phases: 2
   completed_phases: 1
-  total_plans: 4
+  total_plans: 8
   completed_plans: 4
 ---
 
@@ -29,10 +29,10 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 2 — Grounded Ensemble and Safe Scenes
 Plan: Not started
-Status: Ready to plan
-Last activity: 2026-07-22 — Phase 1 complete, transitioned to Phase 2
+Status: Ready to execute
+Last activity: 2026-07-22 — Phase 2 planned in 4 sequential plans
 
-Progress: [████████████████████] 4/4 plans (100%)
+Progress: [██████████░░░░░░░░░░] 4/8 plans (50%)
 
 ## Performance Metrics
 
@@ -82,7 +82,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Final cast, retirement taxonomy, source policy, dialogue model, and comedy eval thresholds require phase-specific research.
+- [Phase 2]: Execution requires five development-scoped provider API keys and one bundled human calibration review; secrets must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
 
@@ -96,6 +96,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T13:30:03.129Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-grounded-ensemble-and-safe-scenes/02-CONTEXT.md
+Last session: 2026-07-22T14:13:11.077Z
+Stopped at: Phase 2 planned; ready to execute
+Resume file: .planning/phases/02-grounded-ensemble-and-safe-scenes/02-01-PLAN.md
