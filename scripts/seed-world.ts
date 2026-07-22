@@ -1,6 +1,8 @@
 import { eq } from "drizzle-orm";
 import { createWorldDatabase } from "../src/db/client.ts";
 import { worldEvents, worldProjection, worlds } from "../src/db/schema.ts";
+import { targetTickFor } from "../src/features/world/domain/clock.ts";
+import { WORLD_EPOCH_MS } from "../src/features/world/fixtures/provisional-world.ts";
 import {
 	CANONICAL_WORLD_ID,
 	createWorldInitializedEvent,
@@ -18,7 +20,8 @@ export async function seedWorld(): Promise<void> {
 				.values({ worldId: CANONICAL_WORLD_ID })
 				.onConflictDoNothing();
 
-			const initialEvent = createWorldInitializedEvent(1);
+			const initialTick = targetTickFor(Date.now(), WORLD_EPOCH_MS);
+			const initialEvent = createWorldInitializedEvent(1, initialTick);
 			const initialSnapshot = toPublicWorldSnapshot(initialEvent.payload.state);
 			const inserted = await transaction
 				.insert(worldEvents)
@@ -33,13 +36,19 @@ export async function seedWorld(): Promise<void> {
 					publicSnapshot: initialSnapshot,
 				})
 				.onConflictDoNothing()
-				.returning({ sequence: worldEvents.sequence });
+				.returning({
+					sequence: worldEvents.sequence,
+					logicalTick: worldEvents.logicalTick,
+				});
 
 			const [existing] =
 				inserted.length > 0
 					? inserted
 					: await transaction
-							.select({ sequence: worldEvents.sequence })
+							.select({
+								sequence: worldEvents.sequence,
+								logicalTick: worldEvents.logicalTick,
+							})
 							.from(worldEvents)
 							.where(eq(worldEvents.occurrenceKey, SEED_OCCURRENCE_KEY))
 							.limit(1);
@@ -48,7 +57,10 @@ export async function seedWorld(): Promise<void> {
 				throw new Error("The immutable seed occurrence could not be read.");
 			}
 
-			const seededEvent = createWorldInitializedEvent(existing.sequence);
+			const seededEvent = createWorldInitializedEvent(
+				existing.sequence,
+				existing.logicalTick,
+			);
 			const snapshot = toPublicWorldSnapshot(seededEvent.payload.state);
 			await transaction
 				.insert(worldProjection)
