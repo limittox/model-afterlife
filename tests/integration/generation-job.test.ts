@@ -171,4 +171,22 @@ describe("generation Trigger task", () => {
 			randomize: false,
 		});
 	});
+
+	it("runs the production task adapter through the bounded request runner", async () => {
+		const taskModule = await loadGenerationTask();
+
+		expect(taskModule, "generation Trigger module must exist").toBeDefined();
+		const runAttempt = vi.fn(async () => ({ status: "accepted" as const, revision }));
+		const publish = vi.fn(async () => ({ revisionId: revision.revisionId }));
+		const result = await taskModule?.runGenerateScene(request, {
+			loadBrief: async () => brief,
+			runAttempt,
+			publish,
+			recordQuiet: async () => undefined,
+		});
+
+		expect(runAttempt).toHaveBeenCalledOnce();
+		expect(publish).toHaveBeenCalledOnce();
+		expect(result).toMatchObject({ status: "published", attemptOrdinal: 1 });
+	});
 });
