@@ -586,10 +586,11 @@ test.describe("local playback and recovery", () => {
 		await mockWorld(page, {
 			snapshots: [live],
 			onUpdates: async (route, call) => {
+				const after = afterFrom(route);
 				await route.fulfill({
 					json:
-						call === 1
-							? emptyUpdates(afterFrom(route))
+						call === 1 || after !== 84
+							? emptyUpdates(after)
 							: {
 									schemaVersion: 1,
 									fromSequence: 84,
