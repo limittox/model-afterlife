@@ -20,6 +20,27 @@ const unavailableSnapshot =
 const overflowSnapshot = overflowState.snapshot as PublicWorldSnapshot;
 const longSnapshot = longTextState.snapshot as PublicWorldSnapshot;
 
+const STAGED_FICTION_COPY =
+	"Scenes are staged fictional interactions between designated model APIs, not evidence of consciousness, private feelings, or autonomous communication.";
+const NON_AFFILIATION_COPY =
+	"Model Afterlife is independent and is not affiliated with or endorsed by OpenRouter, model creators, or serving providers.";
+
+function withExactModelLabels(
+	snapshot: PublicWorldSnapshot,
+): PublicWorldSnapshot {
+	const labelled = structuredClone(snapshot);
+	if (labelled.scene) {
+		labelled.scene.turns = labelled.scene.turns.map((turn) => ({
+			...turn,
+			exactModelId:
+				turn.speakerId === "former-giant"
+					? "openai/gpt-3.5-turbo-0613"
+					: "anthropic/claude-sonnet-4.5",
+		}));
+	}
+	return labelled;
+}
+
 function snapshotAt(
 	base: PublicWorldSnapshot,
 	sequence: number,
@@ -130,6 +151,76 @@ async function openCachedError(page: Page, snapshot = activeSnapshot) {
 }
 
 test.describe("semantic observer UI consideration matrix", () => {
+	test("every visible turn names its resident and exact model version", async ({
+		page,
+	}) => {
+		const labelled = withExactModelLabels(activeSnapshot);
+		await openSnapshot(page, labelled);
+
+		const turns = page.locator(".dialogue-turn");
+		await expect(turns).toHaveCount(labelled.scene?.turns.length ?? 0);
+		await expect(turns.first().locator(".turn-attribution")).toContainText(
+			"The Former Giant",
+		);
+		await expect(turns.first().locator(".turn-attribution")).toContainText(
+			"openai/gpt-3.5-turbo-0613",
+		);
+		await expect(turns.nth(1).locator(".turn-attribution")).toContainText(
+			"anthropic/claude-sonnet-4.5",
+		);
+	});
+
+	for (const width of [1024, 1280]) {
+		for (const [stateName, snapshot] of [
+			["active", withExactModelLabels(activeSnapshot)],
+			["quiet", quietSnapshot],
+			["generation-failed", unavailableSnapshot],
+		] as const) {
+			test(`persistent transparency remains visible for ${stateName} at ${width}px`, async ({
+				page,
+			}) => {
+				await page.setViewportSize({ width, height: 720 });
+				await openSnapshot(page, snapshot);
+				await expect(page.getByText(STAGED_FICTION_COPY)).toBeVisible();
+				await expect(page.getByText(NON_AFFILIATION_COPY)).toBeVisible();
+			});
+		}
+	}
+
+	test("persistent transparency is present while loading", async ({ page }) => {
+		await mockWorld(page, {
+			onSnapshot: async (route) => {
+				await new Promise((resolve) => setTimeout(resolve, 1_500));
+				await route.fulfill({ json: withExactModelLabels(activeSnapshot) });
+			},
+		});
+		await page.goto("/");
+		await expect(page.getByText(STAGED_FICTION_COPY)).toBeVisible();
+		await expect(page.getByText(NON_AFFILIATION_COPY)).toBeVisible();
+	});
+
+	test("cached reconnecting state keeps transparency and accepted scene only", async ({
+		page,
+	}) => {
+		await openCachedError(page, withExactModelLabels(activeSnapshot));
+		await expect(page.getByText(STAGED_FICTION_COPY)).toBeVisible();
+		await expect(page.getByText(NON_AFFILIATION_COPY)).toBeVisible();
+		await expect(page.locator(".state-badge")).toHaveText("Reconnecting");
+		await expect(page.locator(".dialogue-turn")).toHaveCount(6);
+	});
+
+	test("duplicate delivery leaves one accepted scene with no fictional error dialogue", async ({
+		page,
+	}) => {
+		const accepted = withExactModelLabels(activeSnapshot);
+		await mockWorld(page, { snapshots: [accepted, accepted] });
+		await page.goto("/");
+		await page.evaluate(() => window.dispatchEvent(new Event("focus")));
+		await expect(page.locator(".scene-card")).toHaveCount(1);
+		await expect(page.locator(".dialogue-turn")).toHaveCount(6);
+		await expect(page.getByText(/provider failed|retrying dialogue/i)).toHaveCount(0);
+	});
+
 	test("HomeStatusStrip loading uses em dashes and Opening the home copy", async ({
 		page,
 	}) => {
