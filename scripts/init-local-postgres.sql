@@ -1,0 +1,1 @@
+CREATE DATABASE model_afterlife_app OWNER model_afterlife;

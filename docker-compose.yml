@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:18-alpine
+    container_name: model-afterlife-db
+    environment:
+      POSTGRES_DB: model_afterlife
+      POSTGRES_USER: model_afterlife
+      POSTGRES_PASSWORD: model_afterlife
+    ports:
+      - "54329:5432"
+    volumes:
+      - model-afterlife-postgres:/var/lib/postgresql
+      - ./scripts/init-local-postgres.sql:/docker-entrypoint-initdb.d/01-model-afterlife.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U model_afterlife -d model_afterlife"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  wsproxy:
+    image: ghcr.io/neondatabase/wsproxy:latest
+    container_name: model-afterlife-wsproxy
+    environment:
+      ALLOW_ADDR_REGEX: "^db:5432$"
+      LOG_CONN_INFO: "true"
+    ports:
+      - "54330:80"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  model-afterlife-postgres:

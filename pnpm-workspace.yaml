@@ -1,0 +1,33 @@
+allowBuilds:
+  '@depot/cli': false
+  bufferutil: true
+  esbuild: true
+  sharp: true
+overrides:
+  '@opentelemetry/core': 2.10.0
+  engine.io: 6.6.9
+  postcss: 8.5.22
+  sharp: 0.35.3
+  ws: 8.21.1
+minimumReleaseAgeExclude:
+  - '@next/env@16.2.11'
+  - '@next/swc-darwin-arm64@16.2.11'
+  - '@next/swc-darwin-x64@16.2.11'
+  - '@next/swc-linux-arm64-gnu@16.2.11'
+  - '@next/swc-linux-arm64-musl@16.2.11'
+  - '@next/swc-linux-x64-gnu@16.2.11'
+  - '@next/swc-linux-x64-musl@16.2.11'
+  - '@next/swc-win32-arm64-msvc@16.2.11'
+  - '@next/swc-win32-x64-msvc@16.2.11'
+  - '@tanstack/query-core@5.101.4'
+  - '@tanstack/react-query@5.101.4'
+  - '@trigger.dev/build@4.5.6'
+  - '@trigger.dev/core@4.5.6'
+  - '@trigger.dev/schema-to-json@4.5.6'
+  - '@trigger.dev/sdk@4.5.6'
+  - next@16.2.11
+  - react-dom@19.2.8
+  - react@19.2.8
+  - trigger.dev@4.5.6
+  - '@opentelemetry/core@2.10.0'
+  - postcss@8.5.22
