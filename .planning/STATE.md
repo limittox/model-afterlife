@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: Shared Watchable Home
 status: executing
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-07-22T09:34:43.989Z"
+stopped_at: Completed 01-03-PLAN.md
+last_updated: "2026-07-22T10:08:31.931Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 4
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 01 (Shared Watchable Home) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-07-22 — Phase 01 execution started
 
-Progress: [█████░░░░░] 50%
+Progress: [████████░░] 75%
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Progress: [█████░░░░░] 50%
 |------|----------|-------|-------|
 | Phase 01 P01 | 20 min | 2 tasks | 32 files |
 | Phase 01 P02 | 22 min | 3 tasks | 35 files |
+| Phase 01 P03 | 34 min | 3 tasks | 27 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,10 @@ Recent decisions affecting current work:
 - [Phase 01]: Serialize overlapping world advancement through a PostgreSQL row lock with per-world occurrence and sequence uniqueness. — Makes the database the canonical duplicate-delivery and ordering boundary.
 - [Phase 01]: Treat Trigger.dev as a bounded wake-up source only. — The supplied timestamp selects a target tick and PostgreSQL catches up all missing ticks atomically.
 - [Phase 01]: Run singleton-world database test files sequentially while retaining explicit concurrent calls inside tests. — Prevents cross-file interference without weakening concurrency coverage.
+- [Phase 01]: Keep live acquisition, visible presentation, and bounded complete-update buffering in one explicit reducer. — Pause cannot stop canonical acquisition or mix visitor state into canon.
+- [Phase 01]: Distinguish transport failure from malformed or schema-invalid feed data. — Outages preserve cached state with a warning; invalid data is refused and replaced.
+- [Phase 01]: Preserve status, world, scene, controls DOM order independent of visual dock positioning. — Keyboard and assistive-technology order must follow the approved semantic hierarchy.
+- [Phase 01]: Self-host official Google Fonts WOFF2 builds tied to recorded upstream revisions. — Provides stable local fonts with license, source, and hash provenance.
 
 ### Pending Todos
 
@@ -99,6 +104,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T09:34:21.582Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-07-22T10:08:28.851Z
+Stopped at: Completed 01-03-PLAN.md
 Resume file: None
