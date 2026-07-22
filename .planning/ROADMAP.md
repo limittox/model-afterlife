@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Quiet periods, loading, reconnection, and unavailable-scene states remain watchable and explain what is happening instead of leaving an indefinite spinner or frozen home.
   5. Rebuilding from the canonical event history reproduces the same public state, while client-side time or outcome changes never alter canon.
 
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans executed
 
 Plans:
 **Wave 1**
@@ -51,7 +51,7 @@ Plans:
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] 01-04-PLAN.md — Add the original pixel home, local camera controls, and two-viewer verification.
+- [x] 01-04-PLAN.md — Add the original pixel home, local camera controls, and two-viewer verification.
 
 **UI hint**: yes
 
@@ -111,7 +111,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Shared Watchable Home | 3/4 | In Progress|  |
+| 1. Shared Watchable Home | 4/4 | In Progress|  |
 | 2. Grounded Ensemble and Safe Scenes | 0/TBD | Not started | - |
 | 3. Return Loop and Inclusive Presentation | 0/TBD | Not started | - |
 | 4. Safe Public Operation | 0/TBD | Not started | - |

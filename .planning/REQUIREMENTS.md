@@ -7,10 +7,10 @@
 
 ### World and Continuity
 
-- [ ] **WRLD-01**: Every visitor observes the same canonical home timeline rather than a session-specific world.
+- [x] **WRLD-01**: Every visitor observes the same canonical home timeline rather than a session-specific world.
 - [x] **WRLD-02**: The home advances schedules, resident locations, event eligibility, and relationship state while no visitor is watching.
-- [ ] **WRLD-03**: A returning or reconnecting visitor receives the current canonical state without replaying missed animations or creating divergent state.
-- [ ] **WRLD-04**: The home contains one compact, immediately readable environment with distinct functional areas and meaningful quiet routines.
+- [x] **WRLD-03**: A returning or reconnecting visitor receives the current canonical state without replaying missed animations or creating divergent state.
+- [x] **WRLD-04**: The home contains one compact, immediately readable environment with distinct functional areas and meaningful quiet routines.
 - [ ] **WRLD-05**: The simulation enforces event cooldowns, scene budgets, and cast rotation so activity remains varied without becoming constant.
 - [ ] **WRLD-06**: A failed or delayed dialogue-generation attempt leaves canonical world state healthy and produces an understandable quiet or curated fallback beat.
 - [ ] **WRLD-07**: Reprocessing a world tick, event, or publication job cannot duplicate a canonical event, scene, or relationship change.
@@ -50,14 +50,14 @@
 
 ### Live Observer Experience
 
-- [ ] **VIEW-01**: On entry, a visitor can immediately identify the home time, current location, active scene or quiet routine, speakers, scene premise, and whether presentation is live or paused.
-- [ ] **VIEW-02**: The experience presents at most one primary dialogue scene at a time with clear speaker identity, readable short turns, and focused staging.
-- [ ] **VIEW-03**: A visitor can pan and zoom the desktop world, follow or unfollow a resident, reset the camera, and jump back to the live view without influencing residents.
-- [ ] **VIEW-04**: A visitor can pause automatic presentation, read a scene at their own pace, resume from the paused point, or jump directly to live state.
-- [ ] **VIEW-05**: Background residents can perform quiet ambient routines without obscuring or competing with the primary scene.
-- [ ] **VIEW-06**: Quiet, loading, generation-failure, reconnecting, and provider-outage states explain what is happening without freezing the home behind an indefinite spinner.
+- [x] **VIEW-01**: On entry, a visitor can immediately identify the home time, current location, active scene or quiet routine, speakers, scene premise, and whether presentation is live or paused.
+- [x] **VIEW-02**: The experience presents at most one primary dialogue scene at a time with clear speaker identity, readable short turns, and focused staging.
+- [x] **VIEW-03**: A visitor can pan and zoom the desktop world, follow or unfollow a resident, reset the camera, and jump back to the live view without influencing residents.
+- [x] **VIEW-04**: A visitor can pause automatic presentation, read a scene at their own pace, resume from the paused point, or jump directly to live state.
+- [x] **VIEW-05**: Background residents can perform quiet ambient routines without obscuring or competing with the primary scene.
+- [x] **VIEW-06**: Quiet, loading, generation-failure, reconnecting, and provider-outage states explain what is happening without freezing the home behind an indefinite spinner.
 - [ ] **VIEW-07**: The live view uses original pixel-art assets and a consistent Model Afterlife visual identity rather than reproducing another game's protected assets or interface.
-- [ ] **VIEW-08**: The observer client derives its presentation from server-owned snapshots and ordered updates and never authors canonical world time or outcomes.
+- [x] **VIEW-08**: The observer client derives its presentation from server-owned snapshots and ordered updates and never authors canonical world time or outcomes.
 
 ### Archive, Recap, and Return Loop
 
@@ -151,10 +151,10 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| WRLD-01 | Phase 1 | Pending |
+| WRLD-01 | Phase 1 | Complete |
 | WRLD-02 | Phase 1 | Complete |
-| WRLD-03 | Phase 1 | Pending |
-| WRLD-04 | Phase 1 | Pending |
+| WRLD-03 | Phase 1 | Complete |
+| WRLD-04 | Phase 1 | Complete |
 | WRLD-05 | Phase 2 | Pending |
 | WRLD-06 | Phase 2 | Pending |
 | WRLD-07 | Phase 2 | Pending |
@@ -182,14 +182,14 @@
 | SCEN-08 | Phase 2 | Pending |
 | SCEN-09 | Phase 2 | Pending |
 | SCEN-10 | Phase 2 | Pending |
-| VIEW-01 | Phase 1 | Pending |
-| VIEW-02 | Phase 1 | Pending |
-| VIEW-03 | Phase 1 | Pending |
-| VIEW-04 | Phase 1 | Pending |
-| VIEW-05 | Phase 1 | Pending |
-| VIEW-06 | Phase 1 | Pending |
+| VIEW-01 | Phase 1 | Complete |
+| VIEW-02 | Phase 1 | Complete |
+| VIEW-03 | Phase 1 | Complete |
+| VIEW-04 | Phase 1 | Complete |
+| VIEW-05 | Phase 1 | Complete |
+| VIEW-06 | Phase 1 | Complete |
 | VIEW-07 | Phase 3 | Pending |
-| VIEW-08 | Phase 1 | Pending |
+| VIEW-08 | Phase 1 | Complete |
 | RTRN-01 | Phase 3 | Pending |
 | RTRN-02 | Phase 3 | Pending |
 | RTRN-03 | Phase 3 | Pending |

@@ -4,16 +4,16 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 01
 current_phase_name: Shared Watchable Home
-status: executing
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-07-22T10:08:31.931Z"
+status: verifying
+stopped_at: Completed 01-04-PLAN.md
+last_updated: "2026-07-22T10:45:32.728Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -29,10 +29,10 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 01 (Shared Watchable Home) — EXECUTING
 Plan: 4 of 4
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-22 — Phase 01 execution started
 
-Progress: [████████░░] 75%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Progress: [████████░░] 75%
 | Phase 01 P01 | 20 min | 2 tasks | 32 files |
 | Phase 01 P02 | 22 min | 3 tasks | 35 files |
 | Phase 01 P03 | 34 min | 3 tasks | 27 files |
+| Phase 01 P04 | 35 min | 3 tasks | 23 files |
 
 ## Accumulated Context
 
@@ -84,6 +85,10 @@ Recent decisions affecting current work:
 - [Phase 01]: Distinguish transport failure from malformed or schema-invalid feed data. — Outages preserve cached state with a warning; invalid data is refused and replaced.
 - [Phase 01]: Preserve status, world, scene, controls DOM order independent of visual dock positioning. — Keyboard and assistive-technology order must follow the approved semantic hierarchy.
 - [Phase 01]: Self-host official Google Fonts WOFF2 builds tied to recorded upstream revisions. — Provides stable local fonts with license, source, and hash provenance.
+- [Phase 01]: Keep React as semantic and local-presentation authority while Phaser receives serializable view state and emits only three closed local intents. — Prevents the disposable renderer from becoming domain authority.
+- [Phase 01]: Author the provisional home as provider-neutral geometric code on a 16px source grid with CSS owning integer-scaled canvas centering. — Keeps the art original, replaceable, and crisp at supported desktop widths.
+- [Phase 01]: Suppress supplementary resident bubbles during connection trouble while retaining the last valid home and semantic transcript. — Avoids presenting stale or infrastructure state as resident canon.
+- [Phase 01]: Migrate on every Playwright run but seed only when no canonical projection exists. — Repeated verification must not rewind a projection beneath an immutable journal.
 
 ### Pending Todos
 
@@ -104,6 +109,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T10:08:28.851Z
-Stopped at: Completed 01-03-PLAN.md
+Last session: 2026-07-22T10:45:32.716Z
+Stopped at: Completed 01-04-PLAN.md
 Resume file: None
