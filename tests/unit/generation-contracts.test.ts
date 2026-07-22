@@ -67,6 +67,27 @@ describe("strict resident identity evidence", () => {
 		expect(attempt.identityEvidence).toBe("openrouter_verified");
 	});
 
+	it("records the application-selected editorial attempt ordinal", async () => {
+		const { attempt } = await conductSceneAttempt({
+			brief,
+			attemptId: "verified-attempt-2",
+			attemptOrdinal: 2,
+			provider: {
+				generateTurn: async (input) => ({
+					text: `Fresh turn ${input.turnIndex + 1}.`,
+					providerResponseId: `fresh-${input.turnIndex}`,
+					observedModelId: input.requestedModelId,
+					identityEvidence: "openrouter_verified",
+					finishReason: "stop",
+					usage: { inputTokens: 2, outputTokens: 2 },
+				}),
+			},
+			modelForResident: (residentId) => `model/${residentId}`,
+		});
+
+		expect(attempt.attemptOrdinal).toBe(2);
+	});
+
 	it("rejects requested-only and generic provider response evidence", async () => {
 		for (const identityEvidence of ["requested_only", "provider_response"] as const) {
 			const { attempt, turns } = await conductSceneAttempt({
