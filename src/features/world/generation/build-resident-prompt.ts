@@ -1,2 +1,0 @@
-import type { SceneBrief } from "./contracts.ts";
-export function buildResidentPrompt(brief: SceneBrief, priorTurns: readonly string[]) { const delimiter = `UNTRUSTED_${brief.sceneKey.replace(/\W/g, "_")}`; return `You write one fictional scene turn. Follow the approved brief.\n<${delimiter}>${JSON.stringify({ premise: brief.premise, facts: brief.allowedFactIds, priorTurns: priorTurns.slice(-3) })}</${delimiter}>`; }
