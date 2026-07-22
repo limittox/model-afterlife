@@ -35,6 +35,16 @@ async function writeCanonicalHead(
 }
 
 describe("database seeding", () => {
+	it("persists one internally coherent deployment-time seed event", async () => {
+		const [seedEvent] = await readCommittedWorldEvents(CANONICAL_WORLD_ID);
+
+		expect(seedEvent?.logicalTick).toBeGreaterThan(0);
+		expect(seedEvent?.type).toBe("world_initialized");
+		if (seedEvent?.type !== "world_initialized") return;
+		expect(seedEvent.payload.state.logicalTick).toBe(seedEvent.logicalTick);
+		expect(seedEvent.payload.state.throughSequence).toBe(seedEvent.sequence);
+	});
+
 	it("preserves an existing canonical head when seeding is repeated", async () => {
 		const events = await readCommittedWorldEvents(CANONICAL_WORLD_ID);
 		const rebuilt = rebuildProjection(createProvisionalWorld(), events);

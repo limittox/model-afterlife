@@ -29,7 +29,7 @@ export async function seedWorld(): Promise<void> {
 					sequence: initialEvent.sequence,
 					worldId: CANONICAL_WORLD_ID,
 					occurrenceKey: SEED_OCCURRENCE_KEY,
-					logicalTick: 0,
+					logicalTick: initialEvent.logicalTick,
 					type: initialEvent.type,
 					schemaVersion: initialEvent.schemaVersion,
 					payload: initialEvent.payload,

@@ -1,5 +1,8 @@
 import "dotenv/config";
 import { defineConfig, devices } from "@playwright/test";
+import { configureTestDatabaseEnvironment } from "./tests/database-test-environment.ts";
+
+configureTestDatabaseEnvironment();
 
 export default defineConfig({
 	testDir: "./tests/e2e",
