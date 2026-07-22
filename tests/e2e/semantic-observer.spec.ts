@@ -387,7 +387,11 @@ test.describe("semantic observer UI consideration matrix", () => {
 		await expect(currentTurn).toContainText("preferred seeing both sides");
 
 		await page.getByRole("button", { name: "Resume presentation" }).click();
-		await page.clock.fastForward(7_600);
+		await expect(
+			page.getByRole("button", { name: "Pause presentation" }),
+		).toBeEnabled();
+		await page.clock.runFor(100);
+		await page.clock.fastForward(7_500);
 		await expect(currentTurn).toContainText("discovered confidence");
 	});
 
@@ -608,6 +612,10 @@ test.describe("local playback and recovery", () => {
 		await page.clock.fastForward(6_000);
 		await expect(page.locator(".dialogue-turn")).toHaveCount(6);
 		await page.getByRole("button", { name: "Resume presentation" }).click();
+		await expect(
+			page.getByRole("button", { name: "Pause presentation" }),
+		).toBeEnabled();
+		await page.clock.runFor(100);
 		await page.clock.fastForward(1_000);
 		await expect(
 			page.getByRole("heading", { name: "The home is quiet" }),
