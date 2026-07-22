@@ -38,7 +38,11 @@ export function ObserverControlDock({
 		: "Scene controls are unavailable while the home reconnects.";
 
 	return (
-		<nav className="observer-control-dock" aria-label="Observer controls">
+		<nav
+			className="observer-control-dock"
+			id="observer-controls"
+			aria-label="Observer controls"
+		>
 			<span className="visually-hidden" id="control-disabled-reason">
 				{disabledReason}
 			</span>

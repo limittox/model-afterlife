@@ -12,14 +12,17 @@ import {
 } from "./presentation-reducer.ts";
 import type { RecoveryReason, SnapshotReason } from "./presentation-types.ts";
 
+class WorldFeedRequestError extends Error {}
+class WorldSchemaMismatchError extends Error {}
+
 async function readJson(response: Response): Promise<unknown> {
 	if (!response.ok) {
-		throw new Error(`The world feed returned ${response.status}.`);
+		throw new WorldFeedRequestError(
+			`The world feed returned ${response.status}.`,
+		);
 	}
 	return response.json();
 }
-
-class WorldSchemaMismatchError extends Error {}
 
 async function fetchSnapshot() {
 	const response = await fetch("/api/world/snapshot", {
@@ -51,7 +54,7 @@ export function useWorldFeed() {
 		createInitialPresentationState(),
 	);
 	const snapshotReason = useRef<SnapshotReason>("bootstrap");
-	const handledSnapshotAt = useRef(0);
+	const snapshotWasFetching = useRef(true);
 	const handledUpdatesAt = useRef(0);
 
 	const snapshotQuery = useQuery({
@@ -81,17 +84,19 @@ export function useWorldFeed() {
 						: { type: "recovery-requested", reason },
 			);
 			snapshotReason.current = reason;
+			snapshotWasFetching.current = true;
 			void snapshotQuery.refetch();
 		},
 		[snapshotQuery.refetch],
 	);
 
 	useEffect(() => {
-		if (
-			snapshotQuery.data &&
-			snapshotQuery.dataUpdatedAt > handledSnapshotAt.current
-		) {
-			handledSnapshotAt.current = snapshotQuery.dataUpdatedAt;
+		if (snapshotQuery.isFetching) {
+			snapshotWasFetching.current = true;
+			return;
+		}
+		if (snapshotQuery.data && snapshotWasFetching.current) {
+			snapshotWasFetching.current = false;
 			dispatch({
 				type: "snapshot-accepted",
 				snapshot: snapshotQuery.data,
@@ -99,7 +104,7 @@ export function useWorldFeed() {
 			});
 			snapshotReason.current = "focus";
 		}
-	}, [snapshotQuery.data, snapshotQuery.dataUpdatedAt]);
+	}, [snapshotQuery.data, snapshotQuery.isFetching]);
 
 	useEffect(() => {
 		if (snapshotQuery.isError) {
@@ -127,11 +132,15 @@ export function useWorldFeed() {
 
 	useEffect(() => {
 		if (updatesQuery.isError) {
-			requestRecovery(
-				updatesQuery.error instanceof WorldSchemaMismatchError
-					? "schema"
-					: "parse",
-			);
+			if (updatesQuery.error instanceof WorldFeedRequestError) {
+				dispatch({ type: "snapshot-rejected" });
+			} else {
+				requestRecovery(
+					updatesQuery.error instanceof WorldSchemaMismatchError
+						? "schema"
+						: "parse",
+				);
+			}
 		}
 	}, [requestRecovery, updatesQuery.error, updatesQuery.isError]);
 
@@ -139,10 +148,14 @@ export function useWorldFeed() {
 		function handleFocus() {
 			dispatch({ type: "recovery-requested", reason: "focus" });
 			snapshotReason.current = "focus";
+			snapshotWasFetching.current = true;
+			void snapshotQuery.refetch();
 		}
 		function handleOnline() {
 			dispatch({ type: "recovery-requested", reason: "reconnect" });
 			snapshotReason.current = "reconnect";
+			snapshotWasFetching.current = true;
+			void snapshotQuery.refetch();
 		}
 		window.addEventListener("focus", handleFocus);
 		window.addEventListener("online", handleOnline);
@@ -150,7 +163,7 @@ export function useWorldFeed() {
 			window.removeEventListener("focus", handleFocus);
 			window.removeEventListener("online", handleOnline);
 		};
-	}, []);
+	}, [snapshotQuery.refetch]);
 
 	useEffect(() => {
 		if (state.mode !== "behind-live" || state.bufferedUpdates.length === 0) {

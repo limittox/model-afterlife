@@ -13,6 +13,7 @@ export default defineConfig({
 	test: {
 		environment: "node",
 		fileParallelism: false,
+		include: ["tests/unit/**/*.test.ts", "tests/integration/**/*.test.ts"],
 		setupFiles: ["./tests/setup.ts"],
 		sequence: {
 			concurrent: false,

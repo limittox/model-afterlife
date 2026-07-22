@@ -50,22 +50,22 @@ export function WorldObserver() {
 						}
 						onManualPan={() => dispatch({ type: "manual-pan-started" })}
 					/>
-					<ObserverControlDock
-						hasSnapshot={snapshot !== null}
-						connection={state.connection}
-						mode={state.mode}
-						followedResidentName={followedResidentName ?? null}
-						zoom={zoom}
-						onZoomIn={() => setZoom((value) => Math.min(value + 25, 200))}
-						onZoomOut={() => setZoom((value) => Math.max(value - 25, 50))}
-						onReset={() => setZoom(100)}
-						onPause={() => dispatch({ type: "pause" })}
-						onResume={() => dispatch({ type: "resume" })}
-						onJumpLive={jumpToLive}
-						onUnfollow={() => dispatch({ type: "unfollow" })}
-					/>
 				</div>
 				<SceneRail snapshot={snapshot} mode={state.mode} />
+				<ObserverControlDock
+					hasSnapshot={snapshot !== null}
+					connection={state.connection}
+					mode={state.mode}
+					followedResidentName={followedResidentName ?? null}
+					zoom={zoom}
+					onZoomIn={() => setZoom((value) => Math.min(value + 25, 200))}
+					onZoomOut={() => setZoom((value) => Math.max(value - 25, 50))}
+					onReset={() => setZoom(100)}
+					onPause={() => dispatch({ type: "pause" })}
+					onResume={() => dispatch({ type: "resume" })}
+					onJumpLive={jumpToLive}
+					onUnfollow={() => dispatch({ type: "unfollow" })}
+				/>
 			</div>
 			<p className="visually-hidden" aria-live="polite">
 				{state.announcement}

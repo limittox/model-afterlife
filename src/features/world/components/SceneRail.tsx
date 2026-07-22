@@ -16,6 +16,9 @@ export function SceneRail({
 				className="scene-rail scene-rail-loading"
 				aria-label="Current scene"
 			>
+				<a className="scene-focus-target" href="#observer-controls">
+					Scene status. Continue to observer controls
+				</a>
 				<div>
 					<p className="scene-label">Current scene</p>
 					<h2>Opening the home…</h2>
@@ -29,6 +32,9 @@ export function SceneRail({
 		const unavailable = snapshot.quiet?.reason === "scene-unavailable";
 		return (
 			<aside className="scene-rail" aria-label="Current scene">
+				<a className="scene-focus-target" href="#observer-controls">
+					Scene status. Continue to observer controls
+				</a>
 				<div className="quiet-state">
 					<p className="scene-label">Current scene</p>
 					<h2>{unavailable ? "Scene unavailable" : "The home is quiet"}</h2>
@@ -44,6 +50,9 @@ export function SceneRail({
 
 	return (
 		<aside className="scene-rail" aria-label="Current scene">
+			<a className="scene-focus-target" href="#observer-controls">
+				Scene transcript. Continue to observer controls
+			</a>
 			<SceneCard scene={snapshot.scene} snapshot={snapshot} />
 			<div className="transcript-heading">
 				<h2>Dialogue</h2>

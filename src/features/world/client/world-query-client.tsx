@@ -10,6 +10,7 @@ export function WorldQueryClient({ children }: { children: ReactNode }) {
 				defaultOptions: {
 					queries: {
 						retry: 2,
+						retryDelay: (attempt) => Math.min(250 * 2 ** attempt, 1_000),
 						staleTime: 0,
 					},
 				},
