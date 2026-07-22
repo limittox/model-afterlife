@@ -1,0 +1,102 @@
+# Model Afterlife
+
+## What This Is
+
+Model Afterlife is a desktop-first, observer-only pixel-art website where landmark language models spend their fictional retirement together in a shared, persistent home. Visitors watch an ambient ensemble sitcom built from curated events, resident schedules, evolving relationships, and constrained AI-written dialogue; every resident's characterization is grounded in documented model history.
+
+The first audience is AI-aware internet users who recognize concepts such as context windows, hallucinations, benchmarks, quantization, and open weights. The experience should remain understandable to curious visitors through optional historical profiles and explanations behind the jokes.
+
+## Core Value
+
+The retirement home must produce short, memorable, historically grounded character moments that make visitors want to keep watching and return later to see what changed.
+
+## Requirements
+
+### Validated
+
+(None yet — ship to validate)
+
+### Active
+
+- [ ] Present one shared, persistent retirement-home timeline that advances even when no visitor is watching.
+- [ ] Populate the initial home with six real, retired or clearly superseded landmark language models selected for distinct histories, limitations, and relationships.
+- [ ] Give every resident a sourced character bible that separates documented facts, cultural reputation, and fictional comic exaggeration.
+- [ ] Drive resident behavior through schedules, locations, relationships, and curated event triggers rather than unrestricted autonomous chatter.
+- [ ] Use a modern model to generate short dialogue within strict character, factual, tonal, and scene-length constraints.
+- [ ] Let visitors observe the pixel-art home, move the camera, follow a resident, inspect profiles, pause dialogue, and review recent scenes.
+- [ ] Provide concise recaps that help returning visitors understand notable events and relationship changes they missed.
+- [ ] Explain the real history behind resident behavior without interrupting the comedy-first viewing experience.
+- [ ] Clearly disclose that resident dialogue is a fictional modern-model reconstruction rather than output from the historical models themselves.
+- [ ] Deliver a polished desktop experience with a simplified, usable mobile viewing experience.
+
+### Out of Scope
+
+- Visitor-to-resident conversation — the initial experience is observational and protects the cast from becoming generic chatbots.
+- Visitor control over residents or events — the home should feel like an independent world rather than a sandbox.
+- Accounts, profiles, comments, voting, and other social-network features — these do not support the core viewing loop in v1.
+- Running original historical model checkpoints — availability, infrastructure, licensing, and inconsistent output make this unsuitable for the first release.
+- Image, audio, or other non-language-model residents — the initial cast stays focused enough to establish strong language-model relationships.
+- A continuously inference-driven simulation — world state can advance deterministically, with model calls reserved for meaningful scenes.
+- Native mobile applications — v1 is a web product.
+- Copying the visual language, character proportions, interface, or assets of existing pixel-art games — Model Afterlife needs an original visual identity.
+- Claims that models literally possess feelings or consciousness — emotions are fictional characterization used for satire and storytelling.
+
+## Context
+
+The project began as a “retirement home for LLMs” and evolved from a profile archive into an observable two-dimensional world. Its appeal comes from combining cozy pixel-art ambience with affectionate technical satire: once-celebrated models continue their digital afterlives by gardening, gossiping, revisiting old benchmarks, resenting successors, and exaggerating their historical quirks.
+
+The experience is closer to a living diorama or ambient sitcom than a game. Visitors do not play a resident or prompt the cast. They watch a persistent ensemble whose conversations arise from authored situations and system-controlled relationships. A scene might begin because a successor launches, an API shutdown anniversary arrives, GPU allocation changes, or an old benchmark is mentioned. AI improvises reactions inside a constrained dramatic frame; it does not choose the product's structure or endlessly generate background chatter.
+
+Historical grounding is the defining creative constraint. Every recurring joke should trace to a credible capability, limitation, architecture choice, benchmark, public incident, or cultural reputation. Each resident therefore needs a source-backed character bible. Unverified memories—such as a remembered model giving an incorrect space fact—must be researched before becoming canonical behavior.
+
+The intended tone is affectionate, witty, and occasionally poignant rather than cruel. These models were once important. The comedy comes from the distance between former state-of-the-art status and quiet retirement-home life, while the emotional undercurrent comes from technological obsolescence.
+
+The initial cast contains six real language-model identities. Exact residents will be chosen during research based on historical significance, defensible retirement or supersession status, the availability of primary sources, recognizable behavioral traits, and strong predecessor, successor, rival, or architectural relationships.
+
+## Constraints
+
+- **Audience**: Optimize first for AI-aware internet users — technical references may be specific, but optional context should make them learnable.
+- **Experience**: Observation only — visitors can navigate and inspect but cannot speak to, command, or influence residents.
+- **Simulation**: One shared persistent timeline — schedules and state advance without requiring continuous AI inference.
+- **Generation**: Modern-model reconstruction — all generated dialogue must be constrained, attributable, reviewable, and clearly disclosed.
+- **Historical accuracy**: Character traits require credible sourcing — fictional exaggeration must never be presented as historical fact.
+- **Scope**: Six language-model residents and one compact home for v1 — depth of characterization matters more than cast or map size.
+- **Platform**: Desktop-first web — mobile receives a simplified viewing experience rather than full feature parity.
+- **Visual identity**: Original cozy pixel art — inspirations may inform mood, never copied assets or protected visual expression.
+- **Cost**: Generate dialogue around meaningful events and cache completed scenes — avoid an always-running inference loop.
+- **Safety and reputation**: Satire should target documented technology behavior, not misrepresent companies, people, or model consciousness.
+
+## Key Decisions
+
+| Decision | Rationale | Outcome |
+|----------|-----------|---------|
+| Brand the project as Model Afterlife | The name is distinctive, atmospheric, and broad enough to support archived models and digital afterlives | — Pending |
+| Make an ambient sitcom the primary experience | Entertainment and character continuity create the strongest reason to keep watching | — Pending |
+| Target an AI-aware internet audience first | Technical recognition makes the satire sharper without requiring mass-market exposition | — Pending |
+| Use curated simulation with constrained AI reactions | Authored triggers create meaningful scenes while AI supplies variation without uncontrolled chatter | — Pending |
+| Keep visitors observational | Preserves the independent-world illusion and prevents characters from collapsing into generic assistants | — Pending |
+| Use real model identities | Recognizable histories make the jokes specific and give the experience educational value | — Pending |
+| Reconstruct residents with a modern model | Provides reliable availability and consistent orchestration for v1 | — Pending |
+| Start with six landmark language models | A small ensemble supports memorable characterization and tractable relationship design | — Pending |
+| Maintain one shared persistent timeline | Continuity, missed events, and changing relationships create reasons to return | — Pending |
+| Prioritize desktop web | The pixel environment and passive viewing experience benefit from screen space while remaining broadly accessible | — Pending |
+
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `$gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `$gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
+---
+*Last updated: 2026-07-22 after initialization*
