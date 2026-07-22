@@ -1,4 +1,3 @@
-import { createProvisionalScene } from "../fixtures/provisional-world.ts";
 import { reduceWorldEvent } from "./events.ts";
 import type {
 	WorldEvent,
@@ -102,12 +101,16 @@ function eventsForTick(
 		state.scene !== null &&
 		tick >= state.scene.startedAtTick + state.scene.durationTicks;
 	if ((state.scene === null || sceneWillBeComplete) && tick % 10 === 3) {
+		const expectedWorldHead = state.throughSequence + events.length;
 		events.push({
 			schemaVersion: 1,
-			occurrenceKey: eventKey(state, tick, "scene:provisional:start"),
+			occurrenceKey: eventKey(state, tick, "scene:generation:requested"),
 			logicalTick: tick,
-			type: "scene_started",
-			payload: { scene: createProvisionalScene(tick) },
+			type: "scene_generation_requested",
+			payload: {
+				sceneKey: `${state.worldId}:${expectedWorldHead}:scene`,
+				expectedWorldHead,
+			},
 		});
 	}
 

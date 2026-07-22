@@ -17,6 +17,9 @@ export const SceneBriefSchema = strictObject({
 	tone: nonBlank,
 	turnBudget: z.number().int().min(4).max(10),
 	permittedOutcome: nonBlank,
+}).superRefine((brief, context) => {
+	if (brief.speakerOrder.length !== brief.turnBudget) context.addIssue({ code: "custom", message: "speakerOrder must match turnBudget", path: ["speakerOrder"] });
+	for (const residentId of brief.speakerOrder) if (!brief.participantIds.includes(residentId)) context.addIssue({ code: "custom", message: "speakerOrder may name only participants", path: ["speakerOrder"] });
 });
 
 export const ResidentTurnSchema = strictObject({
@@ -40,6 +43,13 @@ export const GenerationAttemptSchema = strictObject({
 	disposition: z.enum(["pending", "accepted", "schema_rejected", "identity_rejected", "timed_out", "stale_world", "duplicate"]),
 	identityEvidence: z.enum(["provider_response", "provider_model_lookup", "requested_only"]),
 	providerResponseId: nonBlank.optional(),
+	adapterVersion: nonBlank,
+	configurationVersion: nonBlank,
+	promptVersion: nonBlank,
+	bibleVersionKey: nonBlank,
+	claimVersionKey: nonBlank,
+	finishReason: nonBlank,
+	usage: strictObject({ inputTokens: z.number().int().nonnegative(), outputTokens: z.number().int().nonnegative() }),
 });
 
 export const ValidationResultSchema = strictObject({

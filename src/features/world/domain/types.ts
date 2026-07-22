@@ -28,6 +28,7 @@ export type WorldRelationship = {
 export type WorldDialogueTurn = {
 	id: string;
 	speakerId: string;
+	exactModelId?: string;
 	text: string;
 };
 
@@ -93,6 +94,19 @@ export type SceneStartedEvent = WorldEventBase<
 	{ scene: CompleteWorldScene }
 >;
 
+export type SceneGenerationRequestedEvent = WorldEventBase<
+	"scene_generation_requested",
+	{
+		sceneKey: string;
+		expectedWorldHead: number;
+	}
+>;
+
+export type ScenePublishedEvent = WorldEventBase<
+	"scene_published",
+	{ scene: CompleteWorldScene; revisionId: string }
+>;
+
 export type SceneCompletedEvent = WorldEventBase<
 	"scene_completed",
 	{ sceneId: string; locationId: WorldRoomId }
@@ -117,6 +131,8 @@ export type WorldEvent =
 	| ResidentLocationChangedEvent
 	| QuietRoutineStartedEvent
 	| SceneStartedEvent
+	| SceneGenerationRequestedEvent
+	| ScenePublishedEvent
 	| SceneCompletedEvent
 	| RelationshipChangedEvent;
 

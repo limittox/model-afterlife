@@ -55,7 +55,10 @@ export function toPublicWorldSnapshot(state: WorldState): PublicWorldSnapshot {
 					startedAtTick: state.scene.startedAtTick,
 					durationTicks: state.scene.durationTicks,
 					presentationDurationMs: state.scene.presentationDurationMs,
-					turns: state.scene.turns,
+					turns: state.scene.turns.map((turn) => ({
+						...turn,
+						exactModelId: turn.exactModelId ?? "fixture-model",
+					})),
 				}
 			: null,
 		quiet: state.quiet,

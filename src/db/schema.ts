@@ -93,3 +93,82 @@ export const worldProjection = pgTable(
 		),
 	],
 );
+
+export const residentModelVersions = pgTable("resident_model_versions", {
+	modelVersionId: text("model_version_id").primaryKey(),
+	residentId: text("resident_id").notNull(),
+	exactModelId: text("exact_model_id").notNull(),
+	versionKey: text("version_key").notNull().unique(),
+	createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const characterBibleVersions = pgTable("character_bible_versions", {
+	bibleVersionId: text("bible_version_id").primaryKey(),
+	residentId: text("resident_id").notNull(),
+	versionKey: text("version_key").notNull().unique(),
+	content: jsonb("content").$type<Record<string, unknown>>().notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const historicalClaimVersions = pgTable("historical_claim_versions", {
+	claimVersionId: text("claim_version_id").primaryKey(),
+	claimId: text("claim_id").notNull(),
+	versionKey: text("version_key").notNull().unique(),
+	content: jsonb("content").$type<Record<string, unknown>>().notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const sceneBriefs = pgTable("scene_briefs", {
+	sceneKey: text("scene_key").primaryKey(),
+	worldId: text("world_id").notNull().references(() => worlds.worldId, { onDelete: "restrict" }),
+	expectedWorldHead: integer("expected_world_head").notNull(),
+	brief: jsonb("brief").$type<Record<string, unknown>>().notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const generationAttempts = pgTable("generation_attempts", {
+	attemptId: text("attempt_id").primaryKey(),
+	sceneKey: text("scene_key").notNull().references(() => sceneBriefs.sceneKey, { onDelete: "restrict" }),
+	attemptOrdinal: integer("attempt_ordinal").notNull(),
+	disposition: text("disposition").notNull(),
+	identityEvidence: text("identity_evidence").notNull(),
+	providerResponseId: text("provider_response_id"),
+	adapterVersion: text("adapter_version").notNull(),
+	configurationVersion: text("configuration_version").notNull(),
+	promptVersion: text("prompt_version").notNull(),
+	bibleVersionKey: text("bible_version_key").notNull(),
+	claimVersionKey: text("claim_version_key").notNull(),
+	finishReason: text("finish_reason").notNull(),
+	usage: jsonb("usage").$type<Record<string, unknown>>().notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [uniqueIndex("generation_attempts_scene_ordinal_unique").on(table.sceneKey, table.attemptOrdinal)]);
+
+export const generationTurns = pgTable("generation_turns", {
+	turnId: text("turn_id").primaryKey(),
+	attemptId: text("attempt_id").notNull().references(() => generationAttempts.attemptId, { onDelete: "restrict" }),
+	turnIndex: integer("turn_index").notNull(),
+	residentId: text("resident_id").notNull(),
+	requestedModelId: text("requested_model_id").notNull(),
+	text: text("text").notNull(),
+	ending: boolean("ending").notNull(),
+	effects: jsonb("effects").$type<Record<string, unknown>[]>().notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+}, (table) => [uniqueIndex("generation_turns_attempt_index_unique").on(table.attemptId, table.turnIndex)]);
+
+export const sceneValidationResults = pgTable("scene_validation_results", {
+	validationId: text("validation_id").primaryKey(),
+	attemptId: text("attempt_id").notNull().references(() => generationAttempts.attemptId, { onDelete: "restrict" }),
+	accepted: boolean("accepted").notNull(),
+	code: text("code").notNull(),
+	detail: text("detail").notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const publishedSceneRevisions = pgTable("published_scene_revisions", {
+	revisionId: text("revision_id").primaryKey(),
+	attemptId: text("attempt_id").notNull().references(() => generationAttempts.attemptId, { onDelete: "restrict" }).unique(),
+	sceneKey: text("scene_key").notNull().references(() => sceneBriefs.sceneKey, { onDelete: "restrict" }).unique(),
+	expectedWorldHead: integer("expected_world_head").notNull(),
+	revision: jsonb("revision").$type<Record<string, unknown>>().notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});

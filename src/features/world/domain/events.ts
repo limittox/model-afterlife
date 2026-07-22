@@ -91,6 +91,18 @@ export function reduceWorldEvent(
 			state.quiet = null;
 			break;
 		}
+		case "scene_published": {
+			state.scene = {
+				...event.payload.scene,
+				participantIds: [...event.payload.scene.participantIds],
+				turns: event.payload.scene.turns.map((turn) => ({ ...turn })),
+			};
+			state.quiet = null;
+			break;
+		}
+		case "scene_generation_requested": {
+			break;
+		}
 		case "scene_completed": {
 			if (state.scene?.id === event.payload.sceneId) {
 				state.scene = null;

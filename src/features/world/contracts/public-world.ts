@@ -17,6 +17,7 @@ const ResidentSchema = z.object({
 const DialogueTurnSchema = z.object({
 	id: z.string().min(1),
 	speakerId: z.string().min(1),
+	exactModelId: z.string().min(1).optional(),
 	text: z.string().min(1),
 });
 
@@ -24,7 +25,7 @@ const CompleteSceneSchema = z.object({
 	id: z.string().min(1),
 	premise: z.string().min(1),
 	locationId: z.string().min(1),
-	participantIds: z.array(z.string().min(1)).min(1),
+	participantIds: z.array(z.string().min(1)).min(2).max(3),
 	startedAtTick: z.number().int().nonnegative(),
 	durationTicks: z.number().int().positive(),
 	presentationDurationMs: z.number().int().positive(),
