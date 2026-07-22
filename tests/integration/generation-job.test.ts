@@ -189,4 +189,47 @@ describe("generation Trigger task", () => {
 		expect(publish).toHaveBeenCalledOnce();
 		expect(result).toMatchObject({ status: "published", attemptOrdinal: 1 });
 	});
+
+	it("composes a verified offline provider into an inspectable private attempt", async () => {
+		const taskModule = await loadGenerationTask();
+
+		expect(taskModule, "generation Trigger module must exist").toBeDefined();
+		expect(
+			taskModule?.createProductionGenerationDependencies,
+			"generation task must expose its server composition seam",
+		).toBeTypeOf("function");
+		const persistAttempt = vi.fn(async () => undefined);
+		const dependencies = taskModule?.createProductionGenerationDependencies({
+			loadBrief: async () => brief,
+			provider: {
+				generateTurn: async (input: {
+					turnIndex: number;
+					requestedModelId: string;
+				}) => ({
+					text: `Frozen verified turn ${input.turnIndex + 1}.`,
+					providerResponseId: `gen-frozen-${input.turnIndex}`,
+					observedModelId: input.requestedModelId,
+					identityEvidence: "openrouter_verified" as const,
+					finishReason: "stop",
+					usage: { inputTokens: 4, outputTokens: 3 },
+				}),
+			},
+			persistAttempt,
+			publish: async () => ({ revisionId: revision.revisionId }),
+			recordQuiet: async () => undefined,
+		});
+
+		const result = await dependencies?.runAttempt({ brief, attemptOrdinal: 2 });
+
+		expect(result?.status).toBe("accepted");
+		expect(persistAttempt).toHaveBeenCalledOnce();
+		expect(persistAttempt.mock.calls[0]?.[0]).toMatchObject({
+			attempt: {
+				attemptOrdinal: 2,
+				identityEvidence: "openrouter_verified",
+				disposition: "accepted",
+			},
+			result: { accepted: true, code: "accepted" },
+		});
+	});
 });
