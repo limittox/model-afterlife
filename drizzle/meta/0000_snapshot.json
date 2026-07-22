@@ -1,5 +1,5 @@
 {
-  "id": "f434db69-12d9-4213-9db9-a33e5ec97916",
+  "id": "79fe32f9-ca56-40c7-8cd8-6222a0805911",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -12,18 +12,7 @@
           "name": "sequence",
           "type": "integer",
           "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "always",
-            "name": "world_events_sequence_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
+          "notNull": true
         },
         "world_id": {
           "name": "world_id",
@@ -49,8 +38,21 @@
           "primaryKey": false,
           "notNull": true
         },
+        "schema_version": {
+          "name": "schema_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
         "payload": {
           "name": "payload",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "public_snapshot": {
+          "name": "public_snapshot",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true
@@ -64,11 +66,38 @@
         }
       },
       "indexes": {
-        "world_events_occurrence_key_unique": {
-          "name": "world_events_occurrence_key_unique",
+        "world_events_world_occurrence_key_unique": {
+          "name": "world_events_world_occurrence_key_unique",
           "columns": [
             {
+              "expression": "world_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
               "expression": "occurrence_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "world_events_world_sequence_unique": {
+          "name": "world_events_world_sequence_unique",
+          "columns": [
+            {
+              "expression": "world_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "sequence",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -151,6 +180,12 @@
         },
         "projection": {
           "name": "projection",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "state": {
+          "name": "state",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": true

@@ -8,13 +8,6 @@
       "when": 1784710805808,
       "tag": "0000_world_skeleton",
       "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1784712153407,
-      "tag": "0001_deterministic_world",
-      "breakpoints": true
     }
   ]
 }
