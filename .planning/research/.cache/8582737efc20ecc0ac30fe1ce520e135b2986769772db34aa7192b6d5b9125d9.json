@@ -1,0 +1,1 @@
+{"content":"Vercel official docs support Next.js deployment and Node functions but state Vercel Functions cannot serve WebSockets; Vercel Cron has no retries and can deliver duplicates, so use Vercel for web hosting and Trigger.dev for durable jobs.","source":"web","provider":"websearch","confidence":"MEDIUM","fetched_at":"2026-07-22T05:43:27.213Z","ttl":86400000,"kind":"docs"}

@@ -1,0 +1,1 @@
+{"content":"npm reports TanStack React Query 5.101.4; official v5 docs define refetchInterval polling and background polling controls, supporting a simple cursor-based foreground feed without WebSockets.","source":"web","provider":"websearch","confidence":"MEDIUM","fetched_at":"2026-07-22T05:43:27.172Z","ttl":86400000,"kind":"docs"}
