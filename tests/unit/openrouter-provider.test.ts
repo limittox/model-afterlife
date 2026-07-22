@@ -67,7 +67,7 @@ describe("strict OpenRouter resident provider", () => {
 			});
 			return modelFactory;
 		});
-		const generateText = vi.fn(async () => ({
+		const generateText = vi.fn(async (_options: Record<string, unknown>) => ({
 			output: {
 				text: "A short model-authored reply.",
 				approvedClaimIds: [],
@@ -134,7 +134,8 @@ describe("strict OpenRouter resident provider", () => {
 				},
 			},
 		);
-		const options = generateText.mock.calls[0]?.[0] as Record<string, unknown>;
+		const options = generateText.mock.calls[0]?.[0];
+		expect(options).toBeDefined();
 		expect(options).toMatchObject({
 			model,
 			maxOutputTokens: 180,

@@ -22,7 +22,7 @@ export type ResidentPrompt = {
 
 export function buildResidentPrompt(
 	input: ResidentPromptInput,
-	delimiterId = randomUUID(),
+	delimiterId: string = randomUUID(),
 ): ResidentPrompt {
 	if (!/^[a-zA-Z0-9-]+$/.test(delimiterId)) {
 		throw new TypeError("Prompt delimiter ID must be an opaque identifier.");
