@@ -60,17 +60,7 @@ export async function seedWorld(): Promise<void> {
 					state: seededEvent.payload.state,
 					stateHash: snapshot.stateHash,
 				})
-				.onConflictDoUpdate({
-					target: worldProjection.worldId,
-					set: {
-						logicalTick: snapshot.logicalTick,
-						throughSequence: snapshot.throughSequence,
-						projection: snapshot,
-						state: seededEvent.payload.state,
-						stateHash: snapshot.stateHash,
-						updatedAt: new Date(),
-					},
-				});
+				.onConflictDoNothing({ target: worldProjection.worldId });
 		});
 	} finally {
 		await close();
