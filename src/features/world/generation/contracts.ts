@@ -40,7 +40,16 @@ export const GenerationAttemptSchema = strictObject({
 	attemptId: nonBlank,
 	sceneKey: nonBlank,
 	attemptOrdinal: z.number().int().positive(),
-	disposition: z.enum(["pending", "accepted", "schema_rejected", "identity_rejected", "timed_out", "stale_world", "duplicate"]),
+	disposition: z.enum([
+		"pending",
+		"accepted",
+		"schema_rejected",
+		"identity_rejected",
+		"provider_failed",
+		"timed_out",
+		"stale_world",
+		"duplicate",
+	]),
 	identityEvidence: z.enum([
 		"openrouter_verified",
 		"provider_response",

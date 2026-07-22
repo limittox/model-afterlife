@@ -198,7 +198,7 @@ describe("generation Trigger task", () => {
 			taskModule?.createProductionGenerationDependencies,
 			"generation task must expose its server composition seam",
 		).toBeTypeOf("function");
-		const persistAttempt = vi.fn(async () => undefined);
+		const persistAttempt = vi.fn(async (_input: unknown) => undefined);
 		const dependencies = taskModule?.createProductionGenerationDependencies({
 			loadBrief: async () => brief,
 			provider: {
@@ -237,7 +237,7 @@ describe("generation Trigger task", () => {
 		const taskModule = await loadGenerationTask();
 
 		expect(taskModule, "generation Trigger module must exist").toBeDefined();
-		const persistAttempt = vi.fn(async () => undefined);
+		const persistAttempt = vi.fn(async (_input: unknown) => undefined);
 		const dependencies = taskModule?.createProductionGenerationDependencies({
 			loadBrief: async () => brief,
 			provider: {
