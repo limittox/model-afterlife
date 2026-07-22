@@ -26,7 +26,6 @@ export function DialogueTranscript({
 					<p className="speaker-name">
 						{residentNames.get(turn.speakerId) ?? "Resident"}
 					</p>
-					<p className="model-label">{turn.exactModelId}</p>
 					<p>{turn.text}</p>
 				</li>
 			))}

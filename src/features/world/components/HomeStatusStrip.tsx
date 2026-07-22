@@ -36,7 +36,6 @@ export function HomeStatusStrip({
 						: "Opening";
 
 	return (
-		<>
 		<header className="home-status-strip">
 			<div className="home-identity">
 				<p className="home-kicker">A quiet corner of the internet</p>
@@ -68,7 +67,5 @@ export function HomeStatusStrip({
 				</div>
 			</dl>
 		</header>
-		<p className="generation-disclosure" role="note">Scenes are fictional, prompted model-API interactions. Model Afterlife is independent and unaffiliated with model providers.</p>
-		</>
 	);
 }
