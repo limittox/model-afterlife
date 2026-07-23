@@ -98,8 +98,11 @@ export function validateOpenRouterMetadata(input: {
 	if (metadata.strategy !== "direct" || metadata.attempt !== 1) {
 		reject("route-not-direct", "OpenRouter route was not direct on its first attempt.");
 	}
-	if (input.responseModelId !== input.profile.canonicalModelId) {
-		reject("model-identity-mismatch", "OpenRouter response model does not match the canonical profile.");
+	if (
+		input.responseModelId !== input.profile.requestedModelId &&
+		input.responseModelId !== input.profile.canonicalModelId
+	) {
+		reject("model-identity-mismatch", "OpenRouter response model does not match the approved profile.");
 	}
 	if ((metadata.pipeline?.length ?? 0) !== 0) {
 		reject("pipeline-transformation", "OpenRouter materially transformed the resident response.");

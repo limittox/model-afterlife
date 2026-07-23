@@ -12,6 +12,7 @@ async function loadMetadataValidator() {
 }
 
 const profile = providerProfileFor("gpt-4o");
+const aliasedProfile = providerProfileFor("claude-sonnet-4.5");
 const approvedAttempt = {
 	provider: "OpenAI",
 	model: profile.canonicalModelId,
@@ -39,6 +40,32 @@ function directMetadata() {
 	};
 }
 
+function directAliasedMetadata() {
+	return {
+		requested: aliasedProfile.requestedModelId,
+		strategy: "direct",
+		attempt: 1,
+		endpoints: {
+			total: 1,
+			available: [
+				{
+					provider: aliasedProfile.selectedUpstreamName,
+					model: aliasedProfile.canonicalModelId,
+					selected: true,
+				},
+			],
+		},
+		attempts: [
+			{
+				provider: aliasedProfile.selectedUpstreamName,
+				model: aliasedProfile.canonicalModelId,
+				status: 200,
+			},
+		],
+		pipeline: [],
+	};
+}
+
 describe("OpenRouter authorship evidence", () => {
 	it("accepts only a direct first-attempt route with exact selected evidence", async () => {
 		const validatorModule = await loadMetadataValidator();
@@ -59,6 +86,50 @@ describe("OpenRouter authorship evidence", () => {
 			selectedModelId: profile.canonicalModelId,
 			selectedUpstream: "OpenAI",
 		});
+	});
+
+	it.each([
+		["requested alias", aliasedProfile.requestedModelId],
+		["canonical model", aliasedProfile.canonicalModelId],
+	] as const)("accepts the exact approved %s as the top-level response model", async (_label, responseModelId) => {
+		const validatorModule = await loadMetadataValidator();
+
+		expect(validatorModule, "metadata validator module must exist").toBeDefined();
+		expect(
+			validatorModule?.validateOpenRouterMetadata({
+				profile: aliasedProfile,
+				generationId: "gen-aliased-response",
+				responseModelId,
+				metadata: directAliasedMetadata(),
+			}),
+		).toMatchObject({
+			generationId: "gen-aliased-response",
+			requestedModelId: aliasedProfile.requestedModelId,
+			canonicalModelId: aliasedProfile.canonicalModelId,
+			selectedModelId: aliasedProfile.canonicalModelId,
+			selectedUpstream: aliasedProfile.selectedUpstreamName,
+			strategy: "direct",
+			routeAttempt: 1,
+		});
+	});
+
+	it.each([
+		["unrelated model", "openai/gpt-4o"],
+		["mutable latest alias", "anthropic/claude-sonnet-4.5:latest"],
+	] as const)("rejects an %s as the top-level response model", async (_label, responseModelId) => {
+		const validatorModule = await loadMetadataValidator();
+
+		expect(validatorModule, "metadata validator module must exist").toBeDefined();
+		expect(() =>
+			validatorModule?.validateOpenRouterMetadata({
+				profile: aliasedProfile,
+				generationId: "gen-unapproved-response",
+				responseModelId,
+				metadata: directAliasedMetadata(),
+			}),
+		).toThrowError(
+			expect.objectContaining({ code: "model-identity-mismatch" }),
+		);
 	});
 
 	it("accepts an omitted optional attempts array after stable direct-route evidence passes", async () => {
