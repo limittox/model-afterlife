@@ -23,3 +23,13 @@ Resolved debug sessions. Used by `gsd-debugger` to surface known-pattern hypothe
 - **Why not caught:** The existing focused metadata unit-test gate did not include the omitted optional-field boundary, despite covering the valid singleton and surrounding routing checks.
 - **Recurrence guard:** Regression tests in `tests/unit/openrouter-metadata.test.ts` cover accepted omitted optional detail and reject empty, multiple, wrong-provider, wrong-model, and non-200 supplied attempt arrays.
 ---
+
+## anthropic-wire-schema — local validation constraints rejected by Anthropic's wire-schema admission
+- **Date:** 2026-07-23
+- **Error patterns:** provider-http-400, Claude Sonnet 4.5, Anthropic, structured output, `minLength`, `maxLength`, `maxItems`
+- **Root cause(s):** `ModelTurnOutputSchema` represented both the provider wire contract and the application's stricter local contract, so AI SDK serialization sent local string-length and collection bounds to Anthropic's narrower structured-output validator.
+- **Fix:** Added a strict structural-only `ModelTurnWireOutputSchema` for `Output.object` while retaining `ModelTurnOutputSchema.parse(result.output)` as the authoritative local validator.
+- **Files changed:** src/features/world/generation/openrouter-resident-turn-provider.ts, tests/unit/openrouter-provider.test.ts
+- **Why not caught:** No offline gate asserted that the exact provider-facing schema remained structural-only across upstream providers; the prior schema test covered `not` compatibility but deliberately retained collection bounds.
+- **Recurrence guard:** Regression test `tests/unit/openrouter-provider.test.ts` — `emits a structural-only provider schema` forbids `not`, string-length bounds, and collection bounds on the wire, while its local-boundary cases reject blank or oversized text, excessive claim IDs, and non-empty relationship effects.
+---
