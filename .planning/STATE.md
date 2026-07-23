@@ -8,7 +8,7 @@ status: executing
 stopped_at: Completed 02-01-PLAN.md
 last_updated: "2026-07-22T15:39:32.987Z"
 last_activity: 2026-07-23
-last_activity_desc: Completed Phase 02 Plan 01 production scene tracer
+last_activity_desc: "Completed quick task 260723-uxm: Run resident admission canaries breadth-first by sample ordinal, with regression coverage proving early provider failures minimize spent calls while preserving deterministic 30-call success results"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
 Status: Ready to execute
-Last activity: 2026-07-23 — Completed Phase 02 Plan 01 production scene tracer
+Last activity: 2026-07-23 - Completed quick task 260723-uxm: Run resident admission canaries breadth-first by sample ordinal, with regression coverage proving early provider failures minimize spent calls while preserving deterministic 30-call success results
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -93,6 +93,12 @@ None yet.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260723-uxm | Run resident admission canaries breadth-first by sample ordinal, with regression coverage proving early provider failures minimize spent calls while preserving deterministic 30-call success results | 2026-07-23 | ed1ab57 | [260723-uxm-run-resident-admission-canaries-breadth-](./quick/260723-uxm-run-resident-admission-canaries-breadth-/) |
 
 ## Deferred Items
 
