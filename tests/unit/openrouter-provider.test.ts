@@ -54,6 +54,116 @@ describe("strict OpenRouter resident provider", () => {
 		}
 	});
 
+	it("emits an OpenAI-compatible zero-item relationship schema", async () => {
+		const providerModule = await loadProvider();
+
+		expect(providerModule, "OpenRouter provider module must exist").toBeDefined();
+		if (!providerModule) throw new Error("OpenRouter provider module is missing.");
+		const model = Symbol("schema-model");
+		let capturedOutput: unknown;
+		const generateText = vi.fn(async (options: Record<string, unknown>) => {
+			capturedOutput = options.output;
+			return {
+				output: {
+					text: "A schema-compatible reply.",
+					approvedClaimIds: [],
+					proposedRelationshipEffects: [],
+					endsScene: false,
+				},
+				response: {
+					id: "gen-schema-1",
+					modelId: "openai/gpt-4o",
+					body: {
+						openrouter_metadata: {
+							requested: "openai/gpt-4o",
+							strategy: "direct",
+							attempt: 1,
+							endpoints: {
+								total: 1,
+								available: [
+									{
+										provider: "OpenAI",
+										model: "openai/gpt-4o",
+										selected: true,
+									},
+								],
+							},
+							attempts: [
+								{
+									provider: "OpenAI",
+									model: "openai/gpt-4o",
+									status: 200,
+								},
+							],
+							pipeline: [],
+						},
+					},
+				},
+				providerMetadata: { openrouter: { provider: "OpenAI" } },
+				finishReason: "stop",
+				usage: { inputTokens: 20, outputTokens: 8 },
+			};
+		});
+		const provider = new providerModule.OpenRouterResidentTurnProvider({
+			apiKey: "test-key",
+			createRouter: vi.fn(() => vi.fn(() => model)),
+			generateText,
+		});
+
+		await provider.generateTurn({
+			brief,
+			turnIndex: 0,
+			residentId: "gpt-4o",
+			requestedModelId: "openai/gpt-4o",
+			priorTurns: [],
+		});
+
+		expect(capturedOutput).toBeDefined();
+		const structuredOutput = capturedOutput as {
+			responseFormat: PromiseLike<{
+				schema?: {
+					properties?: Record<string, unknown>;
+				};
+			}>;
+			parseCompleteOutput(
+				options: { text: string },
+				context: Record<string, unknown>,
+			): Promise<unknown>;
+		};
+		const responseFormat = await structuredOutput.responseFormat;
+		const relationshipEffectsSchema =
+			responseFormat.schema?.properties?.proposedRelationshipEffects;
+		expect(relationshipEffectsSchema).toMatchObject({
+			type: "array",
+			maxItems: 0,
+		});
+		expect(JSON.stringify(responseFormat.schema)).not.toContain('"not"');
+
+		const validOutput = {
+			text: "A schema-compatible reply.",
+			approvedClaimIds: [],
+			proposedRelationshipEffects: [],
+			endsScene: false,
+		};
+		await expect(
+			structuredOutput.parseCompleteOutput(
+				{ text: JSON.stringify(validOutput) },
+				{},
+			),
+		).resolves.toEqual(validOutput);
+		await expect(
+			structuredOutput.parseCompleteOutput(
+				{
+					text: JSON.stringify({
+						...validOutput,
+						proposedRelationshipEffects: [{}],
+					}),
+				},
+				{},
+			),
+		).rejects.toThrow(/did not match schema/i);
+	});
+
 	it("sends one bounded non-streaming call with strict routing and validates evidence", async () => {
 		const providerModule = await loadProvider();
 

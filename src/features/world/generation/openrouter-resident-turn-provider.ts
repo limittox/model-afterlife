@@ -13,7 +13,7 @@ const ModelTurnOutputSchema = z
 	.object({
 		text: z.string().trim().min(1).max(240),
 		approvedClaimIds: z.array(z.string().trim().min(1)).max(3),
-		proposedRelationshipEffects: z.array(z.never()).max(0),
+		proposedRelationshipEffects: z.array(z.string()).max(0),
 		endsScene: z.boolean(),
 	})
 	.strict();
