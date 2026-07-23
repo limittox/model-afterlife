@@ -90,6 +90,9 @@ updated: 2026-07-23T21:42:59+10:00
 - timestamp: 2026-07-23T21:42:59+10:00
   observation: Human verification accepted the completed offline RED-to-GREEN regression, unchanged strict negative cases, adjacent offline tests, TypeScript/lint checks, and revert/reapply proof as sufficient code-level verification, and explicitly prohibited a provider call in this session.
   implication: The debug session can be resolved and archived; native admission confirmation remains deferred to a separately authorized rerun rather than blocking this scoped fix.
+- timestamp: 2026-07-23T21:42:59+10:00
+  observation: Project configuration has MemPalace disabled.
+  implication: Semantic indexing is skipped explicitly; `.planning/debug/knowledge-base.md` remains the durable recall fallback.
 
 ## Eliminated
 
