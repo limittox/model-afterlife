@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 ready: Claude alias identity fix verified offline; 10/40 cumulative admission calls consumed"
-last_updated: "2026-07-23T12:44:28.186Z"
+stopped_at: "02-02 Task 3 blocked: Gemini 2.5 Pro generation-check-failed; 13/40 cumulative admission calls consumed"
+last_updated: "2026-07-23T13:23:24.652Z"
 last_activity: 2026-07-23
-last_activity_desc: "Resuming Plan 02-02 with verified alias identity fix and 30 authorized admission calls remaining"
+last_activity_desc: "Single authorized matrix stopped after 3 fresh calls; 13/40 cumulative consumed and 27 remain"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Resuming Task 3 live admission under the 40-call cumulative cap
-Last activity: 2026-07-23 — Claude alias identity fix verified offline; 10/40 cumulative calls consumed and 30 remain authorized
+Status: Blocked at Task 3 live admission after the single authorized matrix invocation
+Last activity: 2026-07-23 — Gemini 2.5 Pro via `google-ai-studio` failed with sanitized code `generation-check-failed`; 3 fresh calls consumed, 13/40 cumulative, 27 remain
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,6 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
+- [Phase 2]: Plan 02-02 admission is blocked after the single authorized live matrix stopped on Gemini 2.5 Pro via `google-ai-studio` with sanitized code `generation-check-failed`; 3 fresh calls were consumed, 13/40 cumulative calls are consumed, and 27 authorized calls remain. No retry, fallback, substitution, diagnostic call, partial evidence persistence, or Task 4 work occurred.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
