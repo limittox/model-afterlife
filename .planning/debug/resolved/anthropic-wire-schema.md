@@ -87,6 +87,9 @@ updated: 2026-07-23T22:11:23+10:00
 - timestamp: 2026-07-23T22:11:23+10:00
   observation: The human checkpoint accepted the completed offline RED-to-GREEN proof and automated guardrail as sufficient code-level verification, explicitly prohibited a provider call in this session, and deferred native Claude admission confirmation to a separately authorized admission-matrix rerun.
   implication: The debug session can be resolved and archived without a live call; deferred provider admission remains external validation rather than an unresolved code defect.
+- timestamp: 2026-07-23T22:11:23+10:00
+  observation: MemPalace semantic indexing was skipped because `.planning/config.json` explicitly sets `mempalace.enabled` to false; the resolution was appended to `.planning/debug/knowledge-base.md`.
+  implication: The Markdown knowledge base remains the durable fallback for future Phase-0 recall.
 
 ## Eliminated
 
