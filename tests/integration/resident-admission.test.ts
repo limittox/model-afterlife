@@ -2,6 +2,15 @@ import { readFile } from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
 import type { ResidentProviderProfile } from "../../src/features/world/generation/provider-registry.ts";
 
+const EXPECTED_RESIDENT_ORDER = [
+	"gpt-4o",
+	"claude-sonnet-4.5",
+	"gemini-2.5-pro",
+	"deepseek-r1-0528",
+	"llama-3.3-70b-instruct",
+	"qwen-2.5-7b-instruct",
+] as const;
+
 async function loadAdmissionRunner() {
 	try {
 		return await import(
@@ -68,6 +77,19 @@ describe("resident admission canaries", () => {
 			sampleCount: 30,
 		});
 		expect(result.residents).toHaveLength(6);
+		expect(result.residents.map((resident) => resident.residentId)).toEqual(
+			EXPECTED_RESIDENT_ORDER,
+		);
+		expect(
+			generateSample.mock.calls.map(([profile, ordinal]) => [
+				profile.residentId,
+				ordinal,
+			]),
+		).toEqual(
+			Array.from({ length: 5 }, (_, index) =>
+				EXPECTED_RESIDENT_ORDER.map((residentId) => [residentId, index + 1]),
+			).flat(),
+		);
 		expect(result.residents.every((resident) => resident.samples.length === 5)).toBe(true);
 		for (const resident of result.residents) {
 			expect(resident.p50LatencyMs).toBeGreaterThan(0);
@@ -122,7 +144,17 @@ describe("resident admission canaries", () => {
 			approvedUpstream: "google-ai-studio",
 			code: expect.stringMatching(/^[a-z0-9-]+$/u),
 		});
-		expect(generateSample.mock.calls.length).toBeLessThan(30);
+		expect(generateSample).toHaveBeenCalledTimes(3);
+		expect(
+			generateSample.mock.calls.map(([profile, ordinal]) => [
+				profile.residentId,
+				ordinal,
+			]),
+		).toEqual([
+			["gpt-4o", 1],
+			["claude-sonnet-4.5", 1],
+			["gemini-2.5-pro", 1],
+		]);
 	});
 
 	it("provides an explicit secret-gated live command", async () => {

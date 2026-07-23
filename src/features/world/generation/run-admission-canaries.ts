@@ -102,7 +102,11 @@ export async function runAdmissionCanaries(
 		throw new RangeError("Resident admission requires exactly five samples per resident.");
 	}
 
-	const residents: ResidentAdmissionSummary[] = [];
+	const preparedResidents: {
+		profile: ResidentProviderProfile;
+		catalogEvidence: AdmissionCatalogEvidence;
+		samples: SanitizedAdmissionSample[];
+	}[] = [];
 	for (const profile of RESIDENT_PROVIDER_PROFILES) {
 		let catalogEvidence: AdmissionCatalogEvidence;
 		try {
@@ -115,8 +119,12 @@ export async function runAdmissionCanaries(
 			});
 		}
 
-		const samples: SanitizedAdmissionSample[] = [];
-		for (let ordinal = 1; ordinal <= options.samples; ordinal += 1) {
+		preparedResidents.push({ profile, catalogEvidence, samples: [] });
+	}
+
+	for (let ordinal = 1; ordinal <= options.samples; ordinal += 1) {
+		for (const prepared of preparedResidents) {
+			const { profile, catalogEvidence, samples } = prepared;
 			try {
 				const sample = await dependencies.generateSample(
 					profile,
@@ -134,26 +142,30 @@ export async function runAdmissionCanaries(
 				});
 			}
 		}
-
-		const latencies = samples.map((sample) => sample.latencyMs);
-		residents.push({
-			residentId: profile.residentId,
-			requestedModelId: profile.requestedModelId,
-			canonicalModelId: profile.canonicalModelId,
-			approvedUpstream: profile.approvedUpstream,
-			maxOutputTokens: profile.maxOutputTokens,
-			...("reasoning" in profile && profile.reasoning
-				? { reasoning: profile.reasoning }
-				: {}),
-			adapterVersion: profile.adapterVersion,
-			routingPolicyVersion: profile.routingPolicyVersion,
-			catalogEvidence,
-			samples,
-			p50LatencyMs: percentile(latencies, 0.5),
-			p95LatencyMs: percentile(latencies, 0.95),
-			totalCost: samples.reduce((sum, sample) => sum + sample.usage.cost, 0),
-		});
 	}
+
+	const residents = preparedResidents.map(
+		({ profile, catalogEvidence, samples }): ResidentAdmissionSummary => {
+			const latencies = samples.map((sample) => sample.latencyMs);
+			return {
+				residentId: profile.residentId,
+				requestedModelId: profile.requestedModelId,
+				canonicalModelId: profile.canonicalModelId,
+				approvedUpstream: profile.approvedUpstream,
+				maxOutputTokens: profile.maxOutputTokens,
+				...("reasoning" in profile && profile.reasoning
+					? { reasoning: profile.reasoning }
+					: {}),
+				adapterVersion: profile.adapterVersion,
+				routingPolicyVersion: profile.routingPolicyVersion,
+				catalogEvidence,
+				samples,
+				p50LatencyMs: percentile(latencies, 0.5),
+				p95LatencyMs: percentile(latencies, 0.95),
+				totalCost: samples.reduce((sum, sample) => sum + sample.usage.cost, 0),
+			};
+		},
+	);
 
 	return {
 		schemaVersion: 1,
