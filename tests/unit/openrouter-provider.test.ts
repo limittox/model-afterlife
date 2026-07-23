@@ -31,6 +31,13 @@ const brief = SceneBriefSchema.parse({
 	permittedOutcome: "quiet ending",
 });
 
+const validModelOutput = {
+	text: "A schema-compatible reply.",
+	approvedClaimIds: [],
+	proposedRelationshipEffects: [],
+	endsScene: false,
+};
+
 describe("strict OpenRouter resident provider", () => {
 	it("uses the one approved SDK dependency and credential", async () => {
 		const packageJson = JSON.parse(await readFile("package.json", "utf8"));
@@ -54,7 +61,7 @@ describe("strict OpenRouter resident provider", () => {
 		}
 	});
 
-	it("emits an OpenAI-compatible zero-item relationship schema", async () => {
+	it("emits a structural-only provider schema", async () => {
 		const providerModule = await loadProvider();
 
 		expect(providerModule, "OpenRouter provider module must exist").toBeDefined();
@@ -64,12 +71,7 @@ describe("strict OpenRouter resident provider", () => {
 		const generateText = vi.fn(async (options: Record<string, unknown>) => {
 			capturedOutput = options.output;
 			return {
-				output: {
-					text: "A schema-compatible reply.",
-					approvedClaimIds: [],
-					proposedRelationshipEffects: [],
-					endsScene: false,
-				},
+				output: validModelOutput,
 				response: {
 					id: "gen-schema-1",
 					modelId: "openai/gpt-4o",
@@ -131,37 +133,93 @@ describe("strict OpenRouter resident provider", () => {
 			): Promise<unknown>;
 		};
 		const responseFormat = await structuredOutput.responseFormat;
-		const relationshipEffectsSchema =
-			responseFormat.schema?.properties?.proposedRelationshipEffects;
-		expect(relationshipEffectsSchema).toMatchObject({
-			type: "array",
-			maxItems: 0,
+		expect(responseFormat.schema).toMatchObject({
+			type: "object",
+			additionalProperties: false,
+			properties: {
+				text: { type: "string" },
+				approvedClaimIds: {
+					type: "array",
+					items: { type: "string" },
+				},
+				proposedRelationshipEffects: {
+					type: "array",
+					items: { type: "string" },
+				},
+				endsScene: { type: "boolean" },
+			},
 		});
-		expect(JSON.stringify(responseFormat.schema)).not.toContain('"not"');
+		const serializedSchema = JSON.stringify(responseFormat.schema);
+		for (const unsupportedKeyword of [
+			'"not"',
+			'"minLength"',
+			'"maxLength"',
+			'"minItems"',
+			'"maxItems"',
+		]) {
+			expect(serializedSchema).not.toContain(unsupportedKeyword);
+		}
 
-		const validOutput = {
-			text: "A schema-compatible reply.",
-			approvedClaimIds: [],
-			proposedRelationshipEffects: [],
-			endsScene: false,
+		const structurallyValidOutput = {
+			...validModelOutput,
+			proposedRelationshipEffects: ["local validation must reject this"],
 		};
 		await expect(
 			structuredOutput.parseCompleteOutput(
-				{ text: JSON.stringify(validOutput) },
+				{ text: JSON.stringify(structurallyValidOutput) },
 				{},
 			),
-		).resolves.toEqual(validOutput);
+		).resolves.toEqual(structurallyValidOutput);
+	});
+
+	it.each([
+		{
+			boundary: "blank text",
+			output: { ...validModelOutput, text: " " },
+		},
+		{
+			boundary: "241-character text",
+			output: { ...validModelOutput, text: "x".repeat(241) },
+		},
+		{
+			boundary: "four approved claim IDs",
+			output: {
+				...validModelOutput,
+				approvedClaimIds: ["claim-1", "claim-2", "claim-3", "claim-4"],
+			},
+		},
+		{
+			boundary: "one relationship effect",
+			output: {
+				...validModelOutput,
+				proposedRelationshipEffects: ["not permitted"],
+			},
+		},
+	])("rejects $boundary after provider generation", async ({ output }) => {
+		const providerModule = await loadProvider();
+
+		expect(providerModule, "OpenRouter provider module must exist").toBeDefined();
+		if (!providerModule) throw new Error("OpenRouter provider module is missing.");
+		const provider = new providerModule.OpenRouterResidentTurnProvider({
+			apiKey: "test-key",
+			createRouter: vi.fn(() => vi.fn(() => Symbol("local-validation-model"))),
+			generateText: vi.fn(async () => ({
+				output,
+				response: { modelId: "openai/gpt-4o" },
+				finishReason: "stop",
+				usage: {},
+			})),
+		});
+
 		await expect(
-			structuredOutput.parseCompleteOutput(
-				{
-					text: JSON.stringify({
-						...validOutput,
-						proposedRelationshipEffects: [{}],
-					}),
-				},
-				{},
-			),
-		).rejects.toThrow(/did not match schema/i);
+			provider.generateTurn({
+				brief,
+				turnIndex: 0,
+				residentId: "gpt-4o",
+				requestedModelId: "openai/gpt-4o",
+				priorTurns: [],
+			}),
+		).rejects.toMatchObject({ name: "ZodError" });
 	});
 
 	it("sends one bounded non-streaming call with strict routing and validates evidence", async () => {

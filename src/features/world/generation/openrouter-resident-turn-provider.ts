@@ -18,6 +18,15 @@ const ModelTurnOutputSchema = z
 	})
 	.strict();
 
+const ModelTurnWireOutputSchema = z
+	.object({
+		text: z.string(),
+		approvedClaimIds: z.array(z.string()),
+		proposedRelationshipEffects: z.array(z.string()),
+		endsScene: z.boolean(),
+	})
+	.strict();
+
 type RouterFactory = (
 	configuration: {
 		apiKey: string;
@@ -124,7 +133,7 @@ export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 			model,
 			system: prompts.system,
 			prompt: prompts.prompt,
-			output: Output.object({ schema: ModelTurnOutputSchema }),
+			output: Output.object({ schema: ModelTurnWireOutputSchema }),
 			maxOutputTokens: profile.maxOutputTokens,
 			maxRetries: 0,
 			timeout: { totalMs: 30_000 },
