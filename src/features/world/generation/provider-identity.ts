@@ -32,7 +32,7 @@ export type RawAdmissionSample = {
 
 export type SanitizedAdmissionSample = RawAdmissionSample & {
 	identityEvidence: "openrouter_verified";
-	requiredQuantization?: "fp8";
+	requiredQuantization?: "fp4" | "fp8";
 };
 
 export class AdmissionIdentityError extends Error {

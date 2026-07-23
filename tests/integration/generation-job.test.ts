@@ -32,11 +32,11 @@ const brief = SceneBriefSchema.parse({
 	schemaVersion: 1,
 	sceneKey: request.sceneKey,
 	expectedWorldHead: request.expectedWorldHead,
-	participantIds: ["gpt-3.5-turbo-0613", "claude-sonnet-4.5"],
+	participantIds: ["gpt-4o", "claude-sonnet-4.5"],
 	speakerOrder: [
-		"gpt-3.5-turbo-0613",
+		"gpt-4o",
 		"claude-sonnet-4.5",
-		"gpt-3.5-turbo-0613",
+		"gpt-4o",
 		"claude-sonnet-4.5",
 	],
 	locationId: "common-room",
@@ -56,8 +56,8 @@ const revision = PublishedSceneRevisionSchema.parse({
 		turnIndex,
 		residentId,
 		requestedModelId:
-			residentId === "gpt-3.5-turbo-0613"
-				? "openai/gpt-3.5-turbo-0613"
+			residentId === "gpt-4o"
+				? "openai/gpt-4o"
 				: "anthropic/claude-sonnet-4.5",
 		text: `Accepted job turn ${turnIndex + 1}.`,
 		ending: turnIndex === brief.turnBudget - 1,

@@ -84,7 +84,7 @@ describe("historical grounding", () => {
 		const wrongScope = wrongScopeClaims.find((claim) => claim.claimId === firstClaimId);
 		expect(wrongScope).toBeDefined();
 		if (!wrongScope) return;
-		wrongScope.scope.exactModelIds = ["openai/gpt-3.5-turbo-0125"];
+		wrongScope.scope.exactModelIds = ["openai/gpt-4o-mini"];
 		expect(() => registry.validateLaunchResidentRegistry({ ...valid, claims: wrongScopeClaims })).toThrow(/model scope/i);
 
 		const emptyMappings = clone(valid.bibles);

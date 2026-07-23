@@ -225,7 +225,7 @@ describe("supplementary speech bubbles", () => {
 		expect(bubble?.speakerId).toBe(snapshot.scene.turns[2]?.speakerId);
 		expect(bubble?.lines).toHaveLength(MAX_BUBBLE_LINES);
 		expect(bubble?.lines.every((line) => line.length <= 28)).toBe(true);
-		expect(snapshot.scene.turns[2]?.text).toContain("discovered confidence");
+		expect(snapshot.scene.turns[2]?.text).toContain("kettle declined");
 	});
 });
 

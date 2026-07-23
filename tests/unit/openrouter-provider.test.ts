@@ -87,7 +87,7 @@ describe("strict OpenRouter resident provider", () => {
 							total: 1,
 							available: [
 								{
-									provider: "Azure",
+									provider: "OpenAI",
 									model: "openai/gpt-4o",
 									selected: true,
 								},
@@ -95,7 +95,7 @@ describe("strict OpenRouter resident provider", () => {
 						},
 						attempts: [
 							{
-								provider: "Azure",
+								provider: "OpenAI",
 								model: "openai/gpt-4o",
 								status: 200,
 							},
@@ -104,7 +104,7 @@ describe("strict OpenRouter resident provider", () => {
 					},
 				},
 			},
-			providerMetadata: { openrouter: { provider: "Azure" } },
+			providerMetadata: { openrouter: { provider: "OpenAI" } },
 			finishReason: "stop",
 			usage: { inputTokens: 20, outputTokens: 8 },
 		}));
@@ -162,7 +162,7 @@ describe("strict OpenRouter resident provider", () => {
 
 		const model = Symbol("deepseek-model");
 		const modelFactory = vi.fn(() => model);
-		const generateText = vi.fn(async () => ({
+		const generateText = vi.fn(async (_options: Record<string, unknown>) => ({
 			output: {
 				text: "The answer can be shorter than the thinking.",
 				approvedClaimIds: [],

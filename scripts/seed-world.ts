@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { createWorldDatabase } from "../src/db/client.ts";
 import {
 	characterBibleVersions,
@@ -24,6 +24,34 @@ export async function seedWorld(): Promise<void> {
 	try {
 		await db.transaction(async (transaction) => {
 			const editorialSeed = createEditorialSeedData();
+			await transaction
+				.delete(residentModelVersions)
+				.where(
+					inArray(residentModelVersions.modelVersionId, [
+						"model:gpt-3.5-turbo-0613:v1",
+						"model:command-r-plus-08-2024:v1",
+					]),
+				);
+			await transaction
+				.delete(characterBibleVersions)
+				.where(
+					inArray(characterBibleVersions.bibleVersionId, [
+						"bible:gpt-3.5-turbo-0613:v1",
+						"bible:command-r-plus-08-2024:v1",
+					]),
+				);
+			await transaction
+				.delete(historicalClaimVersions)
+				.where(
+					inArray(historicalClaimVersions.claimVersionId, [
+						"claim-version:gpt35-context:v1",
+						"claim-version:gpt35-reputation:v1",
+						"claim-version:gpt35-index-cards:v1",
+						"claim-version:commandr-capability:v1",
+						"claim-version:commandr-reputation:v1",
+						"claim-version:commandr-tea-index:v1",
+					]),
+				);
 			await transaction
 				.insert(residentModelVersions)
 				.values(editorialSeed.residentModelVersions)

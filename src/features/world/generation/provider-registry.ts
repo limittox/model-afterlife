@@ -4,18 +4,24 @@ export type ResidentProviderProfile = {
 	canonicalModelId: string;
 	approvedUpstream: string;
 	selectedUpstreamName: string;
-	requiredQuantization?: "fp8";
+	requiredQuantization?: "fp4" | "fp8";
+	maxOutputTokens: 180 | 1024;
+	reasoning?: Readonly<{
+		effort: "minimal";
+		exclude: true;
+	}>;
 	adapterVersion: "@openrouter/ai-sdk-provider@3.0.0";
 	routingPolicyVersion: "strict-openrouter-v1";
 };
 
 export const RESIDENT_PROVIDER_PROFILES = [
 	{
-		residentId: "gpt-3.5-turbo-0613",
-		requestedModelId: "openai/gpt-3.5-turbo-0613",
-		canonicalModelId: "openai/gpt-3.5-turbo-0613",
-		approvedUpstream: "azure",
-		selectedUpstreamName: "Azure",
+		residentId: "gpt-4o",
+		requestedModelId: "openai/gpt-4o",
+		canonicalModelId: "openai/gpt-4o",
+		approvedUpstream: "openai",
+		selectedUpstreamName: "OpenAI",
+		maxOutputTokens: 180,
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
 	},
@@ -25,6 +31,7 @@ export const RESIDENT_PROVIDER_PROFILES = [
 		canonicalModelId: "anthropic/claude-4.5-sonnet-20250929",
 		approvedUpstream: "anthropic",
 		selectedUpstreamName: "Anthropic",
+		maxOutputTokens: 180,
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
 	},
@@ -34,15 +41,19 @@ export const RESIDENT_PROVIDER_PROFILES = [
 		canonicalModelId: "google/gemini-2.5-pro",
 		approvedUpstream: "google-ai-studio",
 		selectedUpstreamName: "Google AI Studio",
+		maxOutputTokens: 180,
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
 	},
 	{
-		residentId: "command-r-plus-08-2024",
-		requestedModelId: "cohere/command-r-plus-08-2024",
-		canonicalModelId: "cohere/command-r-plus-08-2024",
-		approvedUpstream: "cohere",
-		selectedUpstreamName: "Cohere",
+		residentId: "deepseek-r1-0528",
+		requestedModelId: "deepseek/deepseek-r1-0528",
+		canonicalModelId: "deepseek/deepseek-r1-0528",
+		approvedUpstream: "deepinfra/fp4",
+		selectedUpstreamName: "DeepInfra",
+		requiredQuantization: "fp4",
+		maxOutputTokens: 1024,
+		reasoning: { effort: "minimal", exclude: true },
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
 	},
@@ -53,6 +64,7 @@ export const RESIDENT_PROVIDER_PROFILES = [
 		approvedUpstream: "together",
 		selectedUpstreamName: "Together",
 		requiredQuantization: "fp8",
+		maxOutputTokens: 180,
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
 	},
@@ -63,6 +75,7 @@ export const RESIDENT_PROVIDER_PROFILES = [
 		approvedUpstream: "together",
 		selectedUpstreamName: "Together",
 		requiredQuantization: "fp8",
+		maxOutputTokens: 180,
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
 	},

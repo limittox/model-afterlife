@@ -31,6 +31,8 @@ export type ResidentAdmissionSummary = {
 	requestedModelId: string;
 	canonicalModelId: string;
 	approvedUpstream: string;
+	maxOutputTokens: ResidentProviderProfile["maxOutputTokens"];
+	reasoning?: ResidentProviderProfile["reasoning"];
 	adapterVersion: ResidentProviderProfile["adapterVersion"];
 	routingPolicyVersion: ResidentProviderProfile["routingPolicyVersion"];
 	catalogEvidence: AdmissionCatalogEvidence;
@@ -139,6 +141,10 @@ export async function runAdmissionCanaries(
 			requestedModelId: profile.requestedModelId,
 			canonicalModelId: profile.canonicalModelId,
 			approvedUpstream: profile.approvedUpstream,
+			maxOutputTokens: profile.maxOutputTokens,
+			...("reasoning" in profile && profile.reasoning
+				? { reasoning: profile.reasoning }
+				: {}),
 			adapterVersion: profile.adapterVersion,
 			routingPolicyVersion: profile.routingPolicyVersion,
 			catalogEvidence,

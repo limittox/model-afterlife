@@ -23,7 +23,7 @@ describe("Phase 2 public scene contract", () => {
 				speakerId: index % 2 === 0 ? "atlas" : "ember",
 				exactModelId:
 					index % 2 === 0
-						? "openai/gpt-3.5-turbo-0613"
+						? "openai/gpt-4o"
 						: "anthropic/claude-sonnet-4.5",
 				text: `Validated tracer turn ${index + 1}.`,
 			})),

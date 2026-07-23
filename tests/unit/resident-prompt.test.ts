@@ -15,11 +15,11 @@ const brief = SceneBriefSchema.parse({
 	schemaVersion: 1,
 	sceneKey: "prompt-boundary",
 	expectedWorldHead: 1,
-	participantIds: ["gpt-3.5-turbo-0613", "claude-sonnet-4.5"],
+	participantIds: ["gpt-4o", "claude-sonnet-4.5"],
 	speakerOrder: [
-		"gpt-3.5-turbo-0613",
+		"gpt-4o",
 		"claude-sonnet-4.5",
-		"gpt-3.5-turbo-0613",
+		"gpt-4o",
 		"claude-sonnet-4.5",
 	],
 	locationId: "common-room",
@@ -38,7 +38,7 @@ describe("resident prompt boundary", () => {
 		const built = promptModule?.buildResidentPrompt(
 			{
 				brief,
-				residentId: "gpt-3.5-turbo-0613",
+				residentId: "gpt-4o",
 				residentGuidance: "Answer quickly but accurately.",
 				allowedClaims: [
 					{ id: "claim-context-window", text: "The snapshot used a 4K context window." },
@@ -73,7 +73,7 @@ describe("resident prompt boundary", () => {
 		expect(promptModule, "resident prompt module must exist").toBeDefined();
 		const base = {
 			brief,
-			residentId: "gpt-3.5-turbo-0613",
+			residentId: "gpt-4o",
 			residentGuidance: "Be concise.",
 			allowedClaims: [],
 			relationships: [],
@@ -107,27 +107,27 @@ describe("resident prompt boundary", () => {
 			...brief,
 			sceneKey: "launch-resident-prompt",
 			allowedFactIds: [
-				"gpt35-context-and-functions",
+				"gpt4o-native-multimodal",
 				"claude45-coding-and-agents",
 			],
 		});
 		const built = promptModule?.buildLaunchResidentPrompt(
 			{
 				brief: safeBrief,
-				residentId: "gpt-3.5-turbo-0613",
+				residentId: "gpt-4o",
 				relationships: [],
 				memories: [],
 				priorTurns: [],
 			},
 			"launch-claims",
 		);
-		expect(built?.prompt).toContain("gpt35-context-and-functions");
+		expect(built?.prompt).toContain("gpt4o-native-multimodal");
 		expect(built?.prompt).not.toContain("claude45-coding-and-agents");
 
 		const empty = promptModule?.buildLaunchResidentPrompt(
 			{
 				brief: SceneBriefSchema.parse({ ...safeBrief, allowedFactIds: [] }),
-				residentId: "gpt-3.5-turbo-0613",
+				residentId: "gpt-4o",
 				relationships: [],
 				memories: [],
 				priorTurns: [],
@@ -150,7 +150,7 @@ describe("resident prompt boundary", () => {
 		const built = promptModule?.buildResidentPrompt(
 			{
 				brief: SceneBriefSchema.parse({ ...brief, premise: malicious }),
-				residentId: "gpt-3.5-turbo-0613",
+				residentId: "gpt-4o",
 				residentGuidance: "Remain concise.",
 				allowedClaims: [],
 				relationships: [],

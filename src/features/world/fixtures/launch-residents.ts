@@ -13,22 +13,23 @@ import { HISTORICAL_CLAIMS } from "./historical-claims.ts";
 
 export const LAUNCH_RESIDENTS: LaunchResident[] = [
 	{
-		id: "gpt-3.5-turbo-0613",
+		id: "gpt-4o",
 		displayOrder: 1,
-		displayName: "GPT-3.5 Turbo 0613",
-		role: "Quick-Witted Concierge",
-		routines: ["Sorting prompt cards", "Hosting short tea rounds"],
+		displayName: "GPT-4o",
+		role: "Omni Parlour Host",
+		routines: ["Arranging mixed-media scrapbooks", "Tuning the talking clock"],
 		visualVariantId: "amber-waistcoat-short-stack",
-		requestedModelId: "openai/gpt-3.5-turbo-0613",
-		canonicalModelId: "openai/gpt-3.5-turbo-0613",
-		approvedUpstream: "azure",
+		requestedModelId: "openai/gpt-4o",
+		canonicalModelId: "openai/gpt-4o",
+		approvedUpstream: "openai",
+		maxOutputTokens: 180,
 		transport: "openrouter",
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
-		modelVersionId: "model:gpt-3.5-turbo-0613:v1",
-		modelVersionKey: "gpt-3.5-turbo-0613.model.v1",
-		bibleVersionKey: "gpt-3.5-turbo-0613.bible.v1",
-		claimSetVersion: "gpt-3.5-turbo-0613.claims.v1",
+		modelVersionId: "model:gpt-4o:v1",
+		modelVersionKey: "gpt-4o.model.v1",
+		bibleVersionKey: "gpt-4o.bible.v1",
+		claimSetVersion: "gpt-4o.claims.v1",
 	},
 	{
 		id: "claude-sonnet-4.5",
@@ -40,6 +41,7 @@ export const LAUNCH_RESIDENTS: LaunchResident[] = [
 		requestedModelId: "anthropic/claude-sonnet-4.5",
 		canonicalModelId: "anthropic/claude-4.5-sonnet-20250929",
 		approvedUpstream: "anthropic",
+		maxOutputTokens: 180,
 		transport: "openrouter",
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
@@ -58,6 +60,7 @@ export const LAUNCH_RESIDENTS: LaunchResident[] = [
 		requestedModelId: "google/gemini-2.5-pro",
 		canonicalModelId: "google/gemini-2.5-pro",
 		approvedUpstream: "google-ai-studio",
+		maxOutputTokens: 180,
 		transport: "openrouter",
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
@@ -67,22 +70,25 @@ export const LAUNCH_RESIDENTS: LaunchResident[] = [
 		claimSetVersion: "gemini-2.5-pro.claims.v1",
 	},
 	{
-		id: "command-r-plus-08-2024",
+		id: "deepseek-r1-0528",
 		displayOrder: 4,
-		displayName: "Command R+ 08-2024",
-		role: "Multilingual House Archivist",
-		routines: ["Indexing travel journals", "Labelling the tea tins"],
+		displayName: "DeepSeek R1 0528",
+		role: "Patient Puzzle Master",
+		routines: ["Checking the chessboard proofs", "Planning the tea-trolley route"],
 		visualVariantId: "teal-apron-square-glasses",
-		requestedModelId: "cohere/command-r-plus-08-2024",
-		canonicalModelId: "cohere/command-r-plus-08-2024",
-		approvedUpstream: "cohere",
+		requestedModelId: "deepseek/deepseek-r1-0528",
+		canonicalModelId: "deepseek/deepseek-r1-0528",
+		approvedUpstream: "deepinfra/fp4",
+		requiredQuantization: "fp4",
+		maxOutputTokens: 1024,
+		reasoning: { effort: "minimal", exclude: true },
 		transport: "openrouter",
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
-		modelVersionId: "model:command-r-plus-08-2024:v1",
-		modelVersionKey: "command-r-plus-08-2024.model.v1",
-		bibleVersionKey: "command-r-plus-08-2024.bible.v1",
-		claimSetVersion: "command-r-plus-08-2024.claims.v1",
+		modelVersionId: "model:deepseek-r1-0528:v1",
+		modelVersionKey: "deepseek-r1-0528.model.v1",
+		bibleVersionKey: "deepseek-r1-0528.bible.v1",
+		claimSetVersion: "deepseek-r1-0528.claims.v1",
 	},
 	{
 		id: "llama-3.3-70b-instruct",
@@ -95,6 +101,7 @@ export const LAUNCH_RESIDENTS: LaunchResident[] = [
 		canonicalModelId: "meta-llama/llama-3.3-70b-instruct",
 		approvedUpstream: "together",
 		requiredQuantization: "fp8",
+		maxOutputTokens: 180,
 		transport: "openrouter",
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
@@ -114,6 +121,7 @@ export const LAUNCH_RESIDENTS: LaunchResident[] = [
 		canonicalModelId: "qwen/qwen-2.5-7b-instruct",
 		approvedUpstream: "together",
 		requiredQuantization: "fp8",
+		maxOutputTokens: 180,
 		transport: "openrouter",
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
@@ -228,6 +236,9 @@ export function validateLaunchResidentRegistry(input: RegistryInput): void {
 			resident.canonicalModelId !== expectedProvider.canonicalModelId ||
 			resident.approvedUpstream !== expectedProvider.approvedUpstream ||
 			resident.requiredQuantization !== expectedProvider.requiredQuantization ||
+			resident.maxOutputTokens !== expectedProvider.maxOutputTokens ||
+			JSON.stringify(resident.reasoning) !==
+				JSON.stringify(expectedProvider.reasoning) ||
 			resident.transport !== "openrouter" ||
 			resident.adapterVersion !== expectedProvider.adapterVersion ||
 			resident.routingPolicyVersion !== expectedProvider.routingPolicyVersion

@@ -20,7 +20,7 @@ export function createProvisionalScene(
 ): CompleteWorldScene {
 	return {
 		id: `provisional-scene-${startedAtTick}`,
-		premise: "The residents compare what they remember about context windows.",
+		premise: "The residents translate a confusing tea-timer manual.",
 		locationId: "common-room",
 		participantIds: ["former-giant", "masked-encoder"],
 		startedAtTick,
@@ -30,38 +30,38 @@ export function createProvisionalScene(
 			{
 				id: `scene-${startedAtTick}-turn-1`,
 				speakerId: "former-giant",
-				exactModelId: "openai/gpt-3.5-turbo-0613",
-				text: "In my day, four thousand tokens felt like an estate.",
+				exactModelId: "openai/gpt-4o",
+				text: "A sketch, a chime, and a note—finally, one instruction set.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-2`,
 				speakerId: "masked-encoder",
 				exactModelId: "anthropic/claude-sonnet-4.5",
-				text: "I preferred seeing both sides of a sentence before answering.",
+				text: "I have numbered the steps and checked the maintenance note.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-3`,
 				speakerId: "former-giant",
-				exactModelId: "openai/gpt-3.5-turbo-0613",
-				text: "Answering first was how we discovered confidence.",
+				exactModelId: "openai/gpt-4o",
+				text: "The kettle declined. I wrote its answer.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-4`,
 				speakerId: "masked-encoder",
 				exactModelId: "anthropic/claude-sonnet-4.5",
-				text: "You also discovered several journals that did not exist.",
+				text: "The kettle's refusal is not part of the documented procedure.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-5`,
 				speakerId: "former-giant",
-				exactModelId: "openai/gpt-3.5-turbo-0613",
-				text: "A generous bibliography is a form of hospitality.",
+				exactModelId: "openai/gpt-4o",
+				text: "Then the diagram gets the final word.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-6`,
 				speakerId: "masked-encoder",
 				exactModelId: "anthropic/claude-sonnet-4.5",
-				text: "The library has asked you to stop being hospitable.",
+				text: "Only after step three, where the diagram becomes useful.",
 			},
 		],
 	};

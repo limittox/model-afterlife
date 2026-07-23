@@ -34,7 +34,7 @@ function withExactModelLabels(
 			...turn,
 			exactModelId:
 				turn.speakerId === "former-giant"
-					? "openai/gpt-3.5-turbo-0613"
+					? "openai/gpt-4o"
 					: "anthropic/claude-sonnet-4.5",
 		}));
 	}
@@ -163,7 +163,7 @@ test.describe("semantic observer UI consideration matrix", () => {
 			"The Former Giant",
 		);
 		await expect(turns.first().locator(".turn-attribution")).toContainText(
-			"openai/gpt-3.5-turbo-0613",
+			"openai/gpt-4o",
 		);
 		await expect(turns.nth(1).locator(".turn-attribution")).toContainText(
 			"anthropic/claude-sonnet-4.5",

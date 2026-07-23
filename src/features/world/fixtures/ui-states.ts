@@ -45,7 +45,7 @@ const rooms = [
 
 const activeScene = {
 	id: "fixture-scene",
-	premise: "The residents compare what they remember about context windows.",
+	premise: "The residents translate a confusing tea-timer manual.",
 	locationId: "common-room",
 	participantIds: ["former-giant", "masked-encoder"],
 	startedAtTick: 42,
@@ -55,38 +55,38 @@ const activeScene = {
 		{
 			id: "turn-1",
 			speakerId: "former-giant",
-			exactModelId: "openai/gpt-3.5-turbo-0613",
-			text: "In my day, four thousand tokens felt like an estate.",
+			exactModelId: "openai/gpt-4o",
+			text: "A sketch, a chime, and a note—finally, one instruction set.",
 		},
 		{
 			id: "turn-2",
 			speakerId: "masked-encoder",
 			exactModelId: "anthropic/claude-sonnet-4.5",
-			text: "I preferred seeing both sides of a sentence before answering.",
+			text: "I have numbered the steps and checked the maintenance note.",
 		},
 		{
 			id: "turn-3",
 			speakerId: "former-giant",
-			exactModelId: "openai/gpt-3.5-turbo-0613",
-			text: "Answering first was how we discovered confidence.",
+			exactModelId: "openai/gpt-4o",
+			text: "The kettle declined. I wrote its answer.",
 		},
 		{
 			id: "turn-4",
 			speakerId: "masked-encoder",
 			exactModelId: "anthropic/claude-sonnet-4.5",
-			text: "You also discovered several journals that did not exist.",
+			text: "The kettle's refusal is not part of the documented procedure.",
 		},
 		{
 			id: "turn-5",
 			speakerId: "former-giant",
-			exactModelId: "openai/gpt-3.5-turbo-0613",
-			text: "A generous bibliography is a form of hospitality.",
+			exactModelId: "openai/gpt-4o",
+			text: "Then the diagram gets the final word.",
 		},
 		{
 			id: "turn-6",
 			speakerId: "masked-encoder",
 			exactModelId: "anthropic/claude-sonnet-4.5",
-			text: "The library has asked you to stop being hospitable.",
+			text: "Only after step three, where the diagram becomes useful.",
 		},
 	],
 };
@@ -181,7 +181,7 @@ export const overflowState: UiStateFixture = {
 				{
 					id: "turn-7",
 					speakerId: "former-giant",
-					exactModelId: "openai/gpt-3.5-turbo-0613",
+					exactModelId: "openai/gpt-4o",
 					text: "I shall annotate my hospitality for the next edition.",
 				},
 				{

@@ -61,7 +61,12 @@ export type LaunchResident = {
 	requestedModelId: string;
 	canonicalModelId: string;
 	approvedUpstream: string;
-	requiredQuantization?: "fp8";
+	requiredQuantization?: "fp4" | "fp8";
+	maxOutputTokens: 180 | 1024;
+	reasoning?: Readonly<{
+		effort: "minimal";
+		exclude: true;
+	}>;
 	transport: "openrouter";
 	adapterVersion: "@openrouter/ai-sdk-provider@3.0.0";
 	routingPolicyVersion: "strict-openrouter-v1";

@@ -107,6 +107,7 @@ export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 		};
 		const model = this.router(profile.requestedModelId, {
 			extraBody: { provider },
+			...(profile.reasoning ? { reasoning: profile.reasoning } : {}),
 		});
 		const prompts = buildLaunchResidentPrompt({
 			brief: input.brief,
@@ -124,7 +125,7 @@ export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 			system: prompts.system,
 			prompt: prompts.prompt,
 			output: Output.object({ schema: ModelTurnOutputSchema }),
-			maxOutputTokens: 180,
+			maxOutputTokens: profile.maxOutputTokens,
 			maxRetries: 0,
 			timeout: { totalMs: 30_000 },
 			include: { responseBody: true },
