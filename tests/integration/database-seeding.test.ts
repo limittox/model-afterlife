@@ -86,10 +86,10 @@ describe("database seeding", () => {
 		expect(after.modelRows.map((row) => row.exactModelId).sort()).toEqual(
 			[
 				"anthropic/claude-sonnet-4.5",
-				"cohere/command-r-plus-08-2024",
+				"deepseek/deepseek-r1-0528",
 				"google/gemini-2.5-pro",
 				"meta-llama/llama-3.3-70b-instruct",
-				"openai/gpt-3.5-turbo-0613",
+				"openai/gpt-4o",
 				"qwen/qwen-2.5-7b-instruct",
 			].sort(),
 		);

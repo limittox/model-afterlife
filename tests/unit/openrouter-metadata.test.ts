@@ -11,7 +11,7 @@ async function loadMetadataValidator() {
 	}
 }
 
-const profile = providerProfileFor("gpt-3.5-turbo-0613");
+const profile = providerProfileFor("gpt-4o");
 
 function directMetadata() {
 	return {
@@ -22,14 +22,14 @@ function directMetadata() {
 			total: 1,
 			available: [
 				{
-					provider: "Azure",
+					provider: "OpenAI",
 					model: profile.canonicalModelId,
 					selected: true,
 				},
 			],
 		},
 		attempts: [
-			{ provider: "Azure", model: profile.canonicalModelId, status: 200 },
+			{ provider: "OpenAI", model: profile.canonicalModelId, status: 200 },
 		],
 		pipeline: [],
 		future_additive_field: { remains: "permitted" },
@@ -54,7 +54,7 @@ describe("OpenRouter authorship evidence", () => {
 			strategy: "direct",
 			routeAttempt: 1,
 			selectedModelId: profile.canonicalModelId,
-			selectedUpstream: "Azure",
+			selectedUpstream: "OpenAI",
 		});
 	});
 
@@ -64,7 +64,7 @@ describe("OpenRouter authorship evidence", () => {
 		["fallback attempt", { ...directMetadata(), attempt: 2 }],
 		[
 			"mutable requested alias",
-			{ ...directMetadata(), requested: "openai/gpt-3.5-turbo" },
+			{ ...directMetadata(), requested: "openai/gpt-4o-mini" },
 		],
 		[
 			"unexpected selected upstream",
@@ -74,7 +74,7 @@ describe("OpenRouter authorship evidence", () => {
 					total: 1,
 					available: [
 						{
-							provider: "OpenAI",
+							provider: "Azure",
 							model: profile.canonicalModelId,
 							selected: true,
 						},
@@ -90,8 +90,8 @@ describe("OpenRouter authorship evidence", () => {
 					total: 1,
 					available: [
 						{
-							provider: "Azure",
-							model: "openai/gpt-3.5-turbo",
+							provider: "OpenAI",
+							model: "openai/gpt-4o-mini",
 							selected: true,
 						},
 					],

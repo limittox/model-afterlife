@@ -4,40 +4,50 @@ import { describe, expect, it } from "vitest";
 
 const EXPECTED_RESIDENTS = [
 	{
-		id: "gpt-3.5-turbo-0613",
-		requestedModelId: "openai/gpt-3.5-turbo-0613",
-		canonicalModelId: "openai/gpt-3.5-turbo-0613",
-		approvedUpstream: "azure",
+		id: "gpt-4o",
+		requestedModelId: "openai/gpt-4o",
+		canonicalModelId: "openai/gpt-4o",
+		approvedUpstream: "openai",
+		maxOutputTokens: 180,
 	},
 	{
 		id: "claude-sonnet-4.5",
 		requestedModelId: "anthropic/claude-sonnet-4.5",
 		canonicalModelId: "anthropic/claude-4.5-sonnet-20250929",
 		approvedUpstream: "anthropic",
+		maxOutputTokens: 180,
 	},
 	{
 		id: "gemini-2.5-pro",
 		requestedModelId: "google/gemini-2.5-pro",
 		canonicalModelId: "google/gemini-2.5-pro",
 		approvedUpstream: "google-ai-studio",
+		maxOutputTokens: 180,
 	},
 	{
-		id: "command-r-plus-08-2024",
-		requestedModelId: "cohere/command-r-plus-08-2024",
-		canonicalModelId: "cohere/command-r-plus-08-2024",
-		approvedUpstream: "cohere",
+		id: "deepseek-r1-0528",
+		requestedModelId: "deepseek/deepseek-r1-0528",
+		canonicalModelId: "deepseek/deepseek-r1-0528",
+		approvedUpstream: "deepinfra/fp4",
+		requiredQuantization: "fp4",
+		maxOutputTokens: 1024,
+		reasoning: { effort: "minimal", exclude: true },
 	},
 	{
 		id: "llama-3.3-70b-instruct",
 		requestedModelId: "meta-llama/llama-3.3-70b-instruct",
 		canonicalModelId: "meta-llama/llama-3.3-70b-instruct",
 		approvedUpstream: "together",
+		requiredQuantization: "fp8",
+		maxOutputTokens: 180,
 	},
 	{
 		id: "qwen-2.5-7b-instruct",
 		requestedModelId: "qwen/qwen-2.5-7b-instruct",
 		canonicalModelId: "qwen/qwen-2.5-7b-instruct",
 		approvedUpstream: "together",
+		requiredQuantization: "fp8",
+		maxOutputTokens: 180,
 	},
 ] as const;
 
@@ -69,6 +79,11 @@ describe("launch resident registry", () => {
 				requestedModelId: resident.requestedModelId,
 				canonicalModelId: resident.canonicalModelId,
 				approvedUpstream: resident.approvedUpstream,
+				...(resident.requiredQuantization
+					? { requiredQuantization: resident.requiredQuantization }
+					: {}),
+				maxOutputTokens: resident.maxOutputTokens,
+				...(resident.reasoning ? { reasoning: resident.reasoning } : {}),
 			})),
 		).toEqual(EXPECTED_RESIDENTS);
 		expect(
@@ -76,6 +91,7 @@ describe("launch resident registry", () => {
 		).toEqual([1, 2, 3, 4, 5, 6]);
 		expect(registry?.LAUNCH_RESIDENTS.filter((resident) => resident.requiredQuantization)).toEqual(
 			expect.arrayContaining([
+				expect.objectContaining({ id: "deepseek-r1-0528", requiredQuantization: "fp4" }),
 				expect.objectContaining({ id: "llama-3.3-70b-instruct", requiredQuantization: "fp8" }),
 				expect.objectContaining({ id: "qwen-2.5-7b-instruct", requiredQuantization: "fp8" }),
 			]),

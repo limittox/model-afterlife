@@ -11,7 +11,7 @@ async function loadProviderIdentity() {
 	}
 }
 
-const profile = providerProfileFor("llama-3.3-70b-instruct");
+const profile = providerProfileFor("deepseek-r1-0528");
 
 function validInput() {
 	return {
@@ -23,7 +23,7 @@ function validInput() {
 			endpoint: {
 				providerName: profile.selectedUpstreamName,
 				providerSlug: profile.approvedUpstream,
-				quantization: "fp8",
+				quantization: "fp4",
 				supportedParameters: ["max_tokens", "response_format"],
 			},
 		},
@@ -55,8 +55,8 @@ describe("resident admission identity", () => {
 		expect(identity?.validateAdmissionSample(validInput())).toMatchObject({
 			generationId: "gen-admission-1",
 			identityEvidence: "openrouter_verified",
-			selectedUpstream: "Together",
-			requiredQuantization: "fp8",
+			selectedUpstream: "DeepInfra",
+			requiredQuantization: "fp4",
 		});
 	});
 
