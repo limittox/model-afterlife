@@ -31,7 +31,7 @@ async function main(): Promise<void> {
 main().catch((error: unknown) => {
 	if (error instanceof ResidentAdmissionError) {
 		process.stderr.write(
-			`Admission failed: ${error.residentId} via ${error.approvedUpstream} (${error.code}).\n`,
+			`Admission failed: ${error.residentId} via ${error.approvedUpstream} (${error.code}); calls-consumed=${error.callsConsumed}.\n`,
 		);
 	} else {
 		process.stderr.write("Resident admission could not complete (configuration-or-runner-error).\n");

@@ -143,6 +143,7 @@ describe("resident admission canaries", () => {
 			residentId: "gemini-2.5-pro",
 			approvedUpstream: "google-ai-studio",
 			code: expect.stringMatching(/^[a-z0-9-]+$/u),
+			callsConsumed: 3,
 		});
 		expect(generateSample).toHaveBeenCalledTimes(3);
 		expect(
@@ -166,6 +167,7 @@ describe("resident admission canaries", () => {
 		);
 		expect(script).toContain("--live");
 		expect(script).toContain("--samples=5");
+		expect(script).toContain("callsConsumed");
 		expect(script).not.toMatch(/console\.(log|error)\([^)]*OPENROUTER_API_KEY/u);
 	});
 });

@@ -54,11 +54,13 @@ export class ResidentAdmissionError extends Error {
 	readonly residentId: string;
 	readonly approvedUpstream: string;
 	readonly code: string;
+	readonly callsConsumed: number;
 
 	constructor(input: {
 		residentId: string;
 		approvedUpstream: string;
 		code: string;
+		callsConsumed: number;
 	}) {
 		super(
 			`Resident admission failed for ${input.residentId} via ${input.approvedUpstream} (${input.code}).`,
@@ -67,6 +69,7 @@ export class ResidentAdmissionError extends Error {
 		this.residentId = input.residentId;
 		this.approvedUpstream = input.approvedUpstream;
 		this.code = input.code;
+		this.callsConsumed = input.callsConsumed;
 	}
 }
 
@@ -102,6 +105,7 @@ export async function runAdmissionCanaries(
 		throw new RangeError("Resident admission requires exactly five samples per resident.");
 	}
 
+	let callsConsumed = 0;
 	const preparedResidents: {
 		profile: ResidentProviderProfile;
 		catalogEvidence: AdmissionCatalogEvidence;
@@ -116,6 +120,7 @@ export async function runAdmissionCanaries(
 				residentId: profile.residentId,
 				approvedUpstream: profile.approvedUpstream,
 				code: "catalog-check-failed",
+				callsConsumed,
 			});
 		}
 
@@ -126,6 +131,7 @@ export async function runAdmissionCanaries(
 		for (const prepared of preparedResidents) {
 			const { profile, catalogEvidence, samples } = prepared;
 			try {
+				callsConsumed += 1;
 				const sample = await dependencies.generateSample(
 					profile,
 					ordinal,
@@ -139,6 +145,7 @@ export async function runAdmissionCanaries(
 					residentId: profile.residentId,
 					approvedUpstream: profile.approvedUpstream,
 					code: classifyAdmissionFailure(error),
+					callsConsumed,
 				});
 			}
 		}
