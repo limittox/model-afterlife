@@ -33,3 +33,13 @@ Resolved debug sessions. Used by `gsd-debugger` to surface known-pattern hypothe
 - **Why not caught:** No offline gate asserted that the exact provider-facing schema remained structural-only across upstream providers; the prior schema test covered `not` compatibility but deliberately retained collection bounds.
 - **Recurrence guard:** Regression test `tests/unit/openrouter-provider.test.ts` — `emits a structural-only provider schema` forbids `not`, string-length bounds, and collection bounds on the wire, while its local-boundary cases reject blank or oversized text, excessive claim IDs, and non-empty relationship effects.
 ---
+
+## claude-alias-identity-gate — approved requested alias rejected by the canonical-only top-level identity gate
+- **Date:** 2026-07-23
+- **Error patterns:** model-identity-mismatch, Claude Sonnet 4.5, OpenRouter metadata, requested alias, canonical endpoint
+- **Root cause(s):** `validateOpenRouterMetadata` required the top-level response model to equal only the canonical slug even though the approved requested alias is a valid top-level label and canonical model/provider identity is independently proven by selected-endpoint and attempt metadata.
+- **Fix:** Accept exact equality with either `profile.requestedModelId` or `profile.canonicalModelId` only at the top-level response boundary; retain exact canonical endpoint, provider, attempt, direct-route, generation-ID, and empty-pipeline validation.
+- **Files changed:** src/features/world/generation/openrouter-metadata.ts, tests/unit/openrouter-metadata.test.ts
+- **Why not caught:** The focused unit fixture used GPT-4o, whose requested and canonical IDs are identical, so it could not expose the alias boundary.
+- **Recurrence guard:** Regression tests in `tests/unit/openrouter-metadata.test.ts` use the production Claude profile to accept only the exact requested alias or canonical ID and reject an unrelated model plus `anthropic/claude-sonnet-4.5:latest`.
+---
