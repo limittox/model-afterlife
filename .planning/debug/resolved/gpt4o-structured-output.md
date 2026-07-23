@@ -21,7 +21,7 @@ updated: 2026-07-23
 - bug_class: bohrbug
 - test: Approved offline acceptance only; native GPT-4o admission remains deferred until a separately authorized paid/provider run.
 - expecting: Offline RED→GREEN, controlled revert/reapply, adjacent tests, typecheck, lint, and diff checks remain sufficient for this scoped fix.
-- next_action: Archive the resolved session and commit only the scoped fix/test and debug records; native provider confirmation remains deferred.
+- next_action: Complete; native provider confirmation remains deferred to a separately approved GPT-4o admission run.
 - reasoning_checkpoint:
     hypothesis: "`z.array(z.never()).max(0)` causes the provider HTTP 400 because its generated strict JSON Schema contains OpenAI's unsupported `not` keyword."
     confirming_evidence:
@@ -42,6 +42,9 @@ updated: 2026-07-23
 
 ## Evidence
 
+- timestamp: 2026-07-23
+  observation: The durable Markdown knowledge-base entry was committed; MemPalace indexing was skipped because the project configuration has `mempalace.enabled: false`.
+  implication: Semantic indexing is intentionally unavailable, while `.planning/debug/knowledge-base.md` remains the persistent fallback for future recall.
 - timestamp: 2026-07-23
   observation: Human verification accepted the completed offline RED→GREEN regression, controlled revert/reapply, adjacent provider tests, typecheck, lint, and diff checks as proportionate verification; paid live/provider calls were explicitly deferred.
   implication: The accepted guardrail closes this debug session without repeating a paid call, while native GPT-4o confirmation remains an explicit future admission check.
