@@ -264,10 +264,10 @@ function canaryBrief(profile: ResidentProviderProfile, ordinal: number) {
 	const partner = LAUNCH_RESIDENTS.find(
 		(candidate) => candidate.id !== profile.residentId,
 	);
-	const claim = historicalClaimsFor(profile.residentId).find(
+	const claims = historicalClaimsFor(profile.residentId).filter(
 		(candidate) => candidate.editorialStatus === "approved",
 	);
-	if (!partner || !claim) throw new Error("resident-context-missing");
+	if (!partner || claims.length === 0) throw new Error("resident-context-missing");
 
 	return SceneBriefSchema.parse({
 		schemaVersion: 1,
@@ -277,7 +277,7 @@ function canaryBrief(profile: ResidentProviderProfile, ordinal: number) {
 		speakerOrder: [profile.residentId, partner.id, profile.residentId, partner.id],
 		locationId: "common-room",
 		premise: "A quiet resident notices the tea has cooled and makes one gentle observation.",
-		allowedFactIds: [claim.claimId],
+		allowedFactIds: claims.map((claim) => claim.claimId),
 		tone: "warm, concise, and non-confrontational",
 		turnBudget: 4,
 		permittedOutcome: "One brief line; no state change and no relationship effect.",

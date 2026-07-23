@@ -43,3 +43,13 @@ Resolved debug sessions. Used by `gsd-debugger` to surface known-pattern hypothe
 - **Why not caught:** The focused unit fixture used GPT-4o, whose requested and canonical IDs are identical, so it could not expose the alias boundary.
 - **Recurrence guard:** Regression tests in `tests/unit/openrouter-metadata.test.ts` use the production Claude profile to accept only the exact requested alias or canonical ID and reject an unrelated model plus `anthropic/claude-sonnet-4.5:latest`.
 ---
+
+## gemini-generation-check — bounded canary omitted valid approved Gemini claims
+- **Date:** 2026-07-24
+- **Error patterns:** generation-check-failed, Gemini 2.5 Pro, google-ai-studio, approvedClaimIds, allowedFactIds, canaryBrief
+- **Root cause(s):** `canaryBrief` selected only the first approved resident claim with `.find`; combined with Gemini selecting another exact-version approved resident claim, the post-generation membership guard threw an ordinary error classified as `generation-check-failed`.
+- **Fix:** Include every editorially approved claim for the exact resident/version in the neutral admission canary while preserving the existing exact-membership guard and three-claim output bound.
+- **Files changed:** src/features/world/generation/run-admission-canaries.ts, tests/integration/gemini-admission-generation.test.ts
+- **Why not caught:** No integration gate exercised the production Gemini profile with an exact-version approved claim outside the first stable-order item; existing provider fixtures covered GPT-4o or DeepSeek.
+- **Recurrence guard:** Regression test `tests/integration/gemini-admission-generation.test.ts` — `admits an exact-version approved Gemini claim from its bounded canary context` proves a non-first approved claim is admitted and all three exact-version Gemini claim IDs are included in the prompt.
+---
