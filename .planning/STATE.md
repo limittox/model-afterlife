@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 admission authorized: cumulative cap 43; 13 consumed; exactly 30 fresh calls for one-shot clean matrix"
-last_updated: "2026-07-23T14:56:58.000Z"
+stopped_at: "02-02 Task 3 blocked: Gemini 2.5 Pro generation-check-failed; 3 fresh calls consumed, 16/43 cumulative"
+last_updated: "2026-07-23T15:00:09.280Z"
 last_activity: 2026-07-24
-last_activity_desc: "Raised cumulative admission cap to 43; 13 consumed and exactly 30 fresh calls authorized for one complete one-shot clean matrix"
+last_activity_desc: "One-shot clean matrix stopped after 3 fresh calls; 16/43 cumulative consumed and 27 remain"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Task 3 live admission authorized; one-shot clean matrix not yet invoked
-Last activity: 2026-07-24 — cumulative admission cap raised to 43; 13 calls already consumed, exactly 30 fresh calls authorized, and the clean matrix is one-shot
+Status: Blocked at Task 3 after the one authorized one-shot clean matrix invocation
+Last activity: 2026-07-24 — Gemini 2.5 Pro via `google-ai-studio` failed with sanitized code `generation-check-failed`; 3 fresh calls consumed, 16/43 cumulative, 27 remain
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Plan 02-02 admission has a cumulative cap of 43 calls: 13 calls are already consumed and exactly 30 fresh calls are authorized for one complete clean matrix only. The dispatch is one-shot with no retry, fallback, route/model substitution, or diagnostic provider call.
+- [Phase 2]: Plan 02-02 admission is blocked after the one authorized one-shot clean matrix stopped on Gemini 2.5 Pro via `google-ai-studio` with sanitized code `generation-check-failed`; 3 fresh calls were consumed, 16/43 cumulative calls are consumed, and 27 calls remain. No retry, fallback, route/model substitution, diagnostic provider call, partial admission-result persistence, or Task 4 work occurred.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
