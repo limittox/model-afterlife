@@ -122,7 +122,19 @@
 | Five direct provider APIs | Separate credentials and adapters for OpenAI, Anthropic, Google, Cohere, and Together | |
 
 **User's choice:** “Use Open Router.”
-**Notes:** OpenRouter is a broker only; actual designated resident models still author their own turns. Default routing, mutable aliases, provider/model fallback, missing route metadata, and material pipeline transformations fail closed. The zero-endpoint GPT-3.5 `0125` record is replaced by exact callable `openai/gpt-3.5-turbo-0613` rather than an alias.
+**Notes:** OpenRouter is a broker only; actual designated resident models still author their own turns. Default routing, mutable aliases, provider/model fallback, missing route metadata, and material pipeline transformations fail closed. The intermediate GPT-3.5 `0613` choice recorded here was later superseded by the approved GPT-4o/DeepSeek cast amendment below.
+
+---
+
+## Launch Cast Amendment — 2026-07-23
+
+| Removed | Added | Approved OpenRouter route |
+|---------|-------|---------------------------|
+| `openai/gpt-3.5-turbo-0613` | `openai/gpt-4o` | OpenAI |
+| `cohere/command-r-plus-08-2024` | `deepseek/deepseek-r1-0528` | DeepInfra FP4 |
+
+**User's choice:** Replace both residents explicitly.
+**Notes:** OpenRouter currently lists structured-output-capable endpoints for both models. A live diagnostic already proved `deepseek/deepseek-r1-0528` succeeds through DeepInfra with direct first-attempt routing and no pipeline transformation. DeepSeek's mandatory private reasoning receives a distinct bounded token allowance while the public dialogue-text contract remains unchanged.
 
 ---
 

@@ -5,6 +5,8 @@
 
 **Architecture amendment (approved 2026-07-23):** All resident and backstage-judge inference uses OpenRouter with one server-only `OPENROUTER_API_KEY`. This amendment supersedes every earlier reference to five direct provider credentials or direct provider adapters. OpenRouter is transport only: each resident still calls one exact allowlisted model slug, routing is restricted to an approved upstream provider, provider/model fallback is disabled, required parameters must be supported, and router metadata must prove the selected route before a turn can publish.
 
+**Cast amendment (approved 2026-07-23):** Replace `openai/gpt-3.5-turbo-0613` with `openai/gpt-4o` over the OpenAI upstream, and replace `cohere/command-r-plus-08-2024` with `deepseek/deepseek-r1-0528` over DeepInfra FP4. The DeepSeek resident retains the same 240-character public line limit but receives a separately bounded private reasoning/output budget because reasoning is mandatory for this model. This amendment supersedes the earlier six-model list throughout Phase 2.
+
 <domain>
 ## Phase Boundary
 

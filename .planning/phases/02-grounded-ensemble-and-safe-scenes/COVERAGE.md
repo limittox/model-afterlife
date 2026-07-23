@@ -6,10 +6,10 @@ The integrated external surface is OpenRouter chat generation, catalog/endpoint 
 
 | capability | decision | reason |
 |---|---|---|
-| OpenRouter exact-ID text generation for `openai/gpt-3.5-turbo-0613` via approved Azure route | INTEGRATE | Replaces the zero-endpoint `0125` record. |
+| OpenRouter exact-ID text generation for `openai/gpt-4o` via approved OpenAI route | INTEGRATE | User-approved replacement for GPT-3.5 Turbo 0613. |
 | OpenRouter exact-ID text generation for `anthropic/claude-sonnet-4.5` with dated canonical slug via Anthropic | INTEGRATE | |
 | OpenRouter exact-ID text generation for `google/gemini-2.5-pro` via Google AI Studio | INTEGRATE | |
-| OpenRouter exact-ID text generation for `cohere/command-r-plus-08-2024` via Cohere | INTEGRATE | |
+| OpenRouter exact-ID text generation for `deepseek/deepseek-r1-0528` via DeepInfra FP4 | INTEGRATE | User-approved replacement for Command R+; private mandatory reasoning uses a separate bounded allowance. |
 | OpenRouter exact-ID text generation for `meta-llama/llama-3.3-70b-instruct` via Together FP8 | INTEGRATE | |
 | OpenRouter exact-ID text generation for `qwen/qwen-2.5-7b-instruct` via Together FP8 | INTEGRATE | |
 | Strict structured turn output with local Zod validation | INTEGRATE | |
