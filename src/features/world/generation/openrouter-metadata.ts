@@ -117,10 +117,11 @@ export function validateOpenRouterMetadata(input: {
 	}
 
 	if (
-		metadata.attempts?.length !== 1 ||
-		metadata.attempts[0]?.provider !== input.profile.selectedUpstreamName ||
-		metadata.attempts[0]?.model !== input.profile.canonicalModelId ||
-		metadata.attempts[0]?.status !== 200
+		metadata.attempts !== undefined &&
+		(metadata.attempts.length !== 1 ||
+			metadata.attempts[0]?.provider !== input.profile.selectedUpstreamName ||
+			metadata.attempts[0]?.model !== input.profile.canonicalModelId ||
+			metadata.attempts[0]?.status !== 200)
 	) {
 		reject("route-attempt-mismatch", "OpenRouter attempt evidence does not prove one approved route.");
 	}

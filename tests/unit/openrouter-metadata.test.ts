@@ -12,6 +12,11 @@ async function loadMetadataValidator() {
 }
 
 const profile = providerProfileFor("gpt-4o");
+const approvedAttempt = {
+	provider: "OpenAI",
+	model: profile.canonicalModelId,
+	status: 200,
+};
 
 function directMetadata() {
 	return {
@@ -28,9 +33,7 @@ function directMetadata() {
 				},
 			],
 		},
-		attempts: [
-			{ provider: "OpenAI", model: profile.canonicalModelId, status: 200 },
-		],
+		attempts: [{ ...approvedAttempt }],
 		pipeline: [],
 		future_additive_field: { remains: "permitted" },
 	};
@@ -56,6 +59,54 @@ describe("OpenRouter authorship evidence", () => {
 			selectedModelId: profile.canonicalModelId,
 			selectedUpstream: "OpenAI",
 		});
+	});
+
+	it("accepts an omitted optional attempts array after stable direct-route evidence passes", async () => {
+		const validatorModule = await loadMetadataValidator();
+		const metadata: Record<string, unknown> = { ...directMetadata() };
+		delete metadata.attempts;
+
+		expect(validatorModule, "metadata validator module must exist").toBeDefined();
+		expect(
+			validatorModule?.validateOpenRouterMetadata({
+				profile,
+				generationId: "gen-direct-without-attempt-details",
+				responseModelId: profile.canonicalModelId,
+				metadata,
+			}),
+		).toMatchObject({
+			evidenceKind: "openrouter_verified",
+			generationId: "gen-direct-without-attempt-details",
+			strategy: "direct",
+			routeAttempt: 1,
+			selectedModelId: profile.canonicalModelId,
+			selectedUpstream: "OpenAI",
+		});
+	});
+
+	it.each([
+		["empty", []],
+		["multiple", [{ ...approvedAttempt }, { ...approvedAttempt }]],
+		["wrong provider", [{ ...approvedAttempt, provider: "Azure" }]],
+		[
+			"wrong model",
+			[{ ...approvedAttempt, model: "openai/gpt-4o-mini" }],
+		],
+		["non-200 status", [{ ...approvedAttempt, status: 503 }]],
+	] as const)("rejects a present %s attempts array", async (_label, attempts) => {
+		const validatorModule = await loadMetadataValidator();
+
+		expect(validatorModule, "metadata validator module must exist").toBeDefined();
+		expect(() =>
+			validatorModule?.validateOpenRouterMetadata({
+				profile,
+				generationId: "gen-invalid-attempt-details",
+				responseModelId: profile.canonicalModelId,
+				metadata: { ...directMetadata(), attempts },
+			}),
+		).toThrowError(
+			expect.objectContaining({ code: "route-attempt-mismatch" }),
+		);
 	});
 
 	it.each([
