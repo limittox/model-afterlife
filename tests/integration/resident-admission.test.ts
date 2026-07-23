@@ -74,6 +74,24 @@ describe("resident admission canaries", () => {
 			expect(resident.p95LatencyMs).toBeGreaterThanOrEqual(resident.p50LatencyMs);
 			expect(resident.totalCost).toBeGreaterThan(0);
 		}
+		expect(
+			result.residents.find(
+				(resident) => resident.residentId === "deepseek-r1-0528",
+			),
+		).toMatchObject({
+			approvedUpstream: "deepinfra/fp4",
+			maxOutputTokens: 1024,
+			reasoning: { effort: "minimal", exclude: true },
+		});
+		expect(
+			result.residents
+				.filter((resident) => resident.residentId !== "deepseek-r1-0528")
+				.every(
+					(resident) =>
+						resident.maxOutputTokens === 180 &&
+						resident.reasoning === undefined,
+				),
+		).toBe(true);
 		const serialized = JSON.stringify(result);
 		for (const forbidden of ["rawText", "prompt", "authorization", "test-secret", "Bearer "]) {
 			expect(serialized).not.toContain(forbidden);
