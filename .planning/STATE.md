@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 blocked: Gemini 2.5 Pro generation-check-failed; 3 fresh calls consumed, 16/43 cumulative"
-last_updated: "2026-07-23T15:00:09.280Z"
+stopped_at: "02-02 Task 3 diagnostic authorized: one Gemini-only call reserved; 16/43 consumed before invocation"
+last_updated: "2026-07-23T15:14:13.420Z"
 last_activity: 2026-07-24
-last_activity_desc: "One-shot clean matrix stopped after 3 fresh calls; 16/43 cumulative consumed and 27 remain"
+last_activity_desc: "Authorized exactly one Gemini-only diagnostic call; accounting remains 16/43 before invocation, with the reserved call advancing it to at most 17/43"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Blocked at Task 3 after the one authorized one-shot clean matrix invocation
-Last activity: 2026-07-24 — Gemini 2.5 Pro via `google-ai-studio` failed with sanitized code `generation-check-failed`; 3 fresh calls consumed, 16/43 cumulative, 27 remain
+Status: Blocked at Task 3 pending one authorized Gemini-only diagnostic invocation
+Last activity: 2026-07-24 — exactly one production-profile Gemini diagnostic call is reserved; 16/43 cumulative calls remain consumed before invocation, and the reserved call may advance accounting to 17/43
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Plan 02-02 admission is blocked after the one authorized one-shot clean matrix stopped on Gemini 2.5 Pro via `google-ai-studio` with sanitized code `generation-check-failed`; 3 fresh calls were consumed, 16/43 cumulative calls are consumed, and 27 calls remain. No retry, fallback, route/model substitution, diagnostic provider call, partial admission-result persistence, or Task 4 work occurred.
+- [Phase 2]: Plan 02-02 admission is blocked after the clean matrix stopped on Gemini 2.5 Pro via `google-ai-studio` with sanitized code `generation-check-failed`; 16/43 cumulative calls are consumed. Exactly one Gemini-only diagnostic generation is now authorized and reserved, with no retry, fallback, route/model substitution, catalog/provider call, second generation, or Task 4 work permitted; once invoked, accounting advances conservatively to 17/43.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
