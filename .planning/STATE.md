@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 post-fix admission stopped at DeepSeek provider timeout; 21/47 cumulative"
-last_updated: "2026-07-24T00:11:39.956Z"
+stopped_at: "02-02 Task 3 DeepSeek V3.2 replacement verified offline; live canary not authorized; 23/47 cumulative"
+last_updated: "2026-07-24T01:40:00.000Z"
 last_activity: 2026-07-24
-last_activity_desc: "The only authorized post-fix matrix stopped fail-closed on DeepSeek after 4 fresh calls; 21/47 cumulative calls are consumed"
+last_activity_desc: "DeepSeek R1 was replaced offline by V3.2 with reasoning disabled; 23/47 cumulative calls remain consumed and no further provider call is authorized"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Blocked at Task 3 after the one authorized post-fix live matrix failed closed
-Last activity: 2026-07-24 — DeepSeek R1 0528 via `deepinfra/fp4` timed out on sample ordinal 1 with sanitized code `provider-timeout`; 4 fresh calls were consumed, for 21/47 cumulative and 26 unused
+Status: Task 3 implementation ready; blocked only on authorization for a fresh V3.2 live canary
+Last activity: 2026-07-24 — DeepSeek R1 0528 was replaced by `deepseek/deepseek-v3.2` in explicit non-thinking mode after two failed R1 diagnostics; accounting remains 23/47 and no further provider call is authorized
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -79,7 +79,7 @@ Recent decisions affecting current work:
 - [Phase 1]: Preserve the last valid home during transport trouble while suppressing stale supplementary speech and rejecting malformed feed data.
 - [Phase 2]: Route all resident and backstage-judge inference through one strict OpenRouter transport; pin exact/canonical model slugs and approved upstreams, disable fallback, validate router metadata, and pause rather than substitute.
 - [Phase 2]: The earlier replacement of unavailable `openai/gpt-3.5-turbo-0125` with `openai/gpt-3.5-turbo-0613` is superseded by the approved GPT-4o/DeepSeek cast amendment below; mutable aliases remain prohibited.
-- [Phase 2]: Replace launch residents GPT-3.5 Turbo 0613 and Command R+ 08-2024 with `openai/gpt-4o` via OpenAI and `deepseek/deepseek-r1-0528` via DeepInfra FP4; DeepSeek keeps the public line bound but uses a bounded reasoning-aware private token policy.
+- [Phase 2]: Replace launch residents GPT-3.5 Turbo 0613 and Command R+ 08-2024 with `openai/gpt-4o` via OpenAI and, after R1 0528 failed structured admission, `deepseek/deepseek-v3.2` via DeepInfra FP4. V3.2 uses explicit non-thinking mode and the standard short-turn bounds.
 - [Phase 02]: Resident and judge inference uses one strict OpenRouter transport with exact model/upstream profiles and verified direct first-attempt metadata.
 - [Phase 02]: Only openrouter_verified turns can publish; attempt two restarts from the immutable brief and failed candidates yield a persistent quiet disposition.
 - [Phase 02]: Public scenes require exact per-turn model labels and persistent staged-fiction and non-affiliation disclosure.
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Plan 02-02 admission is blocked after the only authorized post-fix matrix stopped fail-closed at DeepSeek R1 0528 via `deepinfra/fp4` with sanitized code `provider-timeout`. It consumed 4 fresh generation calls, bringing cumulative accounting to 21/47 with 26 unused. No retry, fallback, route/model substitution, diagnostic or follow-up provider call, second matrix, or partial admission result occurred; no further provider call is authorized and Task 4 was not started.
+- [Phase 2]: Plan 02-02 admission is blocked only on a separately authorized V3.2 live canary. The two prior R1 experiments ended with `generation-no-output`; accounting remains 23/47. No catalog request, generation, retry, fallback, route/model/quantization substitution, full matrix, or other paid provider call is authorized.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
@@ -100,6 +100,7 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260723-uxm | Run resident admission canaries breadth-first by sample ordinal, with regression coverage proving early provider failures minimize spent calls while preserving deterministic 30-call success results | 2026-07-23 | ed1ab57 | [260723-uxm-run-resident-admission-canaries-breadth-](./quick/260723-uxm-run-resident-admission-canaries-breadth-/) |
+| 260724-fyf | Replace DeepSeek R1 0528 with DeepSeek V3.2, preserve paid-call accounting, and verify offline without an OpenRouter canary | 2026-07-24 | 1151363 | [260724-fyf-replace-deepseek-r1-0528-resident-with-d](./quick/260724-fyf-replace-deepseek-r1-0528-resident-with-d/) |
 
 ## Deferred Items
 
