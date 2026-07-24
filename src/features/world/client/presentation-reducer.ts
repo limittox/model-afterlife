@@ -71,7 +71,10 @@ export function presentationReducer(
 				presentedSnapshot: action.snapshot,
 				bufferedUpdates: [],
 				connection: "connected",
-				announcement: action.reason === "bootstrap" ? null : CAUGHT_UP_TO_LIVE,
+				announcement:
+					action.reason === "jump-live"
+						? CAUGHT_UP_TO_LIVE
+						: state.announcement,
 				needsFreshSnapshot: false,
 				errorMessage: null,
 			};
@@ -110,9 +113,7 @@ export function presentationReducer(
 					presentationCursor: action.update.sequence,
 					lastValidSnapshot: action.update.snapshot,
 					presentedSnapshot: action.update.snapshot,
-					connection: state.needsFreshSnapshot
-						? "reconnecting"
-						: "connected",
+					connection: state.needsFreshSnapshot ? "reconnecting" : "connected",
 					needsFreshSnapshot: state.needsFreshSnapshot,
 					errorMessage: null,
 				};
@@ -126,9 +127,7 @@ export function presentationReducer(
 				acquisitionCursor: action.update.sequence,
 				lastValidSnapshot: action.update.snapshot,
 				bufferedUpdates: [...state.bufferedUpdates, action.update],
-				connection: state.needsFreshSnapshot
-					? "reconnecting"
-					: "connected",
+				connection: state.needsFreshSnapshot ? "reconnecting" : "connected",
 				needsFreshSnapshot: state.needsFreshSnapshot,
 				errorMessage: null,
 			};
@@ -136,11 +135,17 @@ export function presentationReducer(
 		case "recovery-requested":
 			return requestRecovery(state, action.reason, true);
 		case "pause":
-			return state.presentedSnapshot ? { ...state, mode: "paused" } : state;
+			return state.presentedSnapshot
+				? { ...state, mode: "paused", announcement: "Presentation paused." }
+				: state;
 		case "resume":
 			return {
 				...state,
 				mode: state.bufferedUpdates.length > 0 ? "behind-live" : "live",
+				announcement:
+					state.bufferedUpdates.length > 0
+						? "Presentation resumed behind live."
+						: "Presentation resumed.",
 			};
 		case "present-next": {
 			if (state.mode !== "behind-live") {

@@ -1,3 +1,4 @@
+import { ShareSceneActions } from "../../publication/client/ShareSceneActions.tsx";
 import type {
 	ConnectionState,
 	PresentationMode,
@@ -10,6 +11,7 @@ export function ObserverControlDock({
 	mode,
 	followedResidentName,
 	zoom,
+	canonicalSceneHref,
 	onZoomIn,
 	onZoomOut,
 	onReset,
@@ -24,6 +26,7 @@ export function ObserverControlDock({
 	mode: PresentationMode;
 	followedResidentName: string | null;
 	zoom: number;
+	canonicalSceneHref: string | null;
 	onZoomIn: () => void;
 	onZoomOut: () => void;
 	onReset: () => void;
@@ -115,29 +118,16 @@ export function ObserverControlDock({
 
 			<fieldset className="dock-group presentation-controls">
 				<legend className="visually-hidden">Presentation controls</legend>
-				{mode === "paused" ? (
-					<button
-						type="button"
-						onClick={onResume}
-						disabled={sceneControlsDisabled}
-						aria-describedby={
-							sceneControlsDisabled ? "control-disabled-reason" : undefined
-						}
-					>
-						Resume presentation
-					</button>
-				) : (
-					<button
-						type="button"
-						onClick={onPause}
-						disabled={sceneControlsDisabled}
-						aria-describedby={
-							sceneControlsDisabled ? "control-disabled-reason" : undefined
-						}
-					>
-						Pause presentation
-					</button>
-				)}
+				<button
+					type="button"
+					onClick={mode === "paused" ? onResume : onPause}
+					disabled={sceneControlsDisabled}
+					aria-describedby={
+						sceneControlsDisabled ? "control-disabled-reason" : undefined
+					}
+				>
+					{mode === "paused" ? "Resume presentation" : "Pause presentation"}
+				</button>
 				<button
 					className="jump-live"
 					type="button"
@@ -150,6 +140,7 @@ export function ObserverControlDock({
 					Jump to live
 				</button>
 			</fieldset>
+			<ShareSceneActions canonicalHref={canonicalSceneHref} />
 		</nav>
 	);
 }

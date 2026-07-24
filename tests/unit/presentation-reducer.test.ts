@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import type {
-	PublicWorldSnapshot,
-	PublicWorldUpdate,
-} from "../../src/features/world/contracts/public-world.ts";
 import {
 	createInitialPresentationState,
 	presentationReducer,
 } from "../../src/features/world/client/presentation-reducer.ts";
+import type {
+	PublicWorldSnapshot,
+	PublicWorldUpdate,
+} from "../../src/features/world/contracts/public-world.ts";
 
 function snapshot(sequence: number): PublicWorldSnapshot {
 	return {
@@ -59,6 +59,7 @@ describe("presentationReducer", () => {
 		expect(state.bufferedUpdates.map((item) => item.sequence)).toEqual([
 			11, 12,
 		]);
+		expect(state.announcement).toBe("Presentation paused.");
 	});
 
 	it("resumes from the paused cursor and reaches live through ordered presentation", () => {
@@ -76,6 +77,7 @@ describe("presentationReducer", () => {
 
 		expect(state.mode).toBe("behind-live");
 		expect(state.presentationCursor).toBe(4);
+		expect(state.announcement).toBe("Presentation resumed behind live.");
 		state = presentationReducer(state, { type: "present-next" });
 		expect(state.presentationCursor).toBe(5);
 		expect(state.mode).toBe("behind-live");
@@ -158,6 +160,7 @@ describe("presentationReducer", () => {
 		expect(state.acquisitionCursor).toBe(11);
 		expect(state.presentationCursor).toBe(11);
 		expect(state.lastValidSnapshot).toEqual(snapshot(11));
+		expect(state.announcement).toBeNull();
 	});
 
 	it("turns paused-buffer overflow into a durable snapshot request", () => {

@@ -16,6 +16,7 @@ export function SceneRail({
 		return (
 			<aside
 				className="scene-rail scene-rail-loading"
+				id="current-scene"
 				aria-label="Current scene"
 			>
 				<a className="scene-focus-target" href="#observer-controls">
@@ -33,7 +34,11 @@ export function SceneRail({
 	if (snapshot.scene === null) {
 		const unavailable = snapshot.quiet?.reason === "scene-unavailable";
 		return (
-			<aside className="scene-rail" aria-label="Current scene">
+			<aside
+				className="scene-rail"
+				id="current-scene"
+				aria-label="Current scene"
+			>
 				<a className="scene-focus-target" href="#observer-controls">
 					Scene status. Continue to observer controls
 				</a>
@@ -51,7 +56,7 @@ export function SceneRail({
 	}
 
 	return (
-		<aside className="scene-rail" aria-label="Current scene">
+		<aside className="scene-rail" id="current-scene" aria-label="Current scene">
 			<a className="scene-focus-target" href="#observer-controls">
 				Scene transcript. Continue to observer controls
 			</a>
