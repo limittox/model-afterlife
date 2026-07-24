@@ -98,7 +98,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: The reference-only continuation passed three tea-timer turns and stopped fail-closed on the fourth resident generation. Cumulative accounting is 109/120; no judge or later reference call ran. Privacy-safe provider exception classification is now enabled, and a complete retry would require 15 new generations with exact cumulative ceiling 124.
+- [Phase 2]: The first guarded retry passed all four tea-timer resident calls, then exposed and stopped on `identity.unverified` before judging. The canonical-ID conductor mismatch is fixed and a second guarded retry is ready. Cumulative accounting is 113/124; completing the proof requires 15 new generations with exact ceiling 128.
 - [Phase 2]: Human semantic calibration is approved and enabled. The remaining reference proof must preserve the OpenRouter credential outside chat, git, public bundles, and traces.
 - [Phase 2]: Docker Desktop is stopped, so Plan 02-03's database-backed replay/rebuild check remains explicit verification debt.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
@@ -125,6 +125,7 @@ None yet.
 | 260724-m1x | Preserve the fail-closed live evidence, align the resident prompt with deterministic premise establishment, and add a guarded reference-only continuation without provider calls | 2026-07-24 | 0dc1cb3 | [260724-m1x-align-live-reference-prompts-with-determ](./quick/260724-m1x-align-live-reference-prompts-with-determ/) |
 | 260724-maw | Run the authorized reference-only 15-generation Phase 2 continuation with cumulative ceiling 120, preserve sanitized evidence, stop fail-closed, verify, commit, and push | 2026-07-24 | 4734371 | [260724-maw-run-the-authorized-reference-only-15-gen](./quick/260724-maw-run-the-authorized-reference-only-15-gen/) |
 | 260724-mg7 | Add privacy-safe provider exception classification to the Phase 2 live reference runner, verify offline, make no provider calls, commit, and push | 2026-07-24 | c73f5d1 | [260724-mg7-add-privacy-safe-provider-exception-clas](./quick/260724-mg7-add-privacy-safe-provider-exception-clas/) |
+| 260724-mx9 | Add a guarded Phase 2 reference retry mode for the exact failed 109-generation state, run the authorized 15-generation retry with cumulative ceiling 124, stop fail-closed, verify, commit, and push | 2026-07-24 | 4d9d16d | [260724-mx9-add-a-guarded-phase-2-reference-retry-mo](./quick/260724-mx9-add-a-guarded-phase-2-reference-retry-mo/) |
 
 ## Deferred Items
 
@@ -136,6 +137,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-24T06:11:00.000Z
-Stopped at: Added privacy-safe live provider exception classification; retry remains unauthorized at cumulative 109
+Last session: 2026-07-24T06:39:00.000Z
+Stopped at: Fixed canonical identity downgrade after retry stopped fail-closed at cumulative 113; second retry awaits authorization
 Resume file: None
