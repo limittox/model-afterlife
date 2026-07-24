@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 server-owned relationship boundary verified offline; 40/70 consumed"
-last_updated: "2026-07-24T02:37:02.317Z"
+stopped_at: "Qwen3 replacement verified offline; strict-route live admission remains separately authorized; 40/70 consumed"
+last_updated: "2026-07-24T03:03:22.296Z"
 last_activity: 2026-07-24
-last_activity_desc: "Removed relationship effects from the model wire contract and inject an empty array in the trusted adapter; verified offline with TDD; accounting remains 40/70"
+last_activity_desc: "Replaced the failed Qwen 2.5 7B resident with exact Qwen3 235B A22B Instruct 2507 over DeepInfra FP8, refreshed grounded identity and corpus coverage, and verified offline; accounting remains 40/70"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Task 3 server-owned relationship boundary ready for live canary
-Last activity: 2026-07-24 — the model-facing schema and prompt no longer expose `proposedRelationshipEffects`; unexpected extras are rejected and the trusted adapter supplies the required empty array before the unchanged strict local schema
+Status: Qwen3 replacement verified offline; strict-route live admission remains separately authorized
+Last activity: 2026-07-24 — the sixth resident is now Qwen3 235B A22B Instruct 2507 with the exact requested/canonical IDs, DeepInfra FP8 route, non-thinking-only contract, and many-expert archive-curator grounding; no provider call was made
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -80,6 +80,7 @@ Recent decisions affecting current work:
 - [Phase 2]: Route all resident and backstage-judge inference through one strict OpenRouter transport; pin exact/canonical model slugs and approved upstreams, disable fallback, validate router metadata, and pause rather than substitute.
 - [Phase 2]: The earlier replacement of unavailable `openai/gpt-3.5-turbo-0125` with `openai/gpt-3.5-turbo-0613` is superseded by the approved GPT-4o/DeepSeek cast amendment below; mutable aliases remain prohibited.
 - [Phase 2]: Replace launch residents GPT-3.5 Turbo 0613 and Command R+ 08-2024 with `openai/gpt-4o` via OpenAI and, after R1 0528 failed structured admission, `deepseek/deepseek-v3.2` via DeepInfra FP4. V3.2 uses explicit non-thinking mode and the standard short-turn bounds.
+- [Phase 2]: Replace the pre-admission Qwen 2.5 7B entry after repeated structured-output failures with `qwen/qwen3-235b-a22b-2507` (canonical `qwen/qwen3-235b-a22b-07-25`) via DeepInfra FP8. Qwen3 is non-thinking-only, uses the standard 180-token bound, and remains paused until a separately authorized strict-route live admission succeeds.
 - [Phase 02]: Resident and judge inference uses one strict OpenRouter transport with exact model/upstream profiles and verified direct first-attempt metadata.
 - [Phase 02]: Only openrouter_verified turns can publish; attempt two restarts from the immutable brief and failed candidates yield a persistent quiet disposition.
 - [Phase 02]: Public scenes require exact per-turn model labels and persistent staged-fiction and non-affiliation disclosure.
@@ -90,7 +91,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Qwen ignored a prose-only relationship constraint twice. The stronger offline fix removes `proposedRelationshipEffects` from the model wire schema, rejects unexpected extras, and supplies `[]` only in the trusted adapter. It is verified offline but not yet live-canary verified. Accounting is 40/70 with 30 calls unused; no further provider call is authorized.
+- [Phase 2]: The retired Qwen 2.5 7B resident ignored a prose-only relationship constraint twice and repeatedly failed structured admission even after the server-owned relationship boundary removed `proposedRelationshipEffects` from its wire schema. Qwen3 235B A22B Instruct 2507 is now implemented and verified offline, but its exact DeepInfra FP8 route still requires a separately authorized strict-route live admission. Accounting remains 40/70 with 30 calls unused; no further provider call is authorized.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
@@ -111,6 +112,7 @@ None yet.
 | 260724-hc9 | Make the resident prompt explicitly require an empty relationship-effects array, verified offline with TDD and no provider calls | 2026-07-24 | e12e751 | [260724-hc9-make-the-resident-prompt-explicitly-requ](./quick/260724-hc9-make-the-resident-prompt-explicitly-requ/) |
 | 260724-hf4 | Run one post-fix Qwen canary and, only if it passes, one paced final admission matrix with cumulative ceiling 70 | 2026-07-24 | ecdb4c9 | [260724-hf4-run-one-post-fix-qwen-canary-and-only-if](./quick/260724-hf4-run-one-post-fix-qwen-canary-and-only-if/) |
 | 260724-hgn | Remove application-owned relationship effects from the model wire schema and inject an empty array locally, verified with TDD and no provider calls | 2026-07-24 | ab1f52c | [260724-hgn-remove-application-owned-relationship-ef](./quick/260724-hgn-remove-application-owned-relationship-ef/) |
+| 260724-ho4 | Replace Qwen 2.5 7B resident with Qwen3 235B A22B Instruct 2507 on DeepInfra FP8, update grounded identity and tests, no provider calls | 2026-07-24 | 6be74a9 | [260724-ho4-replace-qwen-2-5-7b-resident-with-qwen3-](./quick/260724-ho4-replace-qwen-2-5-7b-resident-with-qwen3-/) |
 
 ## Deferred Items
 

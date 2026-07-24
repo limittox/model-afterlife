@@ -11,7 +11,7 @@ The integrated external surface is OpenRouter chat generation, catalog/endpoint 
 | OpenRouter exact-ID text generation for `google/gemini-2.5-pro` via Google AI Studio | INTEGRATE | |
 | OpenRouter exact-ID text generation for `deepseek/deepseek-v3.2` (canonical `deepseek/deepseek-v3.2-20251201`) via DeepInfra FP4 | INTEGRATE | User-approved replacement for the failed R1 resident; optional reasoning is explicitly disabled for short structured dialogue. |
 | OpenRouter exact-ID text generation for `meta-llama/llama-3.3-70b-instruct` via Together FP8 | INTEGRATE | |
-| OpenRouter exact-ID text generation for `qwen/qwen-2.5-7b-instruct` via Together FP8 | INTEGRATE | |
+| OpenRouter exact-ID text generation for `qwen/qwen3-235b-a22b-2507` (canonical `qwen/qwen3-235b-a22b-07-25`) via DeepInfra FP8 | INTEGRATE | Pre-admission replacement for the former Qwen 2.5 7B resident after repeated structured-output failures; this exact non-thinking route still requires a separately authorized live admission. |
 | Strict structured turn output with local Zod validation | INTEGRATE | |
 | Exact requested/canonical/selected model and selected upstream capture | INTEGRATE | |
 | Router strategy, attempt, candidate/selected endpoint, pipeline, generation ID, finish reason, warnings/filter and safety metadata capture | INTEGRATE | |

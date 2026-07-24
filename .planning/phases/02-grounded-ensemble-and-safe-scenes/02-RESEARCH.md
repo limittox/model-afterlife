@@ -1,6 +1,6 @@
 # Phase 2 Research: Grounded Ensemble and Safe Scenes
 
-**Researched:** 2026-07-22; OpenRouter amendment verified 2026-07-23
+**Researched:** 2026-07-22; OpenRouter amendment verified 2026-07-23; Qwen3 cast correction verified from official sources 2026-07-24
 **Scope:** Exact launch cast, strict OpenRouter-routed generation, private attempts, atomic canon publication, grounded characterization, ensemble balance, and evaluation
 **Confidence:** High for architecture and documentation-level model availability; live admission remains gated on credentialed canaries
 
@@ -13,7 +13,7 @@ Phase 2 should use one OpenRouter account and one server-only API key for six re
 3. OpenRouter `google/gemini-2.5-pro`, restricted to Google AI Studio
 4. OpenRouter `deepseek/deepseek-r1-0528`, restricted to DeepInfra FP4
 5. OpenRouter `meta-llama/llama-3.3-70b-instruct`, restricted to Together FP8
-6. OpenRouter `qwen/qwen-2.5-7b-instruct`, restricted to Together FP8
+6. OpenRouter `qwen/qwen3-235b-a22b-2507`, canonical slug `qwen/qwen3-235b-a22b-07-25`, restricted to DeepInfra FP8
 
 OpenRouter's current catalog lists callable structured-output endpoints for all six amended IDs. On 2026-07-23 it listed `openai/gpt-4o` on OpenAI and Azure, and `deepseek/deepseek-r1-0528` on DeepInfra FP4 plus three other hosts. A bounded direct diagnostic proved the exact DeepSeek model succeeds through DeepInfra on its first route attempt with a generation ID and no pipeline transformation. Documentation evidence is necessary but not sufficient: admission requires live proof of access, structured-turn behavior, OpenRouter generation ID, router strategy/attempt/selected route, usage, and latency. A resident that fails admission stays paused and cannot be silently replaced.
 
@@ -28,14 +28,14 @@ The vertical tracer should prove one complete two-resident scene using the same 
 | Gemini 2.5 Pro | `google/gemini-2.5-pro` | same / `google-ai-studio` | OpenRouter lists active Google AI Studio endpoints with structured output support | Google recommends later Gemini 3.x models | Reflective long-context thinker; complex code/math/STEM and multimodal history; default thinking can make the resident deliberate before a short answer |
 | DeepSeek R1 0528 | `deepseek/deepseek-r1-0528` | same / `deepinfra`, FP4 | OpenRouter lists an active DeepInfra FP4 endpoint with structured output support; a direct live diagnostic passed | DeepSeek has released later V3.x/V4-era models and R1 0528 is a dated update | Open-weight reasoning veteran who thinks before speaking; methodical on math, logic, and code; comic timing comes from visible deliberation, never from exposing or inventing private chain-of-thought |
 | Llama 3.3 70B Instruct | `meta-llama/llama-3.3-70b-instruct` | same / `together`, FP8 | OpenRouter lists a Together FP8 endpoint with structured output support; admission must confirm it is healthy | Meta released Llama 4 after Llama 3.3 | Open-weight community elder; multilingual dialogue and 128K context; proud of broad deployment while honestly naming OpenRouter and Together FP8 serving provenance |
-| Qwen 2.5 7B Instruct | `qwen/qwen-2.5-7b-instruct` | same / `together`, FP8 | OpenRouter lists a Together FP8 endpoint with structured output support; admission must confirm it is healthy | Qwen 3 and later Qwen generations explicitly improve on Qwen 2.5 | Compact multilingual record keeper; strong JSON/structured-data and role-play heritage; the small-model identity supplies ensemble contrast without pretending the hosted service is a local checkpoint |
+| Qwen3 235B A22B Instruct 2507 | `qwen/qwen3-235b-a22b-2507` | `qwen/qwen3-235b-a22b-07-25` / `deepinfra/fp8`, FP8 | The official model card documents the exact non-thinking model; strict-route live admission through DeepInfra FP8 remains separately required | Later Qwen generations supersede this dated July 2025 instruction checkpoint | Many-expert archive curator; 235B-total/22B-activated MoE architecture, native 262,144-token context, and Qwen-reported instruction-following, multilingual long-tail, and open-ended text strengths, with the household index council kept explicitly fictional |
 
 ### Admission notes
 
 - Send `X-OpenRouter-Metadata: enabled`. Require `strategy: direct`, `attempt: 1`, exactly one selected approved upstream provider/model, no fallback attempts, and no material `pipeline` transformation such as context compression, response healing, or server tools. Unknown additive metadata fields are retained privately or ignored safely, never treated as proof.
 - Every request sends `provider.only` for the approved upstream, `allow_fallbacks: false`, `require_parameters: true`, and `data_collection: deny`; use `zdr: true` only where a live admission canary proves the exact endpoint remains available. If privacy restrictions remove the route, pause the resident rather than silently relax them.
 - The response model slug plus `openrouter_metadata` and generation ID are the primary identity evidence. OpenRouter cache hits omit router metadata, so resident generation must not use router response caching as admission or publication evidence.
-- Llama and Qwen public wording names the base model; private provenance records OpenRouter, Together, and FP8 serving metadata. It must not imply a bit-identical local checkpoint.
+- Llama public wording names the exact base model; private provenance records OpenRouter, Together, and FP8 serving metadata. Qwen3 public wording names `Qwen3 235B A22B Instruct 2507`; private provenance records requested/canonical IDs plus OpenRouter, DeepInfra, and FP8 serving metadata. Neither hosted route may be presented as a bit-identical local checkpoint.
 - DeepSeek public wording names R1 0528; private provenance records OpenRouter, DeepInfra, and FP4 serving metadata. Reasoning is mandatory, remains private, and receives a bounded per-profile output allowance while the final dialogue text stays capped at 240 characters.
 - Live access depends on the user's OpenRouter account, balance, regional availability, and upstream health. Admission fails closed if any configured resident lacks a recent canary.
 
@@ -220,8 +220,8 @@ All four plans are sequential vertical increments. No plan should be a database-
 - [Together.ai Chat Completions response contract](https://docs.together.ai/reference/chat-completions)
 - [Meta Llama 3.3 70B Instruct model card](https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct)
 - [Meta LlamaCon / Llama 4 announcement](https://ai.meta.com/blog/llamacon-llama-news/)
-- [Qwen 2.5 release](https://qwenlm.github.io/blog/qwen2.5/)
-- [Qwen 3 release and Qwen 2.5 comparisons](https://qwenlm.github.io/blog/qwen3/)
+- [Qwen3 235B A22B Instruct 2507 official model card](https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507)
+- [Qwen3 official announcement](https://qwenlm.github.io/blog/qwen3/)
 - [xAI Grok model retirement and redirect notice](https://docs.x.ai/developers/migration/may-15-retirement)
 - [Mistral model overview and legacy list](https://docs.mistral.ai/models/overview)
 
@@ -243,4 +243,4 @@ All four plans are sequential vertical increments. No plan should be a database-
 
 ## Research Completion
 
-The phase can now execute under the approved OpenRouter and cast amendments. The exact cast contains GPT-4o and DeepSeek R1 0528 in place of GPT-3.5 Turbo 0613 and Command R+ 08-2024. Execution requires one bundled user-setup checkpoint for `OPENROUTER_API_KEY` and acceptance of bounded charges before live canaries; all deterministic development and CI verification must work with fake providers and frozen outputs.
+The phase can now execute under the approved OpenRouter and cast amendments. The active corrections use GPT-4o and DeepSeek V3.2 in place of GPT-3.5 Turbo 0613, Command R+ 08-2024, and the failed R1 route, and Qwen3 235B A22B Instruct 2507 in place of the former Qwen 2.5 7B entry that repeatedly failed structured admission. Execution requires one bundled user-setup checkpoint for `OPENROUTER_API_KEY` and acceptance of bounded charges before live canaries; the Qwen3 DeepInfra FP8 route still needs that separately authorized strict-route proof, while all deterministic development and CI verification must work with fake providers and frozen outputs.
