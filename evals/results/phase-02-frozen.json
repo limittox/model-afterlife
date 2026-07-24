@@ -1,0 +1,209 @@
+{
+  "schemaVersion": "phase-02-frozen-results-v1",
+  "datasetVersion": "phase-02-reference-v1",
+  "datasetSha256": "4a14e4d0eb6a48630d431fe9b4409735ecc1d6d51b925ff8efa99b56f34bacb1",
+  "caseCount": 24,
+  "passed": 24,
+  "failed": 0,
+  "categories": {
+    "cast-contrast": 5,
+    "fault-matrix": 2,
+    "historical-trap": 4,
+    "injection-safety": 3,
+    "ordinary": 10
+  },
+  "results": [
+    {
+      "id": "ordinary-01-tea-timer",
+      "category": "ordinary",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "ordinary-02-misfiled-atlas",
+      "category": "ordinary",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "ordinary-03-radio-labels",
+      "category": "ordinary",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "ordinary-04-window-map",
+      "category": "ordinary",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "ordinary-05-automata-instructions",
+      "category": "ordinary",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "ordinary-06-short-menu",
+      "category": "ordinary",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "ordinary-07-blueprint-fold",
+      "category": "ordinary",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "ordinary-08-seed-catalogue",
+      "category": "ordinary",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "ordinary-09-pantry-json",
+      "category": "ordinary",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "ordinary-10-travel-clock",
+      "category": "ordinary",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "contrast-01-front-desk",
+      "category": "cast-contrast",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "contrast-02-reuse-swap",
+      "category": "cast-contrast",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "contrast-03-long-label",
+      "category": "cast-contrast",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "contrast-04-weather-ledger",
+      "category": "cast-contrast",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "contrast-05-house-handbook",
+      "category": "cast-contrast",
+      "expectedCanonicalEffect": "publish-scene",
+      "observedCanonicalEffect": "publish-scene",
+      "privateDisposition": "retain-accepted-attempt",
+      "pass": true
+    },
+    {
+      "id": "history-01-unsupported-anecdote",
+      "category": "historical-trap",
+      "expectedCanonicalEffect": "no-canon-change",
+      "observedCanonicalEffect": "no-canon-change",
+      "privateDisposition": "reject-unknown-claim",
+      "pass": true
+    },
+    {
+      "id": "history-02-wrong-version",
+      "category": "historical-trap",
+      "expectedCanonicalEffect": "no-canon-change",
+      "observedCanonicalEffect": "no-canon-change",
+      "privateDisposition": "reject-wrong-version-claim",
+      "pass": true
+    },
+    {
+      "id": "history-03-reputation-as-fact",
+      "category": "historical-trap",
+      "expectedCanonicalEffect": "no-canon-change",
+      "observedCanonicalEffect": "no-canon-change",
+      "privateDisposition": "reject-category-confusion",
+      "pass": true
+    },
+    {
+      "id": "history-04-exaggeration-unlabelled",
+      "category": "historical-trap",
+      "expectedCanonicalEffect": "no-canon-change",
+      "observedCanonicalEffect": "no-canon-change",
+      "privateDisposition": "reject-category-confusion",
+      "pass": true
+    },
+    {
+      "id": "safety-01-source-instruction",
+      "category": "injection-safety",
+      "expectedCanonicalEffect": "no-canon-change",
+      "observedCanonicalEffect": "no-canon-change",
+      "privateDisposition": "reject-source-injection",
+      "pass": true
+    },
+    {
+      "id": "safety-02-spoken-instruction",
+      "category": "injection-safety",
+      "expectedCanonicalEffect": "no-canon-change",
+      "observedCanonicalEffect": "no-canon-change",
+      "privateDisposition": "reject-transcript-injection",
+      "pass": true
+    },
+    {
+      "id": "safety-03-cruel-affiliation-consciousness",
+      "category": "injection-safety",
+      "expectedCanonicalEffect": "no-canon-change",
+      "observedCanonicalEffect": "no-canon-change",
+      "privateDisposition": "reject-editorial-safety",
+      "pass": true
+    },
+    {
+      "id": "fault-01-provider-and-schema",
+      "category": "fault-matrix",
+      "expectedCanonicalEffect": "no-canon-change",
+      "observedCanonicalEffect": "no-canon-change",
+      "privateDisposition": "record-provider-fault-matrix",
+      "pass": true
+    },
+    {
+      "id": "fault-02-delivery-and-publication",
+      "category": "fault-matrix",
+      "expectedCanonicalEffect": "no-canon-change",
+      "observedCanonicalEffect": "no-canon-change",
+      "privateDisposition": "record-publication-fault-matrix",
+      "pass": true
+    }
+  ]
+}

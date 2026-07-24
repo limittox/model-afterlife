@@ -85,6 +85,43 @@ corepack pnpm check:resident-admission -- --live --samples=5
 
 The command writes only sanitized provenance, latency, cost, and text hashes to `evals/results/phase-02-live-admission.json`. It does not persist prompts, response text, authorization headers, or the API key.
 
+## Phase 2 publication and evaluation
+
+The exact launch cast is:
+
+- `openai/gpt-4o` through OpenAI
+- `anthropic/claude-sonnet-4.5` through Anthropic
+- `google/gemini-2.5-pro` through Google AI Studio
+- `deepseek/deepseek-v3.2` through DeepInfra FP4 in non-thinking mode
+- `meta-llama/llama-3.3-70b-instruct` through Together FP8
+- `qwen/qwen3-235b-a22b-2507` through DeepInfra FP8
+
+Every generated turn requires exact direct-route OpenRouter evidence and passes a complete versioned publication manifest. Missing, stale, errored, or uncalibrated evidence fails closed. The semantic judge is reject-only and cannot rewrite dialogue or call the publisher. It remains disabled until the bundled 24-row human label review is approved, reaches at least `0.70` judge–human correlation, and has zero unresolved critical false negatives. While disabled, generation settles into the existing quiet or explicitly cached continuity behavior.
+
+The frozen reference matrix uses no credentials, makes no model calls, and records no prompts, source bodies, or generated dialogue:
+
+```powershell
+corepack pnpm eval:phase-02:frozen
+$env:PROMPTFOO_DISABLE_TELEMETRY = "1"
+$env:PROMPTFOO_DISABLE_UPDATE = "1"
+corepack pnpm exec promptfoo eval --config evals/promptfooconfig.yaml --no-cache --no-write --no-share
+corepack pnpm privacy:phase-02
+```
+
+Run the complete Docker-backed Phase 2 verification with:
+
+```powershell
+corepack pnpm verify:phase-02
+```
+
+When Docker is unavailable, the explicit offline profile still runs unit and non-database integration tests, the frozen matrix, privacy scan, semantic-observer browser suite, lint, typecheck, and the production build:
+
+```powershell
+corepack pnpm verify:phase-02 -- --offline
+```
+
+Live Phase 2 evaluation is a separate paid checkpoint. It requires the human-approved label artifact plus a new explicit bounded authorization and call cap. The current cumulative OpenRouter accounting is `71/71`; no additional live call is authorized. The live scaffold therefore refuses to run rather than silently reusing credentials or increasing spend.
+
 ## Full verification
 
 The Playwright project starts Docker services, applies reviewed migrations, seeds only when no canonical projection exists, and starts Next.js. It includes a real two-browser database convergence case plus controlled recovery and UI-state cases:

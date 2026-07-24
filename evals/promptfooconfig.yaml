@@ -1,0 +1,18 @@
+description: Model Afterlife Phase 2 frozen reference matrix
+
+prompts:
+  - "{{id}}|{{expectedCanonical}}|{{expectedPrivate}}"
+
+providers:
+  - echo
+
+defaultTest:
+  assert:
+    - type: equals
+      value: "{{id}}|{{expectedCanonical}}|{{expectedPrivate}}"
+
+tests: file://datasets/phase-02-promptfoo.jsonl
+
+evaluateOptions:
+  maxConcurrency: 1
+  delay: 0
