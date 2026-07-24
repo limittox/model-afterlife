@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 Qwen relationship effects violation identified; 39/62 consumed"
-last_updated: "2026-07-24T02:27:14.790Z"
+stopped_at: "02-02 Task 3 Qwen prompt fix verified offline; 39/62 consumed"
+last_updated: "2026-07-24T02:30:21.189Z"
 last_activity: 2026-07-24
-last_activity_desc: "One Qwen diagnostic identified schema-relationship-effects-forbidden; exactly one generation consumed with no retry or fallback; cumulative accounting is 39/62"
+last_activity_desc: "Prompt now explicitly requires proposedRelationshipEffects to be empty because relationships are application-owned; verified offline with TDD; accounting remains 39/62"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Task 3 blocked on Qwen proposing a forbidden relationship effect
-Last activity: 2026-07-24 — the Qwen-only diagnostic returned `schema-relationship-effects-forbidden`; exactly one generation was consumed with no retry, fallback, substitution, or raw-output logging, bringing cumulative accounting to 39/62
+Status: Task 3 Qwen relationship-effects prompt fix ready for canary
+Last activity: 2026-07-24 — the immutable resident system prompt now explicitly requires `proposedRelationshipEffects: []` and states that relationship changes are application-owned; TDD regression, related suites, typecheck, and lint passed with no provider call
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Qwen's first admission response is structurally valid but populates `proposedRelationshipEffects`, which the local turn contract forbids. The privacy-safe diagnostic returned `schema-relationship-effects-forbidden`. Accounting is 39/62 with 23 calls unused; no further provider call is authorized.
+- [Phase 2]: Qwen's first admission response populated forbidden `proposedRelationshipEffects`. The immutable prompt now explicitly requires an empty array and identifies relationship changes as application-owned; the fix is verified offline but not yet live-canary verified. Accounting is 39/62 with 23 calls unused; no further provider call is authorized.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
@@ -108,6 +108,7 @@ None yet.
 | 260724-h0c | Run the one authorized paced final six-resident admission matrix with 21-second generation spacing and cumulative ceiling 62 | 2026-07-24 | bf09b61 | [260724-h0c-run-the-one-authorized-paced-final-six-r](./quick/260724-h0c-run-the-one-authorized-paced-final-six-r/) |
 | 260724-h57 | Add privacy-safe field-level classification for local admission schema failures, with no provider calls | 2026-07-24 | 9f031bc | [260724-h57-add-privacy-safe-field-level-classificat](./quick/260724-h57-add-privacy-safe-field-level-classificat/) |
 | 260724-h91 | Run one privacy-safe Qwen admission diagnostic with two catalog reads, one generation, and cumulative ceiling 39 | 2026-07-24 | 4ec7c22 | [260724-h91-run-one-privacy-safe-qwen-admission-diag](./quick/260724-h91-run-one-privacy-safe-qwen-admission-diag/) |
+| 260724-hc9 | Make the resident prompt explicitly require an empty relationship-effects array, verified offline with TDD and no provider calls | 2026-07-24 | e12e751 | [260724-hc9-make-the-resident-prompt-explicitly-requ](./quick/260724-hc9-make-the-resident-prompt-explicitly-requ/) |
 
 ## Deferred Items
 
