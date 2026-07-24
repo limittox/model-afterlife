@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 paced admission runner verified offline; final matrix not authorized; 32/58 consumed"
-last_updated: "2026-07-24T02:14:00.000Z"
+stopped_at: "02-02 Task 3 paced final matrix authorized and conservatively reserved; 62/62 ceiling"
+last_updated: "2026-07-24T02:16:00.000Z"
 last_activity: 2026-07-24
-last_activity_desc: "Live admission now spaces generation starts by 21 seconds with fake-sleeper regression coverage; no provider call was made and accounting remains 32/58"
+last_activity_desc: "One paced final matrix is authorized with 21-second spacing; cumulative generation ceiling is conservatively reserved at 62/62"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Task 3 paced runner ready; final clean matrix requires separate authorization
-Last activity: 2026-07-24 — the standard live command now spaces all generation starts by at least 21 seconds, preserving breadth-first order, exact call accounting, zero retries, and first-failure behavior; focused tests, sequential integration verification, typecheck, and lint pass with no provider call
+Status: Task 3 paced final matrix authorized and reserved
+Last activity: 2026-07-24 — one standard paced matrix is authorized with 12 catalog/endpoint checks, at most 30 breadth-first generations, 21-second spacing, and a cumulative generation ceiling of 62/62
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: The repeated fourth-request HTTP 429 is addressed offline by pacing credentialed admission generation starts 21 seconds apart. The fake-sleeper regression proves 29 waits across 30 breadth-first calls without delaying the first or adding retries. Accounting remains 32/58. A fresh clean matrix would require a new cumulative ceiling of 62; no provider call is currently authorized.
+- [Phase 2]: One paced final matrix is authorized with a cumulative ceiling of 62/62. It must use the standard command, 21-second spacing, 12 catalog/endpoint checks, and at most 30 breadth-first generations. No retry, fallback, substitution, second matrix, or call outside that command is authorized.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
