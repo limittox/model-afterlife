@@ -24,6 +24,59 @@ export const PRESENTATION_TOKENS: PresentationTokens = {
 	tileSize: 16,
 };
 
+export const RESIDENT_VISUAL_STYLES = {
+	"amber-waistcoat-short-stack": {
+		bodyColor: 0xb7793f,
+		accentColor: 0xf2c66d,
+		headWidth: 12,
+		shoulderWidth: 16,
+		bodyHeight: 15,
+		accessory: "waistcoat",
+	},
+	"navy-cardigan-tall-bookish": {
+		bodyColor: 0x536987,
+		accentColor: 0xb8c5d9,
+		headWidth: 10,
+		shoulderWidth: 14,
+		bodyHeight: 17,
+		accessory: "cardigan",
+	},
+	"violet-shawl-round-satchel": {
+		bodyColor: 0x816b96,
+		accentColor: 0xd1b9df,
+		headWidth: 14,
+		shoulderWidth: 18,
+		bodyHeight: 13,
+		accessory: "shawl",
+	},
+	"teal-apron-square-glasses": {
+		bodyColor: 0x4d8581,
+		accentColor: 0x9dd0c8,
+		headWidth: 12,
+		shoulderWidth: 14,
+		bodyHeight: 14,
+		accessory: "apron",
+	},
+	"rust-overalls-broad-brim": {
+		bodyColor: 0x9a6247,
+		accentColor: 0xd5a36f,
+		headWidth: 10,
+		shoulderWidth: 18,
+		bodyHeight: 15,
+		accessory: "broad-brim",
+	},
+	"jade-coat-many-tabbed-satchel": {
+		bodyColor: 0x4f806c,
+		accentColor: 0xa8d6b6,
+		headWidth: 14,
+		shoulderWidth: 16,
+		bodyHeight: 17,
+		accessory: "tabbed-satchel",
+	},
+} as const;
+
+export type ResidentVisualVariant = keyof typeof RESIDENT_VISUAL_STYLES;
+
 export type RenderRoom = {
 	id: string;
 	label: string;
@@ -38,11 +91,12 @@ export type RenderResident = {
 	id: string;
 	renderId: `resident:${string}`;
 	name: string;
+	role: string;
 	roomId: string;
 	activity: string;
 	x: number;
 	y: number;
-	variant: number;
+	variant: ResidentVisualVariant;
 };
 
 export type RenderActiveTurn = {

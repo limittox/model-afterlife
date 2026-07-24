@@ -43,6 +43,8 @@ export function PixelWorldViewport({
 					<span />
 					<span />
 					<span />
+					<span />
+					<span />
 				</div>
 				<h2>Opening the home…</h2>
 				<p>The shared home will appear here when it is ready.</p>
@@ -127,8 +129,8 @@ export function PixelWorldViewport({
 								"d",
 							].includes(event.key)
 						) {
-								event.preventDefault();
-							}
+							event.preventDefault();
+						}
 					}}
 				>
 					Explore home view with keyboard
@@ -169,14 +171,15 @@ export function PixelWorldViewport({
 													event.stopPropagation();
 													onFollow(resident.id, resident.name);
 												}}
-												aria-label={`Follow ${resident.name}`}
+												aria-label={`Follow ${resident.name}, ${resident.role}. Current routine: ${resident.activity}`}
 												title={`Follow ${resident.name}`}
 												aria-pressed={followedResidentId === resident.id}
 											>
 												<span className="resident-sprite" aria-hidden="true" />
 												<span>
 													<strong>{resident.name}</strong>
-													<small>{resident.activity}</small>
+													<small>{resident.role}</small>
+													<small>Current routine: {resident.activity}</small>
 												</span>
 											</button>
 										</li>

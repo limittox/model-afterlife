@@ -13,17 +13,61 @@ import { CANONICAL_WORLD_ID } from "../../src/features/world/server/seed-data.ts
 describe("scene publication faults", () => {
 	it("keeps an identity-rejected candidate private and leaves canon unchanged", async () => {
 		const before = await readCanonicalHead(CANONICAL_WORLD_ID);
-		const brief = SceneBriefSchema.parse({ schemaVersion: 1, sceneKey: "identity-rejected", expectedWorldHead: before.state.throughSequence, participantIds: ["former-giant", "masked-encoder"], speakerOrder: ["former-giant", "masked-encoder", "former-giant", "masked-encoder"], locationId: "common-room", premise: "identity fault", allowedFactIds: ["claim-1"], tone: "warm", turnBudget: 4, permittedOutcome: "quiet ending" });
-		const { attempt, turns } = await conductSceneAttempt({ brief, attemptId: "identity-attempt", provider: new FakeResidentTurnProvider(), modelForResident: () => "expected-model" });
+		const brief = SceneBriefSchema.parse({
+			schemaVersion: 1,
+			sceneKey: "identity-rejected",
+			expectedWorldHead: before.state.throughSequence,
+			participantIds: ["gpt-4o", "claude-sonnet-4.5"],
+			speakerOrder: [
+				"gpt-4o",
+				"claude-sonnet-4.5",
+				"gpt-4o",
+				"claude-sonnet-4.5",
+			],
+			locationId: "common-room",
+			premise: "identity fault",
+			allowedFactIds: ["claim-1"],
+			tone: "warm",
+			turnBudget: 4,
+			permittedOutcome: "quiet ending",
+		});
+		const { attempt, turns } = await conductSceneAttempt({
+			brief,
+			attemptId: "identity-attempt",
+			provider: new FakeResidentTurnProvider(),
+			modelForResident: () => "expected-model",
+		});
 		attempt.identityEvidence = "requested_only";
 		attempt.disposition = "identity_rejected";
-		const result = validateTracerCandidate({ brief, attempt, turns, revisionId: "unpublished" });
+		const result = validateTracerCandidate({
+			brief,
+			attempt,
+			turns,
+			revisionId: "unpublished",
+		});
 		expect(result.result).toMatchObject({ accepted: false, code: "identity" });
-		await persistGenerationAttempt({ worldId: CANONICAL_WORLD_ID, brief, attempt, turns, result: result.result });
+		await persistGenerationAttempt({
+			worldId: CANONICAL_WORLD_ID,
+			brief,
+			attempt,
+			turns,
+			result: result.result,
+		});
 		const after = await readCanonicalHead(CANONICAL_WORLD_ID);
 		expect(after.snapshot.stateHash).toBe(before.snapshot.stateHash);
 		expect(after.state.relationships).toEqual(before.state.relationships);
 		const { db, close } = createWorldDatabase();
-		try { expect((await db.select().from(generationAttempts).where(eq(generationAttempts.attemptId, "identity-attempt")))[0]?.disposition).toBe("identity_rejected"); } finally { await close(); }
+		try {
+			expect(
+				(
+					await db
+						.select()
+						.from(generationAttempts)
+						.where(eq(generationAttempts.attemptId, "identity-attempt"))
+				)[0]?.disposition,
+			).toBe("identity_rejected");
+		} finally {
+			await close();
+		}
 	});
 });

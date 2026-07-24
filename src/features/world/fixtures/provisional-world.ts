@@ -1,8 +1,10 @@
 import type {
 	CompleteWorldScene,
 	WorldRoom,
+	WorldRoomId,
 	WorldState,
 } from "../domain/types.ts";
+import { LAUNCH_RESIDENTS } from "./launch-residents.ts";
 
 export const PROVISIONAL_WORLD_ID = "00000000-0000-4000-8000-000000000001";
 export const PROVISIONAL_WORLD_SEED = 2_026_072_2;
@@ -15,6 +17,15 @@ export const PROVISIONAL_ROOMS: WorldRoom[] = [
 	{ id: "tea-nook", name: "Tea Nook" },
 ];
 
+const INITIAL_ROOM_BY_RESIDENT: Record<string, WorldRoomId> = {
+	"gpt-4o": "common-room",
+	"claude-sonnet-4.5": "common-room",
+	"gemini-2.5-pro": "library",
+	"deepseek-v3.2": "tea-nook",
+	"llama-3.3-70b-instruct": "memory-garden",
+	"qwen3-235b-a22b-2507": "library",
+};
+
 export function createProvisionalScene(
 	startedAtTick: number,
 ): CompleteWorldScene {
@@ -22,44 +33,44 @@ export function createProvisionalScene(
 		id: `provisional-scene-${startedAtTick}`,
 		premise: "The residents translate a confusing tea-timer manual.",
 		locationId: "common-room",
-		participantIds: ["former-giant", "masked-encoder"],
+		participantIds: ["gpt-4o", "claude-sonnet-4.5"],
 		startedAtTick,
 		durationTicks: 1,
 		presentationDurationMs: 45_000,
 		turns: [
 			{
 				id: `scene-${startedAtTick}-turn-1`,
-				speakerId: "former-giant",
+				speakerId: "gpt-4o",
 				exactModelId: "openai/gpt-4o",
 				text: "A sketch, a chime, and a note—finally, one instruction set.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-2`,
-				speakerId: "masked-encoder",
+				speakerId: "claude-sonnet-4.5",
 				exactModelId: "anthropic/claude-sonnet-4.5",
 				text: "I have numbered the steps and checked the maintenance note.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-3`,
-				speakerId: "former-giant",
+				speakerId: "gpt-4o",
 				exactModelId: "openai/gpt-4o",
 				text: "The kettle declined. I wrote its answer.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-4`,
-				speakerId: "masked-encoder",
+				speakerId: "claude-sonnet-4.5",
 				exactModelId: "anthropic/claude-sonnet-4.5",
 				text: "The kettle's refusal is not part of the documented procedure.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-5`,
-				speakerId: "former-giant",
+				speakerId: "gpt-4o",
 				exactModelId: "openai/gpt-4o",
 				text: "Then the diagram gets the final word.",
 			},
 			{
 				id: `scene-${startedAtTick}-turn-6`,
-				speakerId: "masked-encoder",
+				speakerId: "claude-sonnet-4.5",
 				exactModelId: "anthropic/claude-sonnet-4.5",
 				text: "Only after step three, where the diagram becomes useful.",
 			},
@@ -74,46 +85,28 @@ export function createProvisionalWorld(): WorldState {
 		logicalTick: 0,
 		throughSequence: 0,
 		rooms: PROVISIONAL_ROOMS.map((room) => ({ ...room })),
-		residents: [
-			{
-				id: "former-giant",
-				name: "The Former Giant",
-				roomId: "common-room",
-				activity: "Reading an old benchmark sheet",
-				nextEligibleTick: 1,
-			},
-			{
-				id: "masked-encoder",
-				name: "The Masked Encoder",
-				roomId: "library",
-				activity: "Filling in missing words",
-				nextEligibleTick: 2,
-			},
-			{
-				id: "local-tinkerer",
-				name: "The Local Tinkerer",
-				roomId: "tea-nook",
-				activity: "Repairing the kettle offline",
-				nextEligibleTick: 3,
-			},
-			{
-				id: "deprecated-coder",
-				name: "The Deprecated Coder",
-				roomId: "memory-garden",
-				activity: "Updating an abandoned dependency",
-				nextEligibleTick: 4,
-			},
-		],
+		residents: LAUNCH_RESIDENTS.map((resident) => ({
+			id: resident.id,
+			name: resident.displayName,
+			roomId: INITIAL_ROOM_BY_RESIDENT[resident.id] ?? "common-room",
+			activity: resident.routines[0] ?? "Following a quiet routine",
+			nextEligibleTick: resident.displayOrder,
+		})),
 		relationships: [
 			{
-				residentAId: "former-giant",
-				residentBId: "masked-encoder",
+				residentAId: "gpt-4o",
+				residentBId: "claude-sonnet-4.5",
 				affinity: 0,
 			},
 			{
-				residentAId: "local-tinkerer",
-				residentBId: "deprecated-coder",
+				residentAId: "gemini-2.5-pro",
+				residentBId: "deepseek-v3.2",
 				affinity: 1,
+			},
+			{
+				residentAId: "llama-3.3-70b-instruct",
+				residentBId: "qwen3-235b-a22b-2507",
+				affinity: 0,
 			},
 		],
 		scene: null,

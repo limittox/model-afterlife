@@ -10,6 +10,8 @@ const RoomSchema = z.object({
 const ResidentSchema = z.object({
 	id: z.string().min(1),
 	name: z.string().min(1),
+	role: z.string().min(1),
+	visualVariantId: z.string().min(1),
 	roomId: z.string().min(1),
 	activity: z.string().min(1),
 });
@@ -48,7 +50,7 @@ export const PublicWorldSnapshotSchema = z
 		throughSequence: z.number().int().positive(),
 		stateHash: z.string().regex(/^[a-f0-9]{64}$/),
 		rooms: z.array(RoomSchema).min(1),
-		residents: z.array(ResidentSchema),
+		residents: z.array(ResidentSchema).length(6),
 		scene: CompleteSceneSchema.nullable(),
 		quiet: QuietStatusSchema.nullable(),
 	})
@@ -60,6 +62,18 @@ export const PublicWorldSnapshotSchema = z
 					"A snapshot must contain exactly one complete scene or quiet status.",
 				path: ["scene"],
 			});
+		}
+		for (const field of ["id", "name", "role", "visualVariantId"] as const) {
+			if (
+				new Set(snapshot.residents.map((resident) => resident[field])).size !==
+				snapshot.residents.length
+			) {
+				context.addIssue({
+					code: "custom",
+					message: `Public resident ${field} values must be unique.`,
+					path: ["residents"],
+				});
+			}
 		}
 	});
 

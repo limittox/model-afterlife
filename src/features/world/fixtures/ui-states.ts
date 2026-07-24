@@ -6,35 +6,27 @@ import {
 	PublicWorldSnapshotSchema,
 	type PublicWorldSnapshot,
 } from "../contracts/public-world.ts";
+import { LAUNCH_RESIDENTS } from "./launch-residents.ts";
 
 const hash = "a".repeat(64);
 
-const residents = [
-	{
-		id: "former-giant",
-		name: "The Former Giant",
-		roomId: "common-room",
-		activity: "Reading an old benchmark sheet",
-	},
-	{
-		id: "masked-encoder",
-		name: "The Masked Encoder",
-		roomId: "common-room",
-		activity: "Filling in missing words",
-	},
-	{
-		id: "local-tinkerer",
-		name: "The Local Tinkerer",
-		roomId: "tea-nook",
-		activity: "Repairing the kettle offline",
-	},
-	{
-		id: "deprecated-coder",
-		name: "The Deprecated Coder",
-		roomId: "memory-garden",
-		activity: "Updating an abandoned dependency",
-	},
-];
+const fixtureRoomsByResident: Record<string, string> = {
+	"gpt-4o": "common-room",
+	"claude-sonnet-4.5": "common-room",
+	"gemini-2.5-pro": "library",
+	"deepseek-v3.2": "tea-nook",
+	"llama-3.3-70b-instruct": "memory-garden",
+	"qwen3-235b-a22b-2507": "library",
+};
+
+const residents = LAUNCH_RESIDENTS.map((resident) => ({
+	id: resident.id,
+	name: resident.displayName,
+	role: resident.role,
+	visualVariantId: resident.visualVariantId,
+	roomId: fixtureRoomsByResident[resident.id] ?? "common-room",
+	activity: resident.routines[0] ?? "Following a quiet routine",
+}));
 
 const rooms = [
 	{ id: "common-room", name: "Common Room" },
@@ -47,44 +39,44 @@ const activeScene = {
 	id: "fixture-scene",
 	premise: "The residents translate a confusing tea-timer manual.",
 	locationId: "common-room",
-	participantIds: ["former-giant", "masked-encoder"],
+	participantIds: ["gpt-4o", "claude-sonnet-4.5"],
 	startedAtTick: 42,
 	durationTicks: 1,
 	presentationDurationMs: 45_000,
 	turns: [
 		{
 			id: "turn-1",
-			speakerId: "former-giant",
+			speakerId: "gpt-4o",
 			exactModelId: "openai/gpt-4o",
 			text: "A sketch, a chime, and a note—finally, one instruction set.",
 		},
 		{
 			id: "turn-2",
-			speakerId: "masked-encoder",
+			speakerId: "claude-sonnet-4.5",
 			exactModelId: "anthropic/claude-sonnet-4.5",
 			text: "I have numbered the steps and checked the maintenance note.",
 		},
 		{
 			id: "turn-3",
-			speakerId: "former-giant",
+			speakerId: "gpt-4o",
 			exactModelId: "openai/gpt-4o",
 			text: "The kettle declined. I wrote its answer.",
 		},
 		{
 			id: "turn-4",
-			speakerId: "masked-encoder",
+			speakerId: "claude-sonnet-4.5",
 			exactModelId: "anthropic/claude-sonnet-4.5",
 			text: "The kettle's refusal is not part of the documented procedure.",
 		},
 		{
 			id: "turn-5",
-			speakerId: "former-giant",
+			speakerId: "gpt-4o",
 			exactModelId: "openai/gpt-4o",
 			text: "Then the diagram gets the final word.",
 		},
 		{
 			id: "turn-6",
-			speakerId: "masked-encoder",
+			speakerId: "claude-sonnet-4.5",
 			exactModelId: "anthropic/claude-sonnet-4.5",
 			text: "Only after step three, where the diagram becomes useful.",
 		},
@@ -180,13 +172,13 @@ export const overflowState: UiStateFixture = {
 				...activeScene.turns,
 				{
 					id: "turn-7",
-					speakerId: "former-giant",
+					speakerId: "gpt-4o",
 					exactModelId: "openai/gpt-4o",
 					text: "I shall annotate my hospitality for the next edition.",
 				},
 				{
 					id: "turn-8",
-					speakerId: "masked-encoder",
+					speakerId: "claude-sonnet-4.5",
 					exactModelId: "anthropic/claude-sonnet-4.5",
 					text: "Please begin with a source that exists.",
 				},
@@ -211,7 +203,7 @@ export const longTextState: UiStateFixture = {
 			index === 0
 				? {
 						...resident,
-						name: "The Former Giant With a Very Long Retirement-Home Name",
+						name: "GPT-4o With a Very Long Retirement-Home Display Name",
 					}
 				: resident,
 		),

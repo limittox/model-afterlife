@@ -8,23 +8,10 @@ import { createProvisionalWorld } from "../../src/features/world/fixtures/provis
 import { toPublicWorldSnapshot } from "../../src/features/world/server/to-public-snapshot.ts";
 
 function snapshot(sequence: number): PublicWorldSnapshot {
-	return {
-		schemaVersion: 1,
-		worldId: "00000000-0000-4000-8000-000000000001",
-		logicalTick: sequence,
-		homeTime: "09:00",
-		dayPeriod: "morning",
-		throughSequence: sequence,
-		stateHash: sequence.toString(16).padStart(64, "0"),
-		rooms: [{ id: "common-room", name: "Common Room" }],
-		residents: [],
-		scene: null,
-		quiet: {
-			reason: "between-scenes",
-			locationId: "common-room",
-			message: "The home is between conversations.",
-		},
-	};
+	const world = createProvisionalWorld();
+	world.logicalTick = sequence;
+	world.throughSequence = sequence;
+	return toPublicWorldSnapshot(world);
 }
 
 function envelope(sequences: number[]) {
@@ -34,13 +21,16 @@ function envelope(sequences: number[]) {
 		throughSequence: sequences.at(-1) ?? 0,
 		hasMore: false,
 		requiresSnapshot: false,
-		updates: sequences.map((sequence) => ({
-			schemaVersion: 1 as const,
-			sequence,
-			logicalTick: sequence,
-			stateHash: sequence.toString(16).padStart(64, "0"),
-			snapshot: snapshot(sequence),
-		})),
+		updates: sequences.map((sequence) => {
+			const current = snapshot(sequence);
+			return {
+				schemaVersion: 1 as const,
+				sequence,
+				logicalTick: sequence,
+				stateHash: current.stateHash,
+				snapshot: current,
+			};
+		}),
 	};
 }
 
@@ -63,6 +53,38 @@ describe("public world update contract", () => {
 });
 
 describe("published scene serialization", () => {
+	it("publishes exactly six distinct grounded resident identities and routine cues", () => {
+		const world = createProvisionalWorld();
+		world.throughSequence = 1;
+		const serialized = toPublicWorldSnapshot(world);
+
+		expect(serialized.residents.map((resident) => resident.id)).toEqual([
+			"gpt-4o",
+			"claude-sonnet-4.5",
+			"gemini-2.5-pro",
+			"deepseek-v3.2",
+			"llama-3.3-70b-instruct",
+			"qwen3-235b-a22b-2507",
+		]);
+		expect(
+			new Set(serialized.residents.map((resident) => resident.role)).size,
+		).toBe(6);
+		expect(
+			new Set(serialized.residents.map((resident) => resident.visualVariantId))
+				.size,
+		).toBe(6);
+		expect(
+			serialized.residents.every((resident) => resident.activity.length > 0),
+		).toBe(true);
+
+		const duplicateVisual = structuredClone(serialized);
+		duplicateVisual.residents[1].visualVariantId =
+			duplicateVisual.residents[0].visualVariantId;
+		expect(PublicWorldSnapshotSchema.safeParse(duplicateVisual).success).toBe(
+			false,
+		);
+	});
+
 	it("requires one exact public model/version label on every visible turn", () => {
 		const missingLabel = {
 			...snapshot(20),
@@ -83,7 +105,9 @@ describe("published scene serialization", () => {
 			quiet: null,
 		};
 
-		expect(PublicWorldSnapshotSchema.safeParse(missingLabel).success).toBe(false);
+		expect(PublicWorldSnapshotSchema.safeParse(missingLabel).success).toBe(
+			false,
+		);
 	});
 
 	it("whitelists exact labels while excluding every private generation field", () => {
@@ -93,25 +117,27 @@ describe("published scene serialization", () => {
 			id: "accepted-public-scene",
 			premise: "Only accepted public fields cross the boundary.",
 			locationId: "common-room",
-			participantIds: ["former-giant", "masked-encoder"],
+			participantIds: ["gpt-4o", "claude-sonnet-4.5"],
 			startedAtTick: 2,
 			durationTicks: 1,
 			presentationDurationMs: 10_000,
-			turns: Array.from({ length: 4 }, (_, index) => ({
-				id: `accepted-turn-${index}`,
-				speakerId: index % 2 === 0 ? "former-giant" : "masked-encoder",
-				exactModelId:
-					index % 2 === 0
-						? "openai/gpt-4o"
-						: "anthropic/claude-sonnet-4.5",
-				text: `Accepted turn ${index + 1}.`,
-				providerResponseId: "private-response",
-				rawResponse: "private-raw-output",
-				prompt: "private-prompt",
-				validationEvidence: "private-validator-detail",
-				usageCost: 12,
-				secret: "private-secret",
-			}) as never),
+			turns: Array.from(
+				{ length: 4 },
+				(_, index) =>
+					({
+						id: `accepted-turn-${index}`,
+						speakerId: index % 2 === 0 ? "gpt-4o" : "claude-sonnet-4.5",
+						exactModelId:
+							index % 2 === 0 ? "openai/gpt-4o" : "anthropic/claude-sonnet-4.5",
+						text: `Accepted turn ${index + 1}.`,
+						providerResponseId: "private-response",
+						rawResponse: "private-raw-output",
+						prompt: "private-prompt",
+						validationEvidence: "private-validator-detail",
+						usageCost: 12,
+						secret: "private-secret",
+					}) as never,
+			),
 		};
 		world.quiet = null;
 

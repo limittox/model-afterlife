@@ -17,6 +17,7 @@ import {
 import { disposeWorldGame } from "../../src/features/world/renderer/renderer-lifecycle.ts";
 import { calculateIntegerDisplayScale } from "../../src/features/world/renderer/integer-display-scale.ts";
 import { CameraController } from "../../src/features/world/renderer/CameraController.ts";
+import { RESIDENT_VISUAL_STYLES } from "../../src/features/world/renderer/renderer-types.ts";
 
 describe("renderer bridge", () => {
 	it("projects canonical snapshots to stable room, resident, and speaker identities", () => {
@@ -43,16 +44,37 @@ describe("renderer bridge", () => {
 			["tea-nook", "Tea Nook"],
 		]);
 		expect(first.residents.map((resident) => resident.renderId)).toEqual([
-			"resident:former-giant",
-			"resident:masked-encoder",
-			"resident:local-tinkerer",
-			"resident:deprecated-coder",
+			"resident:gpt-4o",
+			"resident:claude-sonnet-4.5",
+			"resident:gemini-2.5-pro",
+			"resident:deepseek-v3.2",
+			"resident:llama-3.3-70b-instruct",
+			"resident:qwen3-235b-a22b-2507",
 		]);
-		expect(first.scene?.activeTurn?.speakerRenderId).toBe(
-			"resident:former-giant",
+		expect(first.scene?.activeTurn?.speakerRenderId).toBe("resident:gpt-4o");
+		expect(new Set(first.residents.map((resident) => resident.role)).size).toBe(
+			6,
 		);
+		expect(
+			new Set(first.residents.map((resident) => resident.variant)).size,
+		).toBe(6);
 		expect(first).not.toHaveProperty("camera");
 		expect(first).not.toHaveProperty("positionMutation");
+	});
+
+	it("maps every public variant to a distinct palette and silhouette signature", () => {
+		const styles = Object.values(RESIDENT_VISUAL_STYLES);
+		const palettes = styles.map(
+			(style) => `${style.bodyColor}:${style.accentColor}`,
+		);
+		const silhouettes = styles.map(
+			(style) =>
+				`${style.headWidth}:${style.shoulderWidth}:${style.bodyHeight}:${style.accessory}`,
+		);
+
+		expect(styles).toHaveLength(6);
+		expect(new Set(palettes).size).toBe(6);
+		expect(new Set(silhouettes).size).toBe(6);
 	});
 
 	it("keeps renderer state serializable and notifies one active subscription", () => {

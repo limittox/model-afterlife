@@ -33,7 +33,7 @@ function withExactModelLabels(
 		labelled.scene.turns = labelled.scene.turns.map((turn) => ({
 			...turn,
 			exactModelId:
-				turn.speakerId === "former-giant"
+				turn.speakerId === "gpt-4o"
 					? "openai/gpt-4o"
 					: "anthropic/claude-sonnet-4.5",
 		}));
@@ -160,7 +160,7 @@ test.describe("semantic observer UI consideration matrix", () => {
 		const turns = page.locator(".dialogue-turn");
 		await expect(turns).toHaveCount(labelled.scene?.turns.length ?? 0);
 		await expect(turns.first().locator(".turn-attribution")).toContainText(
-			"The Former Giant",
+			"GPT-4o",
 		);
 		await expect(turns.first().locator(".turn-attribution")).toContainText(
 			"openai/gpt-4o",
@@ -218,7 +218,9 @@ test.describe("semantic observer UI consideration matrix", () => {
 		await page.evaluate(() => window.dispatchEvent(new Event("focus")));
 		await expect(page.locator(".scene-card")).toHaveCount(1);
 		await expect(page.locator(".dialogue-turn")).toHaveCount(6);
-		await expect(page.getByText(/provider failed|retrying dialogue/i)).toHaveCount(0);
+		await expect(
+			page.getByText(/provider failed|retrying dialogue/i),
+		).toHaveCount(0);
 	});
 
 	test("HomeStatusStrip loading uses em dashes and Opening the home copy", async ({
@@ -289,7 +291,7 @@ test.describe("semantic observer UI consideration matrix", () => {
 			},
 		});
 		await page.goto("/");
-		await expect(page.locator(".home-silhouette span")).toHaveCount(4);
+		await expect(page.locator(".home-silhouette span")).toHaveCount(6);
 		await expect(page.locator(".dialogue-turn")).toHaveCount(0);
 	});
 
@@ -315,8 +317,18 @@ test.describe("semantic observer UI consideration matrix", () => {
 			).toBeVisible();
 		}
 		await expect(
-			page.getByRole("button", { name: /Follow The Former Giant/ }),
+			page.getByRole("button", {
+				name: /Follow GPT-4o, Omni Parlour Host/,
+			}),
 		).toBeVisible();
+		for (const resident of activeSnapshot.residents) {
+			await expect(
+				page.getByRole("button", {
+					name: `Follow ${resident.name}, ${resident.role}. Current routine: ${resident.activity}`,
+					exact: true,
+				}),
+			).toBeVisible();
+		}
 		await expect(page.getByText("one primary scene")).toBeVisible();
 	});
 
@@ -362,9 +374,7 @@ test.describe("semantic observer UI consideration matrix", () => {
 		await expect(
 			page.getByRole("heading", { name: activeSnapshot.scene?.premise }),
 		).toBeVisible();
-		await expect(page.locator(".scene-speakers")).toContainText(
-			"The Former Giant",
-		);
+		await expect(page.locator(".scene-speakers")).toContainText("GPT-4o");
 		await expect(page.locator(".scene-progress")).toContainText("1 of 6 turns");
 	});
 
@@ -458,8 +468,8 @@ test.describe("semantic observer UI consideration matrix", () => {
 		await openSnapshot(page);
 		const turns = page.locator(".dialogue-turn");
 		await expect(turns).toHaveCount(6);
-		await expect(turns.first()).toContainText("The Former Giant");
-		await expect(turns.nth(1)).toContainText("The Masked Encoder");
+		await expect(turns.first()).toContainText("GPT-4o");
+		await expect(turns.nth(1)).toContainText("Claude Sonnet 4.5");
 	});
 
 	test("scene turns advance over configured time while Pause freezes playback", async ({
@@ -469,13 +479,13 @@ test.describe("semantic observer UI consideration matrix", () => {
 		await openSnapshot(page, activeSnapshot);
 		const currentTurn = page.locator('.dialogue-turn[aria-current="true"]');
 
-		await expect(currentTurn).toContainText("In my day");
+		await expect(currentTurn).toContainText("A sketch");
 		await page.clock.fastForward(7_600);
-		await expect(currentTurn).toContainText("preferred seeing both sides");
+		await expect(currentTurn).toContainText("numbered the steps");
 
 		await page.getByRole("button", { name: "Pause presentation" }).click();
 		await page.clock.fastForward(15_000);
-		await expect(currentTurn).toContainText("preferred seeing both sides");
+		await expect(currentTurn).toContainText("numbered the steps");
 
 		await page.getByRole("button", { name: "Resume presentation" }).click();
 		await expect(
@@ -483,7 +493,7 @@ test.describe("semantic observer UI consideration matrix", () => {
 		).toBeEnabled();
 		await page.clock.runFor(100);
 		await page.clock.fastForward(7_500);
-		await expect(currentTurn).toContainText("discovered confidence");
+		await expect(currentTurn).toContainText("kettle declined");
 	});
 
 	test("DialogueTranscript partial content never replaces complete rows", async ({
@@ -511,7 +521,7 @@ test.describe("semantic observer UI consideration matrix", () => {
 		).toHaveCount(1);
 		await expect(
 			page.locator('.dialogue-turn[aria-current="true"]'),
-		).toContainText("In my day");
+		).toContainText("A sketch");
 		await expect(page.locator(".dialogue-transcript")).toHaveCSS(
 			"overflow-y",
 			"auto",
@@ -845,8 +855,8 @@ test.describe("local playback and recovery", () => {
 	test("observer presentation source issues GET requests only and exposes no canonical write", async () => {
 		const clientDirectory = path.resolve("src/features/world/client");
 		const source = await Promise.all(
-			["WorldObserver.tsx", "use-world-feed.ts"].map(
-				(file) => readFile(path.join(clientDirectory, file), "utf8"),
+			["WorldObserver.tsx", "use-world-feed.ts"].map((file) =>
+				readFile(path.join(clientDirectory, file), "utf8"),
 			),
 		);
 		const combined = source.join("\n");

@@ -79,7 +79,7 @@ describe("deterministic world replay", () => {
 			logicalTick: 1,
 			type: "resident_location_changed",
 			payload: {
-				residentId: "former-giant",
+				residentId: "gpt-4o",
 				roomId: "library",
 				activity: "Reading",
 				nextEligibleTick: 2,
@@ -90,7 +90,7 @@ describe("deterministic world replay", () => {
 			sequence: 1,
 			occurrenceKey: "test:first",
 			payload: {
-				residentId: "former-giant",
+				residentId: "gpt-4o",
 				roomId: "tea-nook",
 				activity: "Brewing tea",
 				nextEligibleTick: 2,
@@ -100,8 +100,7 @@ describe("deterministic world replay", () => {
 		const replayed = replayWorldEvents(initial, [eventOne, eventTwo, eventTwo]);
 
 		expect(
-			replayed.residents.find((resident) => resident.id === "former-giant")
-				?.roomId,
+			replayed.residents.find((resident) => resident.id === "gpt-4o")?.roomId,
 		).toBe("library");
 		expect(replayed.throughSequence).toBe(2);
 	});

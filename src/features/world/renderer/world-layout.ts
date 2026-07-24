@@ -1,5 +1,10 @@
 import type { PublicWorldSnapshot } from "../contracts/public-world.ts";
-import type { RenderResident, RenderRoom } from "./renderer-types.ts";
+import {
+	RESIDENT_VISUAL_STYLES,
+	type RenderResident,
+	type RenderRoom,
+	type ResidentVisualVariant,
+} from "./renderer-types.ts";
 
 export const HOME_WIDTH = 352;
 export const HOME_HEIGHT = 256;
@@ -69,20 +74,24 @@ export function projectResidents(
 	residents: PublicWorldSnapshot["residents"],
 ): RenderResident[] {
 	const usedByRoom = new Map<string, number>();
-	return residents.map((resident, index) => {
+	return residents.map((resident) => {
 		const roomIndex = usedByRoom.get(resident.roomId) ?? 0;
 		usedByRoom.set(resident.roomId, roomIndex + 1);
 		const anchors = ROOM_ANCHORS[resident.roomId] ?? [
 			{ x: HOME_WIDTH / 2, y: HOME_HEIGHT / 2 },
 		];
 		const anchor = anchors[roomIndex % anchors.length];
+		if (!(resident.visualVariantId in RESIDENT_VISUAL_STYLES)) {
+			throw new TypeError(
+				`Unknown resident visual variant: ${resident.visualVariantId}`,
+			);
+		}
 		return {
 			...resident,
 			renderId: `resident:${resident.id}` as const,
 			x: anchor.x,
 			y: anchor.y,
-			variant: index % 4,
+			variant: resident.visualVariantId as ResidentVisualVariant,
 		};
 	});
 }
-

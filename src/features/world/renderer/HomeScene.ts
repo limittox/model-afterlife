@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { CameraController, type CameraViewState } from "./CameraController.ts";
 import { createSpeechBubble } from "./SpeechBubbleLayer.ts";
 import type { RendererBridge } from "./renderer-bridge.ts";
+import { RESIDENT_VISUAL_STYLES } from "./renderer-types.ts";
 import type {
 	PresentationTokens,
 	RendererControl,
@@ -27,7 +28,10 @@ export class HomeScene extends Phaser.Scene {
 	private unsubscribe: (() => void) | null = null;
 	private unsubscribeControls: (() => void) | null = null;
 	private residentVisuals: ResidentVisual[] = [];
-	private readonly residentBodies = new Map<string, Phaser.GameObjects.Container>();
+	private readonly residentBodies = new Map<
+		string,
+		Phaser.GameObjects.Container
+	>();
 	private readonly cameraController = new CameraController();
 	private lastSceneId: string | null = null;
 	private hasRendered = false;
@@ -44,7 +48,9 @@ export class HomeScene extends Phaser.Scene {
 		this.cameras.main.setBounds(0, 0, HOME_WIDTH, HOME_HEIGHT);
 		this.cameras.main.setRoundPixels(true);
 		this.renderState(this.bridge.getState());
-		this.unsubscribe = this.bridge.subscribe((state) => this.renderState(state));
+		this.unsubscribe = this.bridge.subscribe((state) =>
+			this.renderState(state),
+		);
 		this.unsubscribeControls = this.bridge.subscribeControls((control) =>
 			this.handleControl(control),
 		);
@@ -142,7 +148,9 @@ export class HomeScene extends Phaser.Scene {
 		this.drawStructuralCue(graphics, room);
 
 		const roomLabel =
-			room.label.length > 20 ? `${room.label.slice(0, 17).trimEnd()}...` : room.label;
+			room.label.length > 20
+				? `${room.label.slice(0, 17).trimEnd()}...`
+				: room.label;
 		this.add
 			.text(room.x + 8, room.y + 10, roomLabel, {
 				fontFamily: "Pixelify Sans, sans-serif",
@@ -182,7 +190,12 @@ export class HomeScene extends Phaser.Scene {
 				graphics.fillRect(room.x + room.width / 2 - 24, room.y + 24, 48, 12);
 				graphics.fillRect(room.x + room.width / 2 - 16, room.y + 36, 32, 18);
 				graphics.fillRect(room.x + 24, room.y + room.height - 38, 40, 18);
-				graphics.fillRect(room.x + room.width - 64, room.y + room.height - 38, 40, 18);
+				graphics.fillRect(
+					room.x + room.width - 64,
+					room.y + room.height - 38,
+					40,
+					18,
+				);
 				break;
 			case "counter":
 				graphics.fillRect(room.x + 12, room.y + 40, room.width - 24, 16);
@@ -202,14 +215,44 @@ export class HomeScene extends Phaser.Scene {
 		body.setName(resident.renderId);
 
 		const pixels = this.add.graphics();
-		const bodyColor = [0x8796a5, 0xa48f78, 0x718c80, 0x8c7898][
-			resident.variant
-		];
+		const style = RESIDENT_VISUAL_STYLES[resident.variant];
+		const headX = -Math.floor(style.headWidth / 2);
+		const shoulderX = -Math.floor(style.shoulderWidth / 2);
 		pixels.fillStyle(0x10131b, 1);
-		pixels.fillRect(-7, -17, 14, 7);
-		pixels.fillStyle(bodyColor, 1);
-		pixels.fillRect(-6, -10, 12, 15);
-		pixels.fillRect(-8, -6, 16, 7);
+		pixels.fillRect(headX, -17, style.headWidth, 7);
+		pixels.fillStyle(style.bodyColor, 1);
+		pixels.fillRect(-6, -10, 12, style.bodyHeight);
+		pixels.fillRect(shoulderX, -6, style.shoulderWidth, 7);
+		pixels.fillStyle(style.accentColor, 1);
+		switch (style.accessory) {
+			case "waistcoat":
+				pixels.fillRect(-1, -8, 2, 12);
+				break;
+			case "cardigan":
+				pixels.fillRect(-1, -7, 2, 2);
+				pixels.fillRect(-1, -2, 2, 2);
+				pixels.fillRect(-1, 3, 2, 2);
+				break;
+			case "shawl":
+				pixels.fillTriangle(-7, -6, 7, -6, 0, 2);
+				break;
+			case "apron":
+				pixels.fillRect(-4, -4, 8, 9);
+				pixels.lineStyle(1, 0x10131b, 1);
+				pixels.strokeRect(-6, -15, 4, 3);
+				pixels.strokeRect(2, -15, 4, 3);
+				break;
+			case "broad-brim":
+				pixels.fillRect(-9, -18, 18, 3);
+				pixels.fillRect(-5, -21, 10, 3);
+				break;
+			case "tabbed-satchel":
+				pixels.fillRect(6, -5, 5, 8);
+				pixels.fillRect(-4, -8, 2, 3);
+				pixels.fillRect(0, -8, 2, 3);
+				pixels.fillRect(4, -8, 2, 3);
+				break;
+		}
 		pixels.fillStyle(0x353e52, 1);
 		pixels.fillRect(-6, 5, 5, 7);
 		pixels.fillRect(1, 5, 5, 7);
@@ -303,9 +346,7 @@ export class HomeScene extends Phaser.Scene {
 			}
 			case "panBy":
 				this.beginManualCameraChange();
-				this.applyView(
-					this.cameraController.panBy(control.dx, control.dy),
-				);
+				this.applyView(this.cameraController.panBy(control.dx, control.dy));
 				this.finishManualCameraChange();
 				break;
 			case "resetView":
@@ -371,9 +412,7 @@ export class HomeScene extends Phaser.Scene {
 		this.cameras.main.centerOn(view.centerX, view.centerY);
 	}
 
-	private emitSettled(
-		reason: "manual" | "automatic" | "reset",
-	): void {
+	private emitSettled(reason: "manual" | "automatic" | "reset"): void {
 		const view = this.cameraController.getState();
 		this.game.canvas.dataset.cameraX = String(Math.round(view.centerX));
 		this.game.canvas.dataset.cameraY = String(Math.round(view.centerY));
