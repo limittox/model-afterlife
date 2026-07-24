@@ -12,6 +12,7 @@ describe("pre-release database migration", () => {
 			"0000_world_skeleton",
 			"0001_majestic_mariko_yashida",
 			"0002_lumpy_daimon_hellstrom",
+			"0003_phase3_public_provenance",
 		]);
 		expect(migration).toContain('"schema_version" integer DEFAULT 1 NOT NULL');
 		expect(migration).toContain('"public_snapshot" jsonb NOT NULL');
@@ -41,6 +42,19 @@ describe("pre-release database migration", () => {
 		);
 		expect(provenanceMigration).toContain(
 			'ALTER TABLE "generation_turns" ADD COLUMN "provenance"',
+		);
+		const publicProvenanceMigration = await readFile(
+			"drizzle/0003_phase3_public_provenance.sql",
+			"utf8",
+		);
+		expect(publicProvenanceMigration).toContain(
+			'CREATE TABLE "published_scene_claim_versions"',
+		);
+		expect(publicProvenanceMigration).toContain(
+			'PRIMARY KEY("revision_id","turn_index","claim_version_id")',
+		);
+		expect(publicProvenanceMigration).toContain(
+			'("claim_version_id","revision_id")',
 		);
 	});
 });

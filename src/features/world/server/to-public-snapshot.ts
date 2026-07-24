@@ -1,7 +1,8 @@
+import { homeClockForLogicalTick } from "../../publication/domain/home-clock.ts";
 import {
 	PUBLIC_WORLD_SCHEMA_VERSION,
-	PublicWorldSnapshotSchema,
 	type PublicWorldSnapshot,
+	PublicWorldSnapshotSchema,
 } from "../contracts/public-world.ts";
 import { canonicalStateHash } from "../domain/canonical.ts";
 import type { WorldState } from "../domain/types.ts";
@@ -11,31 +12,8 @@ const PUBLIC_RESIDENT_IDENTITIES = new Map(
 	LAUNCH_RESIDENTS.map((resident) => [resident.id, resident]),
 );
 
-function homeClockFor(logicalTick: number): {
-	homeTime: string;
-	dayPeriod: PublicWorldSnapshot["dayPeriod"];
-} {
-	const minutesInDay = 24 * 60;
-	const totalMinutes = (9 * 60 + logicalTick) % minutesInDay;
-	const hour = Math.floor(totalMinutes / 60);
-	const minute = totalMinutes % 60;
-	const dayPeriod =
-		hour < 12
-			? "morning"
-			: hour < 17
-				? "afternoon"
-				: hour < 21
-					? "evening"
-					: "night";
-
-	return {
-		homeTime: `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`,
-		dayPeriod,
-	};
-}
-
 export function toPublicWorldSnapshot(state: WorldState): PublicWorldSnapshot {
-	const clock = homeClockFor(state.logicalTick);
+	const clock = homeClockForLogicalTick(state.logicalTick);
 	const residents = state.residents.map((resident) => {
 		const identity = PUBLIC_RESIDENT_IDENTITIES.get(resident.id);
 		if (!identity) {

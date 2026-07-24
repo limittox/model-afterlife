@@ -22,6 +22,13 @@
       "when": 1784867912766,
       "tag": "0002_lumpy_daimon_hellstrom",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1784911005246,
+      "tag": "0003_phase3_public_provenance",
+      "breakpoints": true
     }
   ]
 }
