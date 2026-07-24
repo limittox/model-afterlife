@@ -1,6 +1,7 @@
 import type { HistoricalClaimVersion } from "../domain/types.ts";
 
 const ACCESSED_ON = "2026-07-23";
+const QWEN3_ACCESSED_ON = "2026-07-24";
 
 export const HISTORICAL_CLAIM_CATEGORY_LABELS = {
 	documented: "Documented fact",
@@ -343,64 +344,73 @@ export const HISTORICAL_CLAIMS: HistoricalClaimVersion[] = [
 		editorialStatus: "approved",
 	},
 	{
-		claimVersionId: "claim-version:qwen25-capability:v1",
-		claimId: "qwen25-structured-multilingual",
-		versionKey: "qwen25-structured-multilingual.v1",
-		residentId: "qwen-2.5-7b-instruct",
+		claimVersionId: "claim-version:qwen3-235b-a22b-2507-architecture:v1",
+		claimId: "qwen3-moe-non-thinking",
+		versionKey: "qwen3-moe-non-thinking.v1",
+		residentId: "qwen3-235b-a22b-2507",
 		stableOrder: 1,
 		category: "documented",
 		statement:
-			"Qwen 2.5 documents multilingual, coding, mathematics, structured-data, and JSON-oriented improvements across its model family.",
+			"Qwen3 235B A22B Instruct 2507 is a mixture-of-experts model with 235 billion total parameters, 22 billion activated parameters, and non-thinking-only output.",
 		scope: {
-			residentId: "qwen-2.5-7b-instruct",
-			exactModelIds: ["qwen/qwen-2.5-7b-instruct"],
+			residentId: "qwen3-235b-a22b-2507",
+			exactModelIds: [
+				"qwen/qwen3-235b-a22b-2507",
+				"qwen/qwen3-235b-a22b-07-25",
+			],
 		},
 		source: {
-			title: "Qwen2.5 release",
-			url: "https://qwenlm.github.io/blog/qwen2.5/",
-			accessedOn: ACCESSED_ON,
+			title: "Qwen3-235B-A22B-Instruct-2507 model card",
+			url: "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507",
+			accessedOn: QWEN3_ACCESSED_ON,
 		},
 		confidence: "high",
 		editorialStatus: "approved",
 	},
 	{
-		claimVersionId: "claim-version:qwen25-reputation:v1",
-		claimId: "qwen25-compact-recordkeeper-reputation",
-		versionKey: "qwen25-compact-recordkeeper-reputation.v1",
-		residentId: "qwen-2.5-7b-instruct",
+		claimVersionId: "claim-version:qwen3-235b-a22b-2507-reputation:v1",
+		claimId: "qwen3-multilingual-archive-reputation",
+		versionKey: "qwen3-multilingual-archive-reputation.v1",
+		residentId: "qwen3-235b-a22b-2507",
 		stableOrder: 2,
 		category: "reported",
 		statement:
-			"The 7B variant's compact scale and the family's structured-output emphasis support a reputation as an efficient record keeper.",
+			"Qwen reports stronger instruction following, multilingual long-tail coverage, open-ended text quality, and long-context understanding for this exact model, which supports its archive-curator reputation.",
 		scope: {
-			residentId: "qwen-2.5-7b-instruct",
-			exactModelIds: ["qwen/qwen-2.5-7b-instruct"],
+			residentId: "qwen3-235b-a22b-2507",
+			exactModelIds: [
+				"qwen/qwen3-235b-a22b-2507",
+				"qwen/qwen3-235b-a22b-07-25",
+			],
 		},
 		source: {
-			title: "Qwen2.5 release",
-			url: "https://qwenlm.github.io/blog/qwen2.5/",
-			accessedOn: ACCESSED_ON,
+			title: "Qwen3-235B-A22B-Instruct-2507 model card",
+			url: "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507",
+			accessedOn: QWEN3_ACCESSED_ON,
 		},
 		confidence: "medium",
 		editorialStatus: "approved",
 	},
 	{
-		claimVersionId: "claim-version:qwen25-ledgers:v1",
-		claimId: "qwen25-tiny-ledgers-exaggeration",
-		versionKey: "qwen25-tiny-ledgers-exaggeration.v1",
-		residentId: "qwen-2.5-7b-instruct",
+		claimVersionId: "claim-version:qwen3-235b-a22b-2507-index-council:v1",
+		claimId: "qwen3-household-index-council-exaggeration",
+		versionKey: "qwen3-household-index-council-exaggeration.v1",
+		residentId: "qwen3-235b-a22b-2507",
 		stableOrder: 3,
 		category: "exaggeration",
 		statement:
-			"Keeping perfectly formatted pocket ledgers for every household object is fictional comic exaggeration.",
+			"Convening a many-expert household index council before shelving each label is fictional comic exaggeration, not a claim that expert routing is conscious.",
 		scope: {
-			residentId: "qwen-2.5-7b-instruct",
-			exactModelIds: ["qwen/qwen-2.5-7b-instruct"],
+			residentId: "qwen3-235b-a22b-2507",
+			exactModelIds: [
+				"qwen/qwen3-235b-a22b-2507",
+				"qwen/qwen3-235b-a22b-07-25",
+			],
 		},
 		source: {
-			title: "Qwen2.5 release",
-			url: "https://qwenlm.github.io/blog/qwen2.5/",
-			accessedOn: ACCESSED_ON,
+			title: "Qwen3: Think Deeper, Act Faster",
+			url: "https://qwenlm.github.io/blog/qwen3/",
+			accessedOn: QWEN3_ACCESSED_ON,
 		},
 		confidence: "high",
 		editorialStatus: "approved",

@@ -121,9 +121,14 @@ describe("resident admission canaries", () => {
 			requestedModelId: "qwen/qwen3-235b-a22b-2507",
 			canonicalModelId: "qwen/qwen3-235b-a22b-07-25",
 			approvedUpstream: "deepinfra/fp8",
-			selectedUpstreamName: "DeepInfra",
-			requiredQuantization: "fp8",
 			maxOutputTokens: 180,
+			catalogEvidence: {
+				endpoint: {
+					providerName: "DeepInfra",
+					providerSlug: "deepinfra/fp8",
+					quantization: "fp8",
+				},
+			},
 		});
 		expect(qwenResident?.reasoning).toBeUndefined();
 		expect(
