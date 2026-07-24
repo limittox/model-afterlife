@@ -23,6 +23,9 @@ import type { ResidentTurnProvider } from "../features/world/generation/resident
 import type { CommittedGenerationRequest } from "../features/world/server/advance-world-to.ts";
 import { persistGenerationAttempt } from "../features/world/server/persist-generation-attempt.ts";
 import { publishSceneRevision } from "../features/world/server/publish-scene-revision.ts";
+import { readCachedScene } from "../features/world/server/read-cached-scene.ts";
+import { readCanonicalHead } from "../features/world/server/world-repository.ts";
+import { resolveGenerationContinuity } from "../features/world/server/resolve-generation-continuity.ts";
 import { CANONICAL_WORLD_ID } from "../features/world/server/seed-data.ts";
 
 export const GENERATE_SCENE_TASK_ID = "model-afterlife-generate-scene";
@@ -42,7 +45,7 @@ type ProductionOverrides = {
 	provider?: ResidentTurnProvider;
 	persistAttempt?: PersistAttempt;
 	publish?: GenerationRequestDependencies["publish"];
-	recordQuiet?: GenerationRequestDependencies["recordQuiet"];
+	resolveContinuity?: GenerationRequestDependencies["resolveContinuity"];
 };
 
 async function loadPersistedBrief(request: CommittedGenerationRequest) {
@@ -62,7 +65,36 @@ async function loadPersistedBrief(request: CommittedGenerationRequest) {
 	}
 }
 
-async function recordPersistentQuiet(input: Parameters<GenerationRequestDependencies["recordQuiet"]>[0]) {
+export function classifyProviderFailure(
+	error: unknown,
+):
+	| "timed_out"
+	| "refused"
+	| "provider_outage"
+	| "provider_failed" {
+	const message =
+		error instanceof Error
+			? `${error.name} ${error.message}`.toLowerCase()
+			: String(error).toLowerCase();
+	if (/timeout|timed out|aborterror/.test(message)) return "timed_out";
+	if (/refus|filtered|content filter|safety block/.test(message)) {
+		return "refused";
+	}
+	if (
+		/\b(?:429|500|502|503|504)\b|outage|unavailable|connection reset|econnreset/.test(
+			message,
+		)
+	) {
+		return "provider_outage";
+	}
+	return "provider_failed";
+}
+
+async function recordPersistentContinuity(
+	input: Parameters<
+		GenerationRequestDependencies["resolveContinuity"]
+	>[0],
+) {
 	const { db, close } = createWorldDatabase();
 	try {
 		const [latest] = await db
@@ -77,16 +109,42 @@ async function recordPersistentQuiet(input: Parameters<GenerationRequestDependen
 		await db
 			.insert(sceneValidationResults)
 			.values({
-				validationId: `${latest.attemptId}:${input.disposition}`,
+				validationId: `${latest.attemptId}:${input.terminalDisposition}`,
 				attemptId: latest.attemptId,
 				accepted: false,
-				code: input.disposition,
+				code: input.terminalDisposition,
 				detail: `Attempt dispositions: ${input.attemptDispositions.join(", ")}.`,
 			})
 			.onConflictDoNothing();
 	} finally {
 		await close();
 	}
+	const head = await readCanonicalHead(CANONICAL_WORLD_ID);
+	const cachedScene =
+		input.terminalDisposition === "stale_world"
+			? null
+			: await readCachedScene({
+					worldId: CANONICAL_WORLD_ID,
+					failedBrief: input.brief,
+					startedAtTick: head.state.logicalTick,
+				});
+	const resolved = await resolveGenerationContinuity({
+		worldId: CANONICAL_WORLD_ID,
+		sceneKey: input.sceneKey,
+		disposition:
+			input.terminalDisposition === "stale_world"
+				? "stale_world"
+				: cachedScene
+					? "cached"
+					: "quiet",
+		...(cachedScene ? { cachedScene } : {}),
+	});
+	return {
+		mode: resolved.mode,
+		...(cachedScene
+			? { cachedRevisionId: cachedScene.originalRevisionId }
+			: {}),
+	};
 }
 
 export function createProductionGenerationDependencies(
@@ -139,25 +197,26 @@ export function createProductionGenerationDependencies(
 					};
 				}
 				return { status: "accepted" as const, revision: validation.revision };
-			} catch {
+			} catch (error) {
+				const disposition = classifyProviderFailure(error);
 				const attempt = GenerationAttemptSchema.parse({
 					attemptId,
 					sceneKey: brief.sceneKey,
 					attemptOrdinal,
-					disposition: "provider_failed",
+					disposition,
 					identityEvidence: "requested_only",
 					adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 					configurationVersion: "strict-openrouter-v1",
 					promptVersion: "resident-turn-v1",
 					bibleVersionKey: "phase-02-tracer-v1",
 					claimVersionKey: "phase-02-tracer-v1",
-					finishReason: "provider_error",
+					finishReason: disposition,
 					usage: { inputTokens: 0, outputTokens: 0 },
 				});
 				const result = ValidationResultSchema.parse({
 					attemptId,
 					accepted: false,
-					code: "provider_failed",
+					code: disposition,
 					detail: "The resident provider call failed before a complete candidate existed.",
 				});
 				await persistAttempt({
@@ -167,13 +226,14 @@ export function createProductionGenerationDependencies(
 					turns: [],
 					result,
 				});
-				return { status: "rejected" as const, disposition: "provider_failed" as const };
+				return { status: "rejected" as const, disposition };
 			}
 		},
 		publish:
 			overrides.publish ??
 			((revision) => publishSceneRevision(CANONICAL_WORLD_ID, revision)),
-		recordQuiet: overrides.recordQuiet ?? recordPersistentQuiet,
+		resolveContinuity:
+			overrides.resolveContinuity ?? recordPersistentContinuity,
 	};
 }
 

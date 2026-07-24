@@ -32,6 +32,20 @@ const CompleteSceneSchema = z.object({
 	durationTicks: z.number().int().positive(),
 	presentationDurationMs: z.number().int().positive(),
 	turns: z.array(DialogueTurnSchema).min(4).max(10),
+	deliveryMode: z.enum(["live", "cached"]).default("live"),
+	originalRevisionId: z.string().min(1).optional(),
+	originalSceneKey: z.string().min(1).optional(),
+}).superRefine((scene, context) => {
+	if (
+		scene.deliveryMode === "cached" &&
+		(!scene.originalRevisionId || !scene.originalSceneKey)
+	) {
+		context.addIssue({
+			code: "custom",
+			message: "Cached scenes must preserve original revision provenance.",
+			path: ["originalRevisionId"],
+		});
+	}
 });
 
 const QuietStatusSchema = z.object({

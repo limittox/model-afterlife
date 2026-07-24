@@ -67,6 +67,9 @@ describe("deterministic scene eligibility", () => {
 			durationTicks: 2,
 			presentationDurationMs: 1_000,
 			turns: [],
+			deliveryMode: "live",
+			originalRevisionId: "active",
+			originalSceneKey: "active",
 		};
 		expect(
 			selectEligibleSceneBrief({

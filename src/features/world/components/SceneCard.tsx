@@ -22,7 +22,11 @@ export function SceneCard({
 
 	return (
 		<section className="scene-card" aria-labelledby="scene-premise">
-			<p className="scene-label">Now in {location}</p>
+			<p className="scene-label">
+				{scene.deliveryMode === "cached"
+					? `Cached scene · not live · originally in ${location}`
+					: `Now in ${location}`}
+			</p>
 			<h2 id="scene-premise">{scene.premise}</h2>
 			<p className="scene-speakers">
 				<span>Speakers</span> {speakers.join(" and ")}

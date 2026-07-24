@@ -2,7 +2,11 @@ import { eq, sql } from "drizzle-orm";
 import { createWorldDatabase } from "../../../db/client.ts";
 import { publishedSceneRevisions, sceneBriefs, worldEvents, worldProjection, worlds } from "../../../db/schema.ts";
 import { SceneBriefSchema, type PublishedSceneRevision } from "../generation/contracts.ts";
-import type { CompleteWorldScene, WorldEvent } from "../domain/types.ts";
+import type {
+	CompleteWorldScene,
+	WorldEvent,
+	WorldRoomId,
+} from "../domain/types.ts";
 import { replayWorldEvents } from "../domain/replay.ts";
 import {
 	orderedResidentPair,
@@ -64,7 +68,11 @@ export async function publishSceneRevision(worldId: string, revision: PublishedS
 			) {
 				throw new Error("Duplicate relationship effect keys are not permitted.");
 			}
-			const scene: CompleteWorldScene = { id: revision.revisionId, premise: "A validated fictional model-API scene.", locationId: "common-room", participantIds: [...new Set(revision.turns.map((turn) => turn.residentId))], startedAtTick: head.state.logicalTick, durationTicks: 1, presentationDurationMs: 12_000, turns: revision.turns.map((turn) => ({ id: `${revision.revisionId}:${turn.turnIndex}`, speakerId: turn.residentId, exactModelId: turn.requestedModelId, text: turn.text })) };
+			const locationId = brief.locationId as WorldRoomId;
+			if (!head.state.rooms.some((room) => room.id === locationId)) {
+				throw new Error(`Scene brief location ${brief.locationId} is unknown.`);
+			}
+			const scene: CompleteWorldScene = { id: revision.revisionId, premise: brief.premise, locationId, participantIds: [...new Set(revision.turns.map((turn) => turn.residentId))], startedAtTick: head.state.logicalTick, durationTicks: 1, presentationDurationMs: 12_000, turns: revision.turns.map((turn) => ({ id: `${revision.revisionId}:${turn.turnIndex}`, speakerId: turn.residentId, exactModelId: turn.requestedModelId, text: turn.text })), deliveryMode: "live", originalRevisionId: revision.revisionId, originalSceneKey: revision.sceneKey };
 			const events: WorldEvent[] = [
 				{ schemaVersion: 1, sequence: head.state.throughSequence + 1, occurrenceKey: `scene-published:${revision.sceneKey}`, logicalTick: head.state.logicalTick, type: "scene_published", payload: { scene, revisionId: revision.revisionId, sceneKey: revision.sceneKey, briefId: brief.briefId } },
 				...acceptedEffects.map((effect, index): WorldEvent => ({

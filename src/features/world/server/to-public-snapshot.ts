@@ -77,6 +77,9 @@ export function toPublicWorldSnapshot(state: WorldState): PublicWorldSnapshot {
 						exactModelId: turn.exactModelId,
 						text: turn.text,
 					})),
+					deliveryMode: state.scene.deliveryMode,
+					originalRevisionId: state.scene.originalRevisionId,
+					originalSceneKey: state.scene.originalSceneKey,
 				}
 			: null,
 		quiet: state.quiet,

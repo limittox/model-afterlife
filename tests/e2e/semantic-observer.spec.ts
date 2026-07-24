@@ -646,6 +646,33 @@ test.describe("semantic observer UI consideration matrix", () => {
 });
 
 test.describe("local playback and recovery", () => {
+	test("two observers converge on the same explicitly cached non-live scene", async ({
+		context,
+		page,
+	}) => {
+		const cached = structuredClone(activeSnapshot);
+		if (!cached.scene) throw new Error("Active fixture requires a scene.");
+		cached.scene.deliveryMode = "cached";
+		cached.scene.originalRevisionId = "fixture-original-revision";
+		cached.scene.originalSceneKey = "fixture-original-scene";
+		const secondPage = await context.newPage();
+		await mockWorld(page, { snapshots: [cached] });
+		await mockWorld(secondPage, { snapshots: [cached] });
+
+		await Promise.all([page.goto("/"), secondPage.goto("/")]);
+
+		for (const observer of [page, secondPage]) {
+			await expect(
+				observer.getByText("Cached scene · not live", { exact: false }),
+			).toBeVisible();
+			await expect(observer.locator(".pixel-world")).toHaveAttribute(
+				"data-state-hash",
+				cached.stateHash,
+			);
+			await expect(observer.locator(".dialogue-turn")).toHaveCount(6);
+		}
+	});
+
 	test("camera dock follows, manually unfollows, clamps integer zoom, and resets locally", async ({
 		page,
 	}) => {

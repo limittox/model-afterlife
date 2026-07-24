@@ -72,18 +72,18 @@ describe("durable generation request runner", () => {
 		expect(runnerModule, "generation runner module must exist").toBeDefined();
 		const runAttempt = vi.fn(async () => ({ status: "accepted" as const, revision }));
 		const publish = vi.fn(async () => ({ revisionId: revision.revisionId, published: true }));
-		const recordQuiet = vi.fn(async () => undefined);
+		const resolveContinuity = vi.fn(async () => ({ mode: "quiet" as const }));
 		const result = await runnerModule?.runGenerationRequest(request, {
 			loadBrief: async () => brief,
 			runAttempt,
 			publish,
-			recordQuiet,
+			resolveContinuity,
 		});
 
 		expect(runAttempt).toHaveBeenCalledTimes(1);
 		expect(runAttempt).toHaveBeenCalledWith({ brief, attemptOrdinal: 1 });
 		expect(publish).toHaveBeenCalledOnce();
-		expect(recordQuiet).not.toHaveBeenCalled();
+		expect(resolveContinuity).not.toHaveBeenCalled();
 		expect(result).toMatchObject({ status: "published", attemptOrdinal: 1 });
 	});
 
@@ -105,13 +105,18 @@ describe("durable generation request runner", () => {
 						disposition: "identity_rejected" as const,
 					};
 		});
-		const publish = vi.fn(async () => undefined);
-		const recordQuiet = vi.fn(async () => undefined);
+		const publish = vi.fn(async () => ({
+			revisionId: revision.revisionId,
+			published: true,
+		}));
+		const resolveContinuity = vi.fn(async () => ({
+			mode: "quiet" as const,
+		}));
 		const result = await runnerModule?.runGenerationRequest(request, {
 			loadBrief: async () => brief,
 			runAttempt,
 			publish,
-			recordQuiet,
+			resolveContinuity,
 		});
 
 		expect(runAttempt).toHaveBeenCalledTimes(2);
@@ -121,9 +126,10 @@ describe("durable generation request runner", () => {
 		]);
 		expect(JSON.stringify(inputs[1])).not.toContain("Do not place this");
 		expect(publish).not.toHaveBeenCalled();
-		expect(recordQuiet).toHaveBeenCalledWith({
+		expect(resolveContinuity).toHaveBeenCalledWith({
+			brief,
 			sceneKey: request.sceneKey,
-			disposition: "generation_failed_after_two_attempts",
+			terminalDisposition: "generation_failed_after_two_attempts",
 			attemptDispositions: ["schema_rejected", "identity_rejected"],
 		});
 		expect(result).toEqual({
@@ -145,7 +151,7 @@ describe("durable generation request runner", () => {
 			loadBrief: async () => brief,
 			runAttempt,
 			publish: async () => ({ revisionId: revision.revisionId, published: true }),
-			recordQuiet: async () => undefined,
+			resolveContinuity: async () => ({ mode: "quiet" }),
 		});
 
 		expect(runAttempt).toHaveBeenCalledTimes(2);
@@ -182,7 +188,7 @@ describe("generation Trigger task", () => {
 			loadBrief: async () => brief,
 			runAttempt,
 			publish,
-			recordQuiet: async () => undefined,
+			resolveContinuity: async () => ({ mode: "quiet" }),
 		});
 
 		expect(runAttempt).toHaveBeenCalledOnce();
@@ -216,7 +222,7 @@ describe("generation Trigger task", () => {
 			},
 			persistAttempt,
 			publish: async () => ({ revisionId: revision.revisionId }),
-			recordQuiet: async () => undefined,
+			resolveContinuity: async () => ({ mode: "quiet" }),
 		});
 
 		const result = await dependencies?.runAttempt({ brief, attemptOrdinal: 2 });
@@ -246,24 +252,24 @@ describe("generation Trigger task", () => {
 				},
 			},
 			persistAttempt,
-			publish: async () => undefined,
-			recordQuiet: async () => undefined,
+			publish: async () => ({ revisionId: revision.revisionId }),
+			resolveContinuity: async () => ({ mode: "quiet" }),
 		});
 
 		const result = await dependencies?.runAttempt({ brief, attemptOrdinal: 1 });
 
 		expect(result).toEqual({
 			status: "rejected",
-			disposition: "provider_failed",
+			disposition: "timed_out",
 		});
 		expect(persistAttempt.mock.calls[0]?.[0]).toMatchObject({
 			attempt: {
 				attemptOrdinal: 1,
-				disposition: "provider_failed",
+				disposition: "timed_out",
 				identityEvidence: "requested_only",
 			},
 			turns: [],
-			result: { accepted: false, code: "provider_failed" },
+			result: { accepted: false, code: "timed_out" },
 		});
 	});
 });

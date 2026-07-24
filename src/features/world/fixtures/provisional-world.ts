@@ -126,6 +126,9 @@ export function createProvisionalScene(
 				text: "Only after step three, where the diagram becomes useful.",
 			},
 		],
+		deliveryMode: "live",
+		originalRevisionId: `provisional-scene-${startedAtTick}`,
+		originalSceneKey: `provisional-scene-${startedAtTick}`,
 	};
 }
 

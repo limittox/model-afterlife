@@ -43,6 +43,9 @@ const activeScene = {
 	startedAtTick: 42,
 	durationTicks: 1,
 	presentationDurationMs: 45_000,
+	deliveryMode: "live" as const,
+	originalRevisionId: "fixture-scene",
+	originalSceneKey: "fixture-scene",
 	turns: [
 		{
 			id: "turn-1",

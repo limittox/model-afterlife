@@ -18,6 +18,9 @@ describe("Phase 2 public scene contract", () => {
 			startedAtTick: 3,
 			durationTicks: 4,
 			presentationDurationMs: 12_000,
+			deliveryMode: "live",
+			originalRevisionId: "scene-complete",
+			originalSceneKey: "scene-complete",
 			turns: Array.from({ length: 10 }, (_, index) => ({
 				id: `turn-${index}`,
 				speakerId: index % 2 === 0 ? "atlas" : "ember",

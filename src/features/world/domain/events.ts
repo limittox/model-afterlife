@@ -164,6 +164,27 @@ export function reduceWorldEvent(
 			};
 			break;
 		}
+		case "scene_generation_resolved": {
+			if (state.pendingSceneRequest?.sceneKey === event.payload.sceneKey) {
+				state.pendingSceneRequest = null;
+			}
+			if (event.payload.disposition === "cached" && event.payload.cachedScene) {
+				state.scene = {
+					...event.payload.cachedScene,
+					participantIds: [...event.payload.cachedScene.participantIds],
+					turns: event.payload.cachedScene.turns.map((turn) => ({ ...turn })),
+				};
+				state.quiet = null;
+			} else if (!state.scene) {
+				state.quiet = {
+					reason: "scene-unavailable",
+					locationId: state.quiet?.locationId ?? "common-room",
+					message:
+						"The planned scene is unavailable. Quiet routines continue.",
+				};
+			}
+			break;
+		}
 		case "scene_completed": {
 			if (state.scene?.id === event.payload.sceneId) {
 				state.scene = null;

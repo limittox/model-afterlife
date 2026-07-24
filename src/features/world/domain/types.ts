@@ -140,6 +140,9 @@ export type CompleteWorldScene = {
 	durationTicks: number;
 	presentationDurationMs: number;
 	turns: WorldDialogueTurn[];
+	deliveryMode: "live" | "cached";
+	originalRevisionId: string;
+	originalSceneKey: string;
 };
 
 export type ApprovedSceneBrief = {
@@ -262,6 +265,19 @@ export type SceneCompletedEvent = WorldEventBase<
 	{ sceneId: string; locationId: WorldRoomId }
 >;
 
+export type SceneGenerationResolvedEvent = WorldEventBase<
+	"scene_generation_resolved",
+	{
+		sceneKey: string;
+		disposition:
+			| "quiet"
+			| "cached"
+			| "stale_world"
+			| "duplicate";
+		cachedScene?: CompleteWorldScene;
+	}
+>;
+
 export type RelationshipEffectAppliedEvent = WorldEventBase<
 	"relationship_effect_applied",
 	{
@@ -294,6 +310,7 @@ export type WorldEvent =
 	| SceneGenerationRequestedEvent
 	| ScenePublishedEvent
 	| SceneCompletedEvent
+	| SceneGenerationResolvedEvent
 	| RelationshipEffectAppliedEvent
 	| SharedExperienceRecordedEvent;
 

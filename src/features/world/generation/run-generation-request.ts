@@ -4,8 +4,13 @@ import type { CommittedGenerationRequest } from "../server/advance-world-to.ts";
 export type GenerationAttemptDisposition =
 	| "schema_rejected"
 	| "identity_rejected"
+	| "fact_rejected"
+	| "safety_rejected"
+	| "refused"
 	| "timed_out"
 	| "stale_world"
+	| "provider_outage"
+	| "publication_failed"
 	| "provider_failed";
 
 export type GenerationAttemptResult =
@@ -21,12 +26,22 @@ export type GenerationRequestDependencies = {
 		brief: SceneBrief;
 		attemptOrdinal: 1 | 2;
 	}) => Promise<GenerationAttemptResult>;
-	publish: (revision: PublishedSceneRevision) => Promise<unknown>;
-	recordQuiet: (input: {
+	publish: (revision: PublishedSceneRevision) => Promise<{
+		revisionId: string;
+		published?: boolean;
+	}>;
+	resolveContinuity: (input: {
+		brief: SceneBrief;
 		sceneKey: string;
-		disposition: "generation_failed_after_two_attempts";
+		terminalDisposition:
+			| "generation_failed_after_two_attempts"
+			| "stale_world"
+			| "publication_failed";
 		attemptDispositions: GenerationAttemptDisposition[];
-	}) => Promise<void>;
+	}) => Promise<{
+		mode: "quiet" | "cached";
+		cachedRevisionId?: string;
+	}>;
 };
 
 export async function runGenerationRequest(
@@ -42,6 +57,27 @@ export async function runGenerationRequest(
 	}
 
 	const attemptDispositions: GenerationAttemptDisposition[] = [];
+	const resolve = async (
+		terminalDisposition:
+			| "generation_failed_after_two_attempts"
+			| "stale_world"
+			| "publication_failed",
+	) => {
+		const continuity = await dependencies.resolveContinuity({
+			brief,
+			sceneKey: request.sceneKey,
+			terminalDisposition,
+			attemptDispositions,
+		});
+		return {
+			status: continuity.mode,
+			disposition: terminalDisposition,
+			attemptDispositions,
+			...(continuity.cachedRevisionId
+				? { cachedRevisionId: continuity.cachedRevisionId }
+				: {}),
+		} as const;
+	};
 	for (const attemptOrdinal of [1, 2] as const) {
 		let result: GenerationAttemptResult;
 		try {
@@ -51,7 +87,24 @@ export async function runGenerationRequest(
 		}
 
 		if (result.status === "accepted") {
-			await dependencies.publish(result.revision);
+			try {
+				const publication = await dependencies.publish(result.revision);
+				if (publication.published === false) {
+					return {
+						status: "duplicate" as const,
+						revisionId: publication.revisionId,
+						attemptOrdinal,
+						attemptDispositions,
+					};
+				}
+			} catch (error) {
+				const disposition =
+					error instanceof Error && error.message === "stale_world"
+						? "stale_world"
+						: "publication_failed";
+				attemptDispositions.push(disposition);
+				return resolve(disposition);
+			}
 			return {
 				status: "published" as const,
 				attemptOrdinal,
@@ -62,10 +115,5 @@ export async function runGenerationRequest(
 	}
 
 	const disposition = "generation_failed_after_two_attempts" as const;
-	await dependencies.recordQuiet({
-		sceneKey: request.sceneKey,
-		disposition,
-		attemptDispositions,
-	});
-	return { status: "quiet" as const, disposition, attemptDispositions };
+	return resolve(disposition);
 }

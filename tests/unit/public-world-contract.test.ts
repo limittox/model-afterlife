@@ -121,6 +121,9 @@ describe("published scene serialization", () => {
 			startedAtTick: 2,
 			durationTicks: 1,
 			presentationDurationMs: 10_000,
+			deliveryMode: "live",
+			originalRevisionId: "accepted-scene",
+			originalSceneKey: "accepted-scene",
 			turns: Array.from(
 				{ length: 4 },
 				(_, index) =>
