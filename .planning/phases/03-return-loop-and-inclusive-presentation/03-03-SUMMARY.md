@@ -116,11 +116,11 @@ completed: 2026-07-25
 - Added qualitative relationship summaries that search newest-first, ignore zero effects and incomplete scenes, require a matching canonical outcome, and serialize no score, delta, meter, rank, or progress field.
 - Proved exact-six, permutation, duplicate, cross-scope, incomplete-evidence, privacy, keyboard, responsive, no-CSS, long-copy, source, existing scene/archive-link, and unavailable-state behavior.
 
-## Verification
+## Test Results
 
-- `node node_modules/vitest/vitest.mjs run tests/unit/resident-profiles.test.ts tests/integration/phase-03-resident-reader.test.ts` — 2 files, 11 tests passed.
-- `node_modules\.bin\playwright.cmd test tests/e2e/phase-03-profiles.spec.ts --project=chromium` — 4 tests passed.
-- `node node_modules/typescript/bin/tsc --noEmit` — passed.
+- node node_modules/vitest/vitest.mjs run tests/unit/resident-profiles.test.ts tests/integration/phase-03-resident-reader.test.ts — 2 files, 11 tests passed.
+- node_modules\.bin\playwright.cmd test tests/e2e/phase-03-profiles.spec.ts --project=chromium — 4 tests passed.
+- node node_modules/typescript/bin/tsc --noEmit — passed.
 - Targeted Biome lint across the 15 implementation and verification files — passed with no warnings.
 
 ## Task Commits
