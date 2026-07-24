@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: Guarded five-generation reference retry-5 is ready at cumulative 135
-last_updated: "2026-07-24T18:39:03.2352603+10:00"
+stopped_at: Live three-case reference proof passed at cumulative 140; full verifier awaits Docker
+last_updated: "2026-07-24T18:46:44.2919938+10:00"
 last_activity: 2026-07-24
-last_activity_desc: "Prepared retry-5 with resident-turn-v2 text bounds and exactly five generations through cap 140"
+last_activity_desc: "Completed the three-case live reference proof with all retry-5 generations passed at cumulative 140"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 4 of 4
-Status: Plan 02-03 complete; guarded five-generation reference retry-5 awaits explicit authorization
-Last activity: 2026-07-24 — added resident-turn-v2 text bounds and prepared the final single-case continuation
+Status: Plan 02-04 live reference proof complete; full database-backed verifier awaits Docker Desktop
+Last activity: 2026-07-24 — all three live reference cases passed at exact cumulative cap 140
 
 Progress: [██████████████████░░] 7/8 plans (88%)
 
@@ -98,8 +98,8 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Retry-4’s privacy-safe evidence cannot distinguish empty text from an over-grapheme-budget turn. Resident prompt v2 now requires non-empty text of at most 180 graphemes while the 240-grapheme publication gate remains unchanged.
-- [Phase 2]: Guarded retry-5 reuses both accepted cases and requires exactly five generations from cumulative 135 to cap 140. It needs fresh explicit authorization before any paid call.
+- [Phase 2]: Live reference proof passed all three cases. Retry-5 completed exactly five generations from cumulative 135 to 140 with no failures, fallbacks, or retries.
+- [Phase 2]: The database-free frozen matrix passed 24/24. Full `verify:phase-02` remains blocked locally because Docker Desktop is stopped.
 - [Phase 2]: Docker Desktop is stopped, so Plan 02-03's database-backed replay/rebuild check remains explicit verification debt.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
@@ -134,6 +134,7 @@ None yet.
 | 260724-pa6 | Fix semantic judge reason-length failures offline, add focused post-implementation regression coverage, and prepare a guarded reference retry from cumulative 129 without provider calls | 2026-07-24 | 35c08f1 | [260724-pa6-fix-semantic-judge-reason-length-failure](./quick/260724-pa6-fix-semantic-judge-reason-length-failure/) |
 | 260724-phw | Run the authorized Phase 2 reference retry-4 with exactly 10 generations from cumulative 129 to cap 139, stop fail-closed, verify, commit, and push | 2026-07-24 | 521df32 | [260724-phw-run-the-authorized-phase-2-reference-ret](./quick/260724-phw-run-the-authorized-phase-2-reference-ret/) |
 | 260724-prh | Diagnose and fix the retry-4 schema-text-invalid resident failure offline, add focused post-implementation regression coverage, and prepare a guarded final reference checkpoint from cumulative 135 without provider calls | 2026-07-24 | f24d959 | [260724-prh-diagnose-and-fix-the-retry-4-schema-text](./quick/260724-prh-diagnose-and-fix-the-retry-4-schema-text/) |
+| 260724-pzr | Run the authorized Phase 2 reference retry-5 with exactly five generations from cumulative 135 to cap 140, stop fail-closed, verify, commit, and push | 2026-07-24 | e4da50a | [260724-pzr-run-the-authorized-phase-2-reference-ret](./quick/260724-pzr-run-the-authorized-phase-2-reference-ret/) |
 
 ## Deferred Items
 
@@ -145,6 +146,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-24T18:39:03.2352603+10:00
-Stopped at: Guarded retry-5 is ready for exactly five generations from cumulative 135 to cap 140
+Last session: 2026-07-24T18:46:44.2919938+10:00
+Stopped at: Live three-case reference proof passed; full database-backed verification awaits Docker Desktop
 Resume file: None
