@@ -38,12 +38,20 @@ const CONTINUATION_CHECKPOINT_GENERATIONS =
 const CONTINUATION_REQUIRED_CUMULATIVE_CAP =
 	CONTINUATION_STARTING_CUMULATIVE_GENERATIONS +
 	CONTINUATION_CHECKPOINT_GENERATIONS;
+const RETRY_STARTING_CUMULATIVE_GENERATIONS = 109;
+const RETRY_CHECKPOINT_GENERATIONS =
+	REFERENCE_RESIDENT_GENERATIONS + REFERENCE_JUDGE_GENERATIONS;
+const RETRY_REQUIRED_CUMULATIVE_CAP =
+	RETRY_STARTING_CUMULATIVE_GENERATIONS + RETRY_CHECKPOINT_GENERATIONS;
 const GENERATION_INTERVAL_MS = 21_000;
 const INITIAL_LEDGER_PATH = resolve(
 	"evals/results/phase-02-live-checkpoint.json",
 );
 const CONTINUATION_LEDGER_PATH = resolve(
 	"evals/results/phase-02-live-continuation.json",
+);
+const RETRY_LEDGER_PATH = resolve(
+	"evals/results/phase-02-live-reference-retry.json",
 );
 const ADMISSION_RESULT_PATH = resolve(
 	"evals/results/phase-02-live-admission.json",
@@ -78,7 +86,7 @@ type Ledger = {
 };
 
 type RunConfiguration = Readonly<{
-	mode: "initial" | "reference-continuation";
+	mode: "initial" | "reference-continuation" | "reference-retry";
 	startingCumulativeGenerations: number;
 	checkpointGenerations: number;
 	requiredCumulativeCap: number;
@@ -135,28 +143,84 @@ export function validatePriorCheckpoint(): void {
 	}
 }
 
+export function validatePriorRetryCheckpoint(): void {
+	validatePriorCheckpoint();
+	if (!existsSync(CONTINUATION_LEDGER_PATH)) {
+		throw new Error(
+			"Reference retry requires the prior failed continuation ledger.",
+		);
+	}
+	const prior = JSON.parse(
+		readFileSync(CONTINUATION_LEDGER_PATH, "utf8"),
+	) as Ledger;
+	const expectedResidents = [
+		"gpt-4o",
+		"claude-sonnet-4.5",
+		"gpt-4o",
+		"claude-sonnet-4.5",
+	];
+	const entriesMatch = prior.entries.every(
+		(entry, index) =>
+			entry.kind === "reference-resident" &&
+			entry.residentId === expectedResidents[index] &&
+			entry.caseId === "ordinary-01-tea-timer" &&
+			entry.ordinal === index + 1 &&
+			entry.status === (index < 3 ? "passed" : "failed") &&
+			(index !== 3 || entry.code === "reference-resident-generation-failed"),
+	);
+	if (
+		prior.status !== "failed" ||
+		prior.startingCumulativeGenerations !==
+			CONTINUATION_STARTING_CUMULATIVE_GENERATIONS ||
+		prior.authorizedCheckpointGenerations !==
+			CONTINUATION_CHECKPOINT_GENERATIONS ||
+		prior.cumulativeGenerationCap !== CONTINUATION_REQUIRED_CUMULATIVE_CAP ||
+		prior.cumulativeGenerationsConsumed !==
+			RETRY_STARTING_CUMULATIVE_GENERATIONS ||
+		prior.entries.length !== 4 ||
+		!entriesMatch
+	) {
+		throw new Error(
+			"The prior continuation does not match the reviewed three-pass plus one-failure state at cumulative 109.",
+		);
+	}
+}
+
 function assertAuthorization(): {
 	apiKey: string;
 	configuration: RunConfiguration;
 } {
 	const args = new Set(process.argv.slice(2).filter((value) => value !== "--"));
 	const continuation = args.has("--reference-only-continuation");
-	const configuration: RunConfiguration = continuation
+	const retry = args.has("--reference-only-retry");
+	if (continuation && retry) {
+		throw new Error("Choose exactly one reference continuation or retry mode.");
+	}
+	const configuration: RunConfiguration = retry
 		? {
-				mode: "reference-continuation",
-				startingCumulativeGenerations:
-					CONTINUATION_STARTING_CUMULATIVE_GENERATIONS,
-				checkpointGenerations: CONTINUATION_CHECKPOINT_GENERATIONS,
-				requiredCumulativeCap: CONTINUATION_REQUIRED_CUMULATIVE_CAP,
-				ledgerPath: CONTINUATION_LEDGER_PATH,
+				mode: "reference-retry",
+				startingCumulativeGenerations: RETRY_STARTING_CUMULATIVE_GENERATIONS,
+				checkpointGenerations: RETRY_CHECKPOINT_GENERATIONS,
+				requiredCumulativeCap: RETRY_REQUIRED_CUMULATIVE_CAP,
+				ledgerPath: RETRY_LEDGER_PATH,
 			}
-		: {
-				mode: "initial",
-				startingCumulativeGenerations: INITIAL_STARTING_CUMULATIVE_GENERATIONS,
-				checkpointGenerations: INITIAL_CHECKPOINT_GENERATIONS,
-				requiredCumulativeCap: INITIAL_REQUIRED_CUMULATIVE_CAP,
-				ledgerPath: INITIAL_LEDGER_PATH,
-			};
+		: continuation
+			? {
+					mode: "reference-continuation",
+					startingCumulativeGenerations:
+						CONTINUATION_STARTING_CUMULATIVE_GENERATIONS,
+					checkpointGenerations: CONTINUATION_CHECKPOINT_GENERATIONS,
+					requiredCumulativeCap: CONTINUATION_REQUIRED_CUMULATIVE_CAP,
+					ledgerPath: CONTINUATION_LEDGER_PATH,
+				}
+			: {
+					mode: "initial",
+					startingCumulativeGenerations:
+						INITIAL_STARTING_CUMULATIVE_GENERATIONS,
+					checkpointGenerations: INITIAL_CHECKPOINT_GENERATIONS,
+					requiredCumulativeCap: INITIAL_REQUIRED_CUMULATIVE_CAP,
+					ledgerPath: INITIAL_LEDGER_PATH,
+				};
 	if (!args.has("--live")) {
 		throw new Error("Phase 2 live proof requires --live.");
 	}
@@ -186,6 +250,9 @@ function assertAuthorization(): {
 	if (!apiKey) throw new Error("OPENROUTER_API_KEY is required.");
 	if (configuration.mode === "reference-continuation") {
 		validatePriorCheckpoint();
+	}
+	if (configuration.mode === "reference-retry") {
+		validatePriorRetryCheckpoint();
 	}
 	if (existsSync(configuration.ledgerPath)) {
 		throw new Error(

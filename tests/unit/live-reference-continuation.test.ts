@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
 	classifyLiveGenerationFailure,
 	validatePriorCheckpoint,
+	validatePriorRetryCheckpoint,
 } from "../../scripts/run-phase-02-live.ts";
 
 const SENSITIVE =
@@ -43,6 +44,38 @@ describe("live reference continuation", () => {
 		expect(prior.entries.every((entry) => entry.status === "passed")).toBe(
 			true,
 		);
+	});
+
+	it("accepts only the preserved three-pass plus one-failure continuation state", () => {
+		expect(() => validatePriorRetryCheckpoint()).not.toThrow();
+
+		const prior = JSON.parse(
+			readFileSync(
+				resolve("evals/results/phase-02-live-continuation.json"),
+				"utf8",
+			),
+		) as {
+			status: string;
+			cumulativeGenerationsConsumed: number;
+			entries: {
+				residentId: string;
+				status: string;
+				code?: string;
+			}[];
+		};
+
+		expect(prior.status).toBe("failed");
+		expect(prior.cumulativeGenerationsConsumed).toBe(109);
+		expect(prior.entries.map((entry) => entry.status)).toEqual([
+			"passed",
+			"passed",
+			"passed",
+			"failed",
+		]);
+		expect(prior.entries.at(-1)).toMatchObject({
+			residentId: "claude-sonnet-4.5",
+			code: "reference-resident-generation-failed",
+		});
 	});
 
 	it.each([
