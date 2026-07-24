@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 03
 current_phase_name: return-loop-and-inclusive-presentation
 status: executing
-stopped_at: Completed 03-02-PLAN.md
-last_updated: "2026-07-24T17:21:17.735Z"
+stopped_at: Completed 03-03-PLAN.md
+last_updated: "2026-07-24T17:51:33.675Z"
 last_activity: 2026-07-25
-last_activity_desc: Phase 03 execution started
+last_activity_desc: Completed Phase 03 Plan 03 sourced resident profiles
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 15
-  completed_plans: 10
+  completed_plans: 11
 ---
 
 # Project State
@@ -28,19 +28,19 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 03 (return-loop-and-inclusive-presentation) — EXECUTING
-Plan: 3 of 7
+Plan: 4 of 7
 Status: Ready to execute
-Last activity: 2026-07-25 — Phase 03 execution started
+Last activity: 2026-07-25 — Completed Phase 03 Plan 03 sourced resident profiles
 
-Progress: [█████████████░░░░░░░] 10/15 milestone plans complete (67%)
+Progress: [███████████████░░░░░] 11/15 milestone plans complete (73%)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 10
+- Total plans completed: 11
 - Average duration: not recalculated; Plan 02-02 spanned interactive provider checkpoints
-- Total execution time: 2.9 recorded hours plus multi-session Plan 02-02 work
+- Total execution time: 3.3 recorded hours plus multi-session Plan 02-02 work
 
 **By Phase:**
 
@@ -69,6 +69,7 @@ Progress: [█████████████░░░░░░░] 10/15 m
 | Phase 02 P04 | multi-session | 4 tasks | multi-commit |
 | Phase 03 P01 | 23min | 1 tasks | 15 files |
 | Phase 03 P02 | 18min | 2 tasks | 13 files |
+| Phase 03 P03 | 25min | 2 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -102,6 +103,10 @@ Recent decisions affecting current work:
 - [Phase 03]: Backfill execution is restricted to the configured local model_afterlife_app or model_afterlife_test database and fails closed for every other target.
 - [Phase 03]: The archive uses scene_published sequence plus immutable revisionId ordering, and cached presentations normalize to originalRevisionId without creating another public identity.
 - [Phase 03]: Incomplete canonical rows are omitted and produce a partial archive notice rather than fragmentary public content.
+- [Phase 03]: Public profile claims require an exact version, stable claim ID, category, resident scope, and every designated exact model ID; any mismatch fails closed.
+- [Phase 03]: Factual profile prose comes directly from reviewed ledger statements while jokes, retirement framing, and uncertainty remain explicitly reconstructed.
+- [Phase 03]: Relationship history uses only the newest complete canonical cause scene with a matching nonzero effect and exposes qualitative phrases rather than numeric state.
+- [Phase 03]: Resident URLs remain the fixed /residents/[residentId] contract in approved six-resident launch order.
 
 ### Pending Todos
 
@@ -157,6 +162,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-24T17:21:17.722Z
-Stopped at: Completed 03-02-PLAN.md
+Last session: 2026-07-24T17:51:33.660Z
+Stopped at: Completed 03-03-PLAN.md
 Resume file: None

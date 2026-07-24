@@ -22,8 +22,8 @@
 - [ ] **RSID-02**: Visitors can distinguish every resident by sprite silhouette or palette, name, concise role description, routines, and stable dialogue characteristics without relying on provider logos.
 - [ ] **RSID-03**: Each resident has a versioned character bible that separates documented facts, reported or cultural reputation, and fictional comic exaggeration.
 - [ ] **RSID-04**: Every recurring resident trait or joke maps to one or more approved historical claims with source, model/version scope, confidence, and access date.
-- [ ] **RSID-05**: Each resident profile explains significance, lineage, architecture or capabilities, documented limitations, and the basis for retirement or supersession.
-- [ ] **RSID-06**: Visitors can open a “Behind this behavior” explanation that distinguishes the joke, its historical inspiration, the exaggeration, uncertainty, and supporting sources.
+- [x] **RSID-05**: Each resident profile explains significance, lineage, architecture or capabilities, documented limitations, and the basis for retirement or supersession.
+- [x] **RSID-06**: Visitors can open a “Behind this behavior” explanation that distinguishes the joke, its historical inspiration, the exaggeration, uncertainty, and supporting sources.
 - [ ] **RSID-07**: Published historical claims can be corrected or superseded without silently rewriting the provenance of earlier scenes.
 - [ ] **RSID-08**: Provider logos, copied mascots, and protected game assets or visual expression are absent from resident and environment art unless separately authorized.
 
@@ -32,7 +32,7 @@
 - [x] **RELS-01**: Residents maintain persistent, typed friendship, rivalry, familiarity, and recent-shared-experience state across scenes.
 - [x] **RELS-02**: A scene can change only explicitly permitted relationship dimensions and records the event that caused each change.
 - [x] **RELS-03**: Future event eligibility and dialogue context can reference bounded, relevant prior outcomes without supplying an unbounded transcript history to the model.
-- [ ] **RELS-04**: Visitors can recognize relationship changes through later behavior, profiles, archived scenes, or recaps.
+- [x] **RELS-04**: Visitors can recognize relationship changes through later behavior, profiles, archived scenes, or recaps.
 - [x] **RELS-05**: The system prevents one popular resident or pairing from starving the rest of the six-resident ensemble of meaningful scenes.
 
 ### Scene Planning and Generation
@@ -79,9 +79,9 @@
 
 ### Accessibility and Mobile
 
-- [ ] **ACCS-01**: Dialogue, controls, profiles, recaps, and scene transcripts are available as semantic HTML rather than exclusively through the canvas.
-- [ ] **ACCS-02**: Visitors can operate all essential viewing, profile, archive, recap, pause, and navigation controls with a keyboard and visible focus.
-- [ ] **ACCS-03**: Text can scale and reflow without losing content, while contrast and non-color cues keep speakers, statuses, and controls understandable.
+- [x] **ACCS-01**: Dialogue, controls, profiles, recaps, and scene transcripts are available as semantic HTML rather than exclusively through the canvas.
+- [x] **ACCS-02**: Visitors can operate all essential viewing, profile, archive, recap, pause, and navigation controls with a keyboard and visible focus.
+- [x] **ACCS-03**: Text can scale and reflow without losing content, while contrast and non-color cues keep speakers, statuses, and controls understandable.
 - [ ] **ACCS-04**: The experience honors reduced-motion preferences and provides a mode that removes nonessential camera easing, panning, parallax, and animation.
 - [ ] **ACCS-05**: Automatically moving or updating presentation can be paused, stopped, hidden, or read manually without stopping canonical server time.
 - [ ] **ACCS-06**: Mobile visitors receive a touch-friendly scene-first view with the current scene, compact establishing view, residents, recap, archive, profiles, sharing, and jump-to-live controls.
@@ -163,14 +163,14 @@
 | RSID-02 | Phase 2 | Complete |
 | RSID-03 | Phase 2 | Complete |
 | RSID-04 | Phase 2 | Complete |
-| RSID-05 | Phase 3 | Pending |
-| RSID-06 | Phase 3 | Pending |
+| RSID-05 | Phase 3 | Complete |
+| RSID-06 | Phase 3 | Complete |
 | RSID-07 | Phase 4 | Pending |
 | RSID-08 | Phase 3 | Pending |
 | RELS-01 | Phase 2 | Complete |
 | RELS-02 | Phase 2 | Complete |
 | RELS-03 | Phase 2 | Complete |
-| RELS-04 | Phase 3 | Pending |
+| RELS-04 | Phase 3 | Complete |
 | RELS-05 | Phase 2 | Complete |
 | SCEN-01 | Phase 2 | Complete |
 | SCEN-02 | Phase 2 | Complete |
@@ -202,9 +202,9 @@
 | TRNS-04 | Phase 3 | Complete |
 | TRNS-05 | Phase 4 | Pending |
 | TRNS-06 | Phase 3 | Pending |
-| ACCS-01 | Phase 3 | Pending |
-| ACCS-02 | Phase 3 | Pending |
-| ACCS-03 | Phase 3 | Pending |
+| ACCS-01 | Phase 3 | Complete |
+| ACCS-02 | Phase 3 | Complete |
+| ACCS-03 | Phase 3 | Complete |
 | ACCS-04 | Phase 3 | Pending |
 | ACCS-05 | Phase 3 | Pending |
 | ACCS-06 | Phase 3 | Pending |
