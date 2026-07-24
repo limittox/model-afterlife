@@ -15,7 +15,7 @@ const wireResult = {
 	},
 	reasons: {
 		responsiveness: "The exchange responds to the supplied premise.",
-		voice: "The voices remain distinct.",
+		voice: "v".repeat(200),
 		affection: "The tone preserves dignity.",
 		novelty: "The scene avoids recent repetition.",
 		resolution: "The final turn resolves the premise.",
@@ -25,7 +25,7 @@ const wireResult = {
 };
 
 describe("strict OpenRouter semantic judge provider", () => {
-	it("uses the exact direct OpenAI route and returns app-owned provenance", async () => {
+	it("uses the exact direct route and accepts a bounded rationale above 160 characters", async () => {
 		const model = Symbol("semantic-judge-model");
 		const route = vi.fn(() => model);
 		const createRouter = vi.fn(() => route);

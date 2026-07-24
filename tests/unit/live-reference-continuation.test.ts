@@ -4,8 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
 	classifyLiveGenerationFailure,
 	validatePriorCheckpoint,
-	validatePriorRetry2Checkpoint,
-	validatePriorRetry3Checkpoint,
+	validatePriorRetry4Checkpoint,
 	validatePriorRetryCheckpoint,
 } from "../../scripts/run-phase-02-live.ts";
 
@@ -80,9 +79,7 @@ describe("live reference continuation", () => {
 		});
 	});
 
-	it("accepts only the four-pass identity-gate rejection at cumulative 113", () => {
-		expect(() => validatePriorRetry2Checkpoint()).not.toThrow();
-
+	it("preserves the consumed retry and retry-2 ledger chain", () => {
 		const retry = JSON.parse(
 			readFileSync(
 				resolve("evals/results/phase-02-live-reference-retry.json"),
@@ -93,32 +90,6 @@ describe("live reference continuation", () => {
 			cumulativeGenerationsConsumed: number;
 			entries: { status: string }[];
 		};
-		const evidence = JSON.parse(
-			readFileSync(
-				resolve("evals/results/phase-02-live-reference.json"),
-				"utf8",
-			),
-		) as {
-			failure: {
-				validatorCodes: { id: string; code: string }[];
-			};
-		};
-
-		expect(retry.status).toBe("failed");
-		expect(retry.cumulativeGenerationsConsumed).toBe(113);
-		expect(retry.entries.every((entry) => entry.status === "passed")).toBe(
-			true,
-		);
-		expect(
-			evidence.failure.validatorCodes.find(
-				(result) => result.id === "identity",
-			),
-		).toMatchObject({ code: "identity.unverified" });
-	});
-
-	it("accepts only the retry-2 judge rejection plus successful diagnostic at cumulative 119", () => {
-		expect(() => validatePriorRetry3Checkpoint()).not.toThrow();
-
 		const retry2 = JSON.parse(
 			readFileSync(
 				resolve("evals/results/phase-02-live-reference-retry-2.json"),
@@ -129,30 +100,62 @@ describe("live reference continuation", () => {
 			cumulativeGenerationsConsumed: number;
 			entries: { status: string; code?: string }[];
 		};
-		const diagnostic = JSON.parse(
-			readFileSync(
-				resolve("evals/results/phase-02-live-judge-diagnostic.json"),
-				"utf8",
-			),
-		) as {
-			status: string;
-			cumulativeGenerationsConsumed: number;
-			entry: { status: string; code: string };
-		};
 
+		expect(retry.status).toBe("failed");
+		expect(retry.cumulativeGenerationsConsumed).toBe(113);
+		expect(retry.entries.every((entry) => entry.status === "passed")).toBe(
+			true,
+		);
 		expect(retry2.status).toBe("failed");
 		expect(retry2.cumulativeGenerationsConsumed).toBe(118);
 		expect(retry2.entries.at(-1)).toMatchObject({
 			status: "failed",
 			code: "schema-invalid",
 		});
-		expect(diagnostic).toMatchObject({
-			status: "passed",
-			cumulativeGenerationsConsumed: 119,
-			entry: {
-				status: "passed",
-				code: "judge-schema-valid",
-			},
+	});
+
+	it("accepts only the cumulative 129 reason-length stop with one accepted case", () => {
+		expect(() => validatePriorRetry4Checkpoint()).not.toThrow();
+
+		const retry3 = JSON.parse(
+			readFileSync(
+				resolve("evals/results/phase-02-live-reference-retry-3.json"),
+				"utf8",
+			),
+		) as {
+			status: string;
+			cumulativeGenerationsConsumed: number;
+			entries: { status: string; code?: string }[];
+		};
+		const evidence = JSON.parse(
+			readFileSync(
+				resolve("evals/results/phase-02-live-reference.json"),
+				"utf8",
+			),
+		) as {
+			status: string;
+			caseCount: number;
+			results: { caseId: string; accepted: boolean }[];
+		};
+
+		expect(retry3).toMatchObject({
+			status: "failed",
+			cumulativeGenerationsConsumed: 129,
+		});
+		expect(retry3.entries).toHaveLength(10);
+		expect(retry3.entries.at(-1)).toMatchObject({
+			status: "failed",
+			code: "judge-schema-reason-too-long",
+		});
+		expect(evidence).toMatchObject({
+			status: "running",
+			caseCount: 1,
+			results: [
+				{
+					caseId: "ordinary-01-tea-timer",
+					accepted: true,
+				},
+			],
 		});
 	});
 

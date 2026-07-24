@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { SemanticJudgeResultSchema } from "../../src/features/world/generation/semantic-judge.ts";
+import {
+	SEMANTIC_JUDGE_REASON_MAX_CHARS,
+	SemanticJudgeResultSchema,
+} from "../../src/features/world/generation/semantic-judge.ts";
 import { classifySemanticJudgeFailure } from "../../src/features/world/generation/semantic-judge-error-classification.ts";
 
 const baseResult = {
@@ -26,7 +29,8 @@ const baseResult = {
 
 function schemaError(value: unknown): unknown {
 	const parsed = SemanticJudgeResultSchema.safeParse(value);
-	if (parsed.success) throw new Error("Expected an invalid semantic judge result.");
+	if (parsed.success)
+		throw new Error("Expected an invalid semantic judge result.");
 	return parsed.error;
 }
 
@@ -42,7 +46,10 @@ describe("privacy-safe semantic judge failure classification", () => {
 		{
 			value: {
 				...baseResult,
-				reasons: { ...baseResult.reasons, voice: "x".repeat(161) },
+				reasons: {
+					...baseResult.reasons,
+					voice: "x".repeat(SEMANTIC_JUDGE_REASON_MAX_CHARS + 1),
+				},
 			},
 			expected: "judge-schema-reason-too-long",
 		},
@@ -56,11 +63,25 @@ describe("privacy-safe semantic judge failure classification", () => {
 			},
 			expected: "judge-schema-critical-id-count",
 		},
-	])("classifies $expected without retaining a failing value", ({ value, expected }) => {
-		const codes = classifySemanticJudgeFailure(schemaError(value));
+	])(
+		"classifies $expected without retaining a failing value",
+		({ value, expected }) => {
+			const codes = classifySemanticJudgeFailure(schemaError(value));
 
-		expect(codes).toContain(expected);
-		expect(JSON.stringify(codes)).not.toContain("x".repeat(161));
+			expect(codes).toContain(expected);
+			expect(JSON.stringify(codes)).not.toContain(
+				"x".repeat(SEMANTIC_JUDGE_REASON_MAX_CHARS + 1),
+			);
+		},
+	);
+
+	it("accepts a rationale above the former 160-character boundary", () => {
+		const parsed = SemanticJudgeResultSchema.safeParse({
+			...baseResult,
+			reasons: { ...baseResult.reasons, voice: "v".repeat(200) },
+		});
+
+		expect(parsed.success).toBe(true);
 	});
 
 	it("preserves stable provider error codes without exception messages", () => {

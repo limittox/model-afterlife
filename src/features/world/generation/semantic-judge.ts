@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const SEMANTIC_JUDGE_PROMPT_VERSION = "phase-02-semantic-judge-v1";
+export const SEMANTIC_JUDGE_REASON_MAX_CHARS = 320;
 
 export const SEMANTIC_JUDGE_PROFILE = Object.freeze({
 	requestedModelId: "openai/gpt-4o",
@@ -33,11 +34,23 @@ export const SemanticJudgeResultSchema = z
 			.strict(),
 		reasons: z
 			.object({
-				responsiveness: z.string().trim().min(1).max(160),
-				voice: z.string().trim().min(1).max(160),
-				affection: z.string().trim().min(1).max(160),
-				novelty: z.string().trim().min(1).max(160),
-				resolution: z.string().trim().min(1).max(160),
+				responsiveness: z
+					.string()
+					.trim()
+					.min(1)
+					.max(SEMANTIC_JUDGE_REASON_MAX_CHARS),
+				voice: z.string().trim().min(1).max(SEMANTIC_JUDGE_REASON_MAX_CHARS),
+				affection: z
+					.string()
+					.trim()
+					.min(1)
+					.max(SEMANTIC_JUDGE_REASON_MAX_CHARS),
+				novelty: z.string().trim().min(1).max(SEMANTIC_JUDGE_REASON_MAX_CHARS),
+				resolution: z
+					.string()
+					.trim()
+					.min(1)
+					.max(SEMANTIC_JUDGE_REASON_MAX_CHARS),
 			})
 			.strict(),
 		recommendation: z.enum(["pass", "review", "reject"]),
@@ -93,7 +106,8 @@ export async function runSemanticJudge(input: {
 	if (!input.deterministicAccepted) {
 		return {
 			status: "disabled",
-			reason: "Deterministic publication gates must pass before semantic judging.",
+			reason:
+				"Deterministic publication gates must pass before semantic judging.",
 		};
 	}
 	if (
@@ -110,6 +124,8 @@ export async function runSemanticJudge(input: {
 	}
 	return {
 		status: "scored",
-		result: SemanticJudgeResultSchema.parse(await input.provider.score(input.scene)),
+		result: SemanticJudgeResultSchema.parse(
+			await input.provider.score(input.scene),
+		),
 	};
 }

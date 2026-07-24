@@ -54,6 +54,10 @@ const RETRY_3_CHECKPOINT_GENERATIONS =
 	REFERENCE_RESIDENT_GENERATIONS + REFERENCE_JUDGE_GENERATIONS;
 const RETRY_3_REQUIRED_CUMULATIVE_CAP =
 	RETRY_3_STARTING_CUMULATIVE_GENERATIONS + RETRY_3_CHECKPOINT_GENERATIONS;
+const RETRY_4_STARTING_CUMULATIVE_GENERATIONS = 129;
+const RETRY_4_CHECKPOINT_GENERATIONS = 10;
+const RETRY_4_REQUIRED_CUMULATIVE_CAP =
+	RETRY_4_STARTING_CUMULATIVE_GENERATIONS + RETRY_4_CHECKPOINT_GENERATIONS;
 const GENERATION_INTERVAL_MS = 21_000;
 const INITIAL_LEDGER_PATH = resolve(
 	"evals/results/phase-02-live-checkpoint.json",
@@ -69,6 +73,9 @@ const RETRY_2_LEDGER_PATH = resolve(
 );
 const RETRY_3_LEDGER_PATH = resolve(
 	"evals/results/phase-02-live-reference-retry-3.json",
+);
+const RETRY_4_LEDGER_PATH = resolve(
+	"evals/results/phase-02-live-reference-retry-4.json",
 );
 const JUDGE_DIAGNOSTIC_LEDGER_PATH = resolve(
 	"evals/results/phase-02-live-judge-diagnostic.json",
@@ -112,11 +119,13 @@ type RunConfiguration = Readonly<{
 		| "reference-continuation"
 		| "reference-retry"
 		| "reference-retry-2"
-		| "reference-retry-3";
+		| "reference-retry-3"
+		| "reference-retry-4";
 	startingCumulativeGenerations: number;
 	checkpointGenerations: number;
 	requiredCumulativeCap: number;
 	ledgerPath: string;
+	referenceStartCaseIndex: number;
 }>;
 
 function canonicalApprovedHash(): string {
@@ -326,8 +335,7 @@ export function validatePriorRetry3Checkpoint(): void {
 		retry2.status !== "failed" ||
 		retry2.startingCumulativeGenerations !==
 			RETRY_2_STARTING_CUMULATIVE_GENERATIONS ||
-		retry2.authorizedCheckpointGenerations !==
-			RETRY_2_CHECKPOINT_GENERATIONS ||
+		retry2.authorizedCheckpointGenerations !== RETRY_2_CHECKPOINT_GENERATIONS ||
 		retry2.cumulativeGenerationCap !== RETRY_2_REQUIRED_CUMULATIVE_CAP ||
 		retry2.cumulativeGenerationsConsumed !== 118 ||
 		retry2.entries.length !== 5 ||
@@ -352,6 +360,182 @@ export function validatePriorRetry3Checkpoint(): void {
 	}
 }
 
+export function validatePriorRetry4Checkpoint(): void {
+	validatePriorRetryCheckpoint();
+	if (
+		!existsSync(RETRY_LEDGER_PATH) ||
+		!existsSync(RETRY_2_LEDGER_PATH) ||
+		!existsSync(JUDGE_DIAGNOSTIC_LEDGER_PATH) ||
+		!existsSync(RETRY_3_LEDGER_PATH) ||
+		!existsSync(REFERENCE_RESULT_PATH)
+	) {
+		throw new Error(
+			"Fourth reference retry requires the complete reviewed ledger chain and accepted first-case evidence.",
+		);
+	}
+	const retry = JSON.parse(readFileSync(RETRY_LEDGER_PATH, "utf8")) as Ledger;
+	const retry2 = JSON.parse(
+		readFileSync(RETRY_2_LEDGER_PATH, "utf8"),
+	) as Ledger;
+	const diagnostic = JSON.parse(
+		readFileSync(JUDGE_DIAGNOSTIC_LEDGER_PATH, "utf8"),
+	) as {
+		status?: unknown;
+		startingCumulativeGenerations?: unknown;
+		authorizedCheckpointGenerations?: unknown;
+		cumulativeGenerationCap?: unknown;
+		cumulativeGenerationsConsumed?: unknown;
+		labelSetHash?: unknown;
+		entry?: {
+			kind?: unknown;
+			residentId?: unknown;
+			status?: unknown;
+			code?: unknown;
+			generationId?: unknown;
+		};
+	};
+	const retry3 = JSON.parse(
+		readFileSync(RETRY_3_LEDGER_PATH, "utf8"),
+	) as Ledger;
+	const acceptedResults = loadRetry4ReferenceResults();
+	const retryResidents = [
+		"gpt-4o",
+		"claude-sonnet-4.5",
+		"gpt-4o",
+		"claude-sonnet-4.5",
+	];
+	const retryEntriesMatch = retry.entries.every(
+		(entry, index) =>
+			entry.kind === "reference-resident" &&
+			entry.residentId === retryResidents[index] &&
+			entry.caseId === "ordinary-01-tea-timer" &&
+			entry.ordinal === index + 1 &&
+			entry.status === "passed",
+	);
+	const retry2EntriesMatch = retry2.entries.every((entry, index) =>
+		index < retryResidents.length
+			? entry.kind === "reference-resident" &&
+				entry.residentId === retryResidents[index] &&
+				entry.caseId === "ordinary-01-tea-timer" &&
+				entry.ordinal === index + 1 &&
+				entry.status === "passed"
+			: entry.kind === "reference-judge" &&
+				entry.residentId === "semantic-judge" &&
+				entry.caseId === "ordinary-01-tea-timer" &&
+				entry.ordinal === 5 &&
+				entry.status === "failed" &&
+				entry.code === "schema-invalid",
+	);
+	const retry3Expected = [
+		["reference-resident", "gpt-4o", "ordinary-01-tea-timer", "passed"],
+		[
+			"reference-resident",
+			"claude-sonnet-4.5",
+			"ordinary-01-tea-timer",
+			"passed",
+		],
+		["reference-resident", "gpt-4o", "ordinary-01-tea-timer", "passed"],
+		[
+			"reference-resident",
+			"claude-sonnet-4.5",
+			"ordinary-01-tea-timer",
+			"passed",
+		],
+		["reference-judge", "semantic-judge", "ordinary-01-tea-timer", "passed"],
+		[
+			"reference-resident",
+			"gemini-2.5-pro",
+			"ordinary-02-misfiled-atlas",
+			"passed",
+		],
+		[
+			"reference-resident",
+			"deepseek-v3.2",
+			"ordinary-02-misfiled-atlas",
+			"passed",
+		],
+		[
+			"reference-resident",
+			"gemini-2.5-pro",
+			"ordinary-02-misfiled-atlas",
+			"passed",
+		],
+		[
+			"reference-resident",
+			"deepseek-v3.2",
+			"ordinary-02-misfiled-atlas",
+			"passed",
+		],
+		[
+			"reference-judge",
+			"semantic-judge",
+			"ordinary-02-misfiled-atlas",
+			"failed",
+		],
+	] as const;
+	const retry3EntriesMatch = retry3.entries.every(
+		(entry, index) =>
+			entry.kind === retry3Expected[index]?.[0] &&
+			entry.residentId === retry3Expected[index]?.[1] &&
+			entry.caseId === retry3Expected[index]?.[2] &&
+			entry.ordinal === index + 1 &&
+			entry.status === retry3Expected[index]?.[3] &&
+			(index !== retry3Expected.length - 1 ||
+				(entry.code === "judge-schema-reason-too-long" &&
+					entry.schemaCodes?.length === 1 &&
+					entry.schemaCodes[0] === "judge-schema-reason-too-long")),
+	);
+	if (
+		retry.status !== "failed" ||
+		retry.startingCumulativeGenerations !==
+			RETRY_STARTING_CUMULATIVE_GENERATIONS ||
+		retry.authorizedCheckpointGenerations !== RETRY_CHECKPOINT_GENERATIONS ||
+		retry.cumulativeGenerationCap !== RETRY_REQUIRED_CUMULATIVE_CAP ||
+		retry.cumulativeGenerationsConsumed !==
+			RETRY_2_STARTING_CUMULATIVE_GENERATIONS ||
+		retry.labelSetHash !== APPROVED_SEMANTIC_CALIBRATION.labelSetHash ||
+		retry.entries.length !== retryResidents.length ||
+		!retryEntriesMatch ||
+		retry2.status !== "failed" ||
+		retry2.startingCumulativeGenerations !==
+			RETRY_2_STARTING_CUMULATIVE_GENERATIONS ||
+		retry2.authorizedCheckpointGenerations !== RETRY_2_CHECKPOINT_GENERATIONS ||
+		retry2.cumulativeGenerationCap !== RETRY_2_REQUIRED_CUMULATIVE_CAP ||
+		retry2.cumulativeGenerationsConsumed !== 118 ||
+		retry2.labelSetHash !== APPROVED_SEMANTIC_CALIBRATION.labelSetHash ||
+		retry2.entries.length !== 5 ||
+		!retry2EntriesMatch ||
+		diagnostic.status !== "passed" ||
+		diagnostic.startingCumulativeGenerations !== 118 ||
+		diagnostic.authorizedCheckpointGenerations !== 1 ||
+		diagnostic.cumulativeGenerationCap !==
+			RETRY_3_STARTING_CUMULATIVE_GENERATIONS ||
+		diagnostic.cumulativeGenerationsConsumed !==
+			RETRY_3_STARTING_CUMULATIVE_GENERATIONS ||
+		diagnostic.labelSetHash !== APPROVED_SEMANTIC_CALIBRATION.labelSetHash ||
+		diagnostic.entry?.kind !== "reference-judge" ||
+		diagnostic.entry.residentId !== "semantic-judge" ||
+		diagnostic.entry?.status !== "passed" ||
+		diagnostic.entry.code !== "judge-schema-valid" ||
+		typeof diagnostic.entry.generationId !== "string" ||
+		retry3.status !== "failed" ||
+		retry3.startingCumulativeGenerations !==
+			RETRY_3_STARTING_CUMULATIVE_GENERATIONS ||
+		retry3.authorizedCheckpointGenerations !== RETRY_3_CHECKPOINT_GENERATIONS ||
+		retry3.cumulativeGenerationCap !== RETRY_3_REQUIRED_CUMULATIVE_CAP ||
+		retry3.cumulativeGenerationsConsumed !==
+			RETRY_4_STARTING_CUMULATIVE_GENERATIONS ||
+		retry3.labelSetHash !== APPROVED_SEMANTIC_CALIBRATION.labelSetHash ||
+		retry3.entries.length !== retry3Expected.length ||
+		!retry3EntriesMatch ||
+		acceptedResults.length !== 1
+	) {
+		throw new Error(
+			"The saved state does not match the reviewed cumulative 129 reason-length failure with one accepted reference case.",
+		);
+	}
+}
+
 function assertAuthorization(): {
 	apiKey: string;
 	configuration: RunConfiguration;
@@ -361,52 +545,70 @@ function assertAuthorization(): {
 	const retry = args.has("--reference-only-retry");
 	const retry2 = args.has("--reference-only-retry-2");
 	const retry3 = args.has("--reference-only-retry-3");
-	if ([continuation, retry, retry2, retry3].filter(Boolean).length > 1) {
+	const retry4 = args.has("--reference-only-retry-4");
+	if (
+		[continuation, retry, retry2, retry3, retry4].filter(Boolean).length > 1
+	) {
 		throw new Error("Choose exactly one reference continuation or retry mode.");
 	}
-	const configuration: RunConfiguration = retry3
+	const configuration: RunConfiguration = retry4
 		? {
-				mode: "reference-retry-3",
-				startingCumulativeGenerations: RETRY_3_STARTING_CUMULATIVE_GENERATIONS,
-				checkpointGenerations: RETRY_3_CHECKPOINT_GENERATIONS,
-				requiredCumulativeCap: RETRY_3_REQUIRED_CUMULATIVE_CAP,
-				ledgerPath: RETRY_3_LEDGER_PATH,
+				mode: "reference-retry-4",
+				startingCumulativeGenerations: RETRY_4_STARTING_CUMULATIVE_GENERATIONS,
+				checkpointGenerations: RETRY_4_CHECKPOINT_GENERATIONS,
+				requiredCumulativeCap: RETRY_4_REQUIRED_CUMULATIVE_CAP,
+				ledgerPath: RETRY_4_LEDGER_PATH,
+				referenceStartCaseIndex: 1,
 			}
-		: retry2
+		: retry3
 			? {
-					mode: "reference-retry-2",
+					mode: "reference-retry-3",
 					startingCumulativeGenerations:
-						RETRY_2_STARTING_CUMULATIVE_GENERATIONS,
-					checkpointGenerations: RETRY_2_CHECKPOINT_GENERATIONS,
-					requiredCumulativeCap: RETRY_2_REQUIRED_CUMULATIVE_CAP,
-					ledgerPath: RETRY_2_LEDGER_PATH,
+						RETRY_3_STARTING_CUMULATIVE_GENERATIONS,
+					checkpointGenerations: RETRY_3_CHECKPOINT_GENERATIONS,
+					requiredCumulativeCap: RETRY_3_REQUIRED_CUMULATIVE_CAP,
+					ledgerPath: RETRY_3_LEDGER_PATH,
+					referenceStartCaseIndex: 0,
 				}
-			: retry
+			: retry2
 				? {
-						mode: "reference-retry",
+						mode: "reference-retry-2",
 						startingCumulativeGenerations:
-							RETRY_STARTING_CUMULATIVE_GENERATIONS,
-						checkpointGenerations: RETRY_CHECKPOINT_GENERATIONS,
-						requiredCumulativeCap: RETRY_REQUIRED_CUMULATIVE_CAP,
-						ledgerPath: RETRY_LEDGER_PATH,
+							RETRY_2_STARTING_CUMULATIVE_GENERATIONS,
+						checkpointGenerations: RETRY_2_CHECKPOINT_GENERATIONS,
+						requiredCumulativeCap: RETRY_2_REQUIRED_CUMULATIVE_CAP,
+						ledgerPath: RETRY_2_LEDGER_PATH,
+						referenceStartCaseIndex: 0,
 					}
-				: continuation
+				: retry
 					? {
-							mode: "reference-continuation",
+							mode: "reference-retry",
 							startingCumulativeGenerations:
-								CONTINUATION_STARTING_CUMULATIVE_GENERATIONS,
-							checkpointGenerations: CONTINUATION_CHECKPOINT_GENERATIONS,
-							requiredCumulativeCap: CONTINUATION_REQUIRED_CUMULATIVE_CAP,
-							ledgerPath: CONTINUATION_LEDGER_PATH,
+								RETRY_STARTING_CUMULATIVE_GENERATIONS,
+							checkpointGenerations: RETRY_CHECKPOINT_GENERATIONS,
+							requiredCumulativeCap: RETRY_REQUIRED_CUMULATIVE_CAP,
+							ledgerPath: RETRY_LEDGER_PATH,
+							referenceStartCaseIndex: 0,
 						}
-					: {
-							mode: "initial",
-							startingCumulativeGenerations:
-								INITIAL_STARTING_CUMULATIVE_GENERATIONS,
-							checkpointGenerations: INITIAL_CHECKPOINT_GENERATIONS,
-							requiredCumulativeCap: INITIAL_REQUIRED_CUMULATIVE_CAP,
-							ledgerPath: INITIAL_LEDGER_PATH,
-						};
+					: continuation
+						? {
+								mode: "reference-continuation",
+								startingCumulativeGenerations:
+									CONTINUATION_STARTING_CUMULATIVE_GENERATIONS,
+								checkpointGenerations: CONTINUATION_CHECKPOINT_GENERATIONS,
+								requiredCumulativeCap: CONTINUATION_REQUIRED_CUMULATIVE_CAP,
+								ledgerPath: CONTINUATION_LEDGER_PATH,
+								referenceStartCaseIndex: 0,
+							}
+						: {
+								mode: "initial",
+								startingCumulativeGenerations:
+									INITIAL_STARTING_CUMULATIVE_GENERATIONS,
+								checkpointGenerations: INITIAL_CHECKPOINT_GENERATIONS,
+								requiredCumulativeCap: INITIAL_REQUIRED_CUMULATIVE_CAP,
+								ledgerPath: INITIAL_LEDGER_PATH,
+								referenceStartCaseIndex: 0,
+							};
 	if (!args.has("--live")) {
 		throw new Error("Phase 2 live proof requires --live.");
 	}
@@ -445,6 +647,9 @@ function assertAuthorization(): {
 	}
 	if (configuration.mode === "reference-retry-3") {
 		validatePriorRetry3Checkpoint();
+	}
+	if (configuration.mode === "reference-retry-4") {
+		validatePriorRetry4Checkpoint();
 	}
 	if (existsSync(configuration.ledgerPath)) {
 		throw new Error(
@@ -561,6 +766,65 @@ type ReferenceResult = {
 	accepted: true;
 };
 
+function loadRetry4ReferenceResults(): ReferenceResult[] {
+	const evidence = JSON.parse(readFileSync(REFERENCE_RESULT_PATH, "utf8")) as {
+		status?: unknown;
+		labelSetHash?: unknown;
+		caseCount?: unknown;
+		results?: ReferenceResult[];
+		failure?: unknown;
+	};
+	const results = evidence.results ?? [];
+	const first = results[0];
+	const expectedResidents = [
+		"gpt-4o",
+		"claude-sonnet-4.5",
+		"gpt-4o",
+		"claude-sonnet-4.5",
+	];
+	const turnsMatch =
+		first?.turns.length === expectedResidents.length &&
+		first.turns.every((turn, index) => {
+			const expectedResidentId = expectedResidents[index];
+			if (!expectedResidentId) return false;
+			const profile = providerProfileFor(expectedResidentId);
+			return (
+				turn.turnIndex === index &&
+				turn.residentId === expectedResidentId &&
+				turn.requestedModelId === profile.requestedModelId &&
+				turn.selectedModelId === profile.canonicalModelId &&
+				turn.selectedUpstream === profile.selectedUpstreamName &&
+				typeof turn.generationId === "string" &&
+				/^[a-f0-9]{64}$/u.test(turn.textSha256)
+			);
+		});
+	if (
+		evidence.status !== "running" ||
+		evidence.labelSetHash !== APPROVED_SEMANTIC_CALIBRATION.labelSetHash ||
+		evidence.caseCount !== 1 ||
+		results.length !== 1 ||
+		evidence.failure !== undefined ||
+		first?.caseId !== "ordinary-01-tea-timer" ||
+		first.participantIds.length !== 2 ||
+		first.participantIds[0] !== "gpt-4o" ||
+		first.participantIds[1] !== "claude-sonnet-4.5" ||
+		!turnsMatch ||
+		first.judge.requestedModelId !== SEMANTIC_JUDGE_PROFILE.requestedModelId ||
+		first.judge.resolvedModelId !== SEMANTIC_JUDGE_PROFILE.canonicalModelId ||
+		first.judge.promptVersion !== SEMANTIC_JUDGE_PROFILE.promptVersion ||
+		first.judge.recommendation !== "pass" ||
+		first.judge.criticalFailureCount !== 0 ||
+		first.validatorCodes.length !== 15 ||
+		first.validatorCodes.some((result) => result.status !== "pass") ||
+		first.accepted !== true
+	) {
+		throw new Error(
+			"Retry-4 requires the exact accepted tea-timer reference evidence.",
+		);
+	}
+	return results;
+}
+
 function writeReferenceEvidence(
 	status: "running" | "passed" | "failed",
 	results: readonly ReferenceResult[],
@@ -644,9 +908,13 @@ async function main(): Promise<void> {
 				});
 			},
 		});
-		const referenceResults: ReferenceResult[] = [];
+		const referenceResults: ReferenceResult[] =
+			configuration.mode === "reference-retry-4"
+				? loadRetry4ReferenceResults()
+				: [];
 
 		for (const [caseIndex, reference] of REFERENCE_CASES.entries()) {
+			if (caseIndex < configuration.referenceStartCaseIndex) continue;
 			const speakerOrder = [
 				reference.participantIds[0],
 				reference.participantIds[1],

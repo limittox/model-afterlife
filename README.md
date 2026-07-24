@@ -142,6 +142,8 @@ corepack pnpm eval:phase-02:live:retry-3
 
 The third retry makes no admission calls, writes `phase-02-live-reference-retry-3.json` after every generation, requires the exact reviewed retry-2 failure plus successful one-shot diagnostic, and records only privacy-safe judge schema categories. It requires a fresh explicit authorization for exactly 15 generations and cumulative ceiling 134.
 
+The fourth retry is an efficient continuation from the fail-closed cumulative 129 state. It reuses the accepted tea-timer evidence, runs only the two unfinished reference cases, writes `phase-02-live-reference-retry-4.json` after every generation, and requires a fresh explicit authorization for exactly 10 generations and cumulative ceiling 139. The calibrated judge prompt, model, route, and scoring contract remain unchanged; only the private rationale field accepts up to 320 characters.
+
 ## Full verification
 
 The Playwright project starts Docker services, applies reviewed migrations, seeds only when no canonical projection exists, and starts Next.js. It includes a real two-browser database convergence case plus controlled recovery and UI-state cases:
