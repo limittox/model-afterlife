@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 final six-resident admission authorized and conservatively reserved; 54/54 ceiling"
-last_updated: "2026-07-24T01:55:00.000Z"
+stopped_at: "02-02 Task 3 final matrix stopped on DeepSeek provider-http-429; 28/54 consumed"
+last_updated: "2026-07-24T01:58:00.000Z"
 last_activity: 2026-07-24
-last_activity_desc: "Final matrix authorized: 12 catalog checks and at most 30 breadth-first generations; cumulative generation ceiling conservatively reserved at 54/54"
+last_activity_desc: "The final matrix stopped fail-closed on DeepSeek V3.2 provider-http-429 after four generations; 28/54 cumulative calls are consumed and 26 remain unused"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Task 3 final admission matrix authorized and reserved; invocation pending
-Last activity: 2026-07-24 — the user authorized 12 read-only catalog/endpoint checks plus at most 30 breadth-first generations for five samples per resident; cumulative generation accounting is conservatively reserved at 54/54
+Status: Task 3 blocked by a live DeepSeek V3.2 HTTP 429 during the final matrix
+Last activity: 2026-07-24 — all catalog checks passed and ordinal-one GPT-4o, Claude, and Gemini samples completed; DeepSeek V3.2 then returned sanitized `provider-http-429`, the command stopped, no artifact was written, and accounting is 28/54 with 26 unused
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: The final clean admission matrix is authorized once: 12 read-only catalog/endpoint checks and at most 30 breadth-first generations, stopping on the first failure. The cumulative generation ceiling is conservatively reserved at 54/54. No retry, fallback, substitution, second matrix, or call beyond the standard command is authorized.
+- [Phase 2]: The authorized final matrix passed all catalog checks and the first GPT-4o, Claude, and Gemini samples, then stopped fail-closed on DeepSeek V3.2 with sanitized `provider-http-429`. Four generation calls were consumed, bringing cumulative accounting to 28/54 with 26 unused. No retry, fallback, substitution, second matrix, or further provider call is authorized; no partial admission artifact was written.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
@@ -102,6 +102,7 @@ None yet.
 | 260723-uxm | Run resident admission canaries breadth-first by sample ordinal, with regression coverage proving early provider failures minimize spent calls while preserving deterministic 30-call success results | 2026-07-23 | ed1ab57 | [260723-uxm-run-resident-admission-canaries-breadth-](./quick/260723-uxm-run-resident-admission-canaries-breadth-/) |
 | 260724-fyf | Replace DeepSeek R1 0528 with DeepSeek V3.2, preserve paid-call accounting, and verify offline without an OpenRouter canary | 2026-07-24 | 1151363 | [260724-fyf-replace-deepseek-r1-0528-resident-with-d](./quick/260724-fyf-replace-deepseek-r1-0528-resident-with-d/) |
 | 260724-gba | Run exactly one authorized DeepSeek V3.2 admission generation canary through DeepInfra FP4, preserve strict routing, and stop at 24 of 47 calls | 2026-07-24 | e695608 | [260724-gba-run-exactly-one-authorized-deepseek-v3-2](./quick/260724-gba-run-exactly-one-authorized-deepseek-v3-2/) |
+| 260724-gix | Run the authorized final six-resident OpenRouter admission matrix with 12 catalog checks and at most 30 generations, stopping fail-closed at a cumulative ceiling of 54 calls | 2026-07-24 | 46986a8 | [260724-gix-run-the-authorized-final-six-resident-op](./quick/260724-gix-run-the-authorized-final-six-resident-op/) |
 
 ## Deferred Items
 
