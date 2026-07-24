@@ -80,12 +80,46 @@ function percentile(values: readonly number[], fraction: number): number {
 	return sorted[index] ?? 0;
 }
 
+function classifySchemaIssues(issues: unknown): string {
+	if (!Array.isArray(issues)) return "schema-invalid";
+
+	for (const candidate of issues) {
+		if (!candidate || typeof candidate !== "object") continue;
+		const issue = candidate as { code?: unknown; path?: unknown };
+		if (!Array.isArray(issue.path)) continue;
+
+		switch (issue.path[0]) {
+			case "text":
+				return issue.code === "too_big"
+					? "schema-text-too-long"
+					: "schema-text-invalid";
+			case "approvedClaimIds":
+				return issue.code === "too_big" && issue.path.length === 1
+					? "schema-approved-claim-count"
+					: "schema-approved-claim-ids-invalid";
+			case "proposedRelationshipEffects":
+				return issue.code === "too_big"
+					? "schema-relationship-effects-forbidden"
+					: "schema-relationship-effects-invalid";
+			case "endsScene":
+				return "schema-ends-scene-invalid";
+		}
+	}
+
+	return "schema-invalid";
+}
+
 export function classifyAdmissionFailure(error: unknown): string {
 	if (error instanceof AdmissionIdentityError) return error.code;
 	if (error instanceof OpenRouterIdentityError) return error.code;
 	if (!error || typeof error !== "object") return "generation-check-failed";
 
-	const failure = error as { name?: unknown; statusCode?: unknown; status?: unknown };
+	const failure = error as {
+		name?: unknown;
+		statusCode?: unknown;
+		status?: unknown;
+		issues?: unknown;
+	};
 	const status = failure.statusCode ?? failure.status;
 	if (Number.isInteger(status) && Number(status) >= 400 && Number(status) <= 599) {
 		return `provider-http-${status}`;
@@ -95,7 +129,7 @@ export function classifyAdmissionFailure(error: unknown): string {
 	}
 	if (failure.name === "AI_NoObjectGeneratedError") return "schema-no-object";
 	if (failure.name === "AI_NoOutputGeneratedError") return "generation-no-output";
-	if (failure.name === "ZodError") return "schema-invalid";
+	if (failure.name === "ZodError") return classifySchemaIssues(failure.issues);
 	return "generation-check-failed";
 }
 

@@ -46,6 +46,56 @@ describe("admission failure classification", () => {
 		expect(JSON.stringify(code)).not.toContain(SECRET);
 	});
 
+	it.each([
+		{
+			label: "overlong text",
+			issue: { code: "too_big", path: ["text"], message: SECRET },
+			expected: "schema-text-too-long",
+		},
+		{
+			label: "invalid text",
+			issue: { code: "invalid_type", path: ["text"], message: SECRET },
+			expected: "schema-text-invalid",
+		},
+		{
+			label: "too many approved claims",
+			issue: { code: "too_big", path: ["approvedClaimIds"], message: SECRET },
+			expected: "schema-approved-claim-count",
+		},
+		{
+			label: "invalid approved claim ID",
+			issue: {
+				code: "too_small",
+				path: ["approvedClaimIds", 0],
+				message: SECRET,
+			},
+			expected: "schema-approved-claim-ids-invalid",
+		},
+		{
+			label: "forbidden relationship effects",
+			issue: {
+				code: "too_big",
+				path: ["proposedRelationshipEffects"],
+				message: SECRET,
+			},
+			expected: "schema-relationship-effects-forbidden",
+		},
+		{
+			label: "invalid ends-scene flag",
+			issue: { code: "invalid_type", path: ["endsScene"], message: SECRET },
+			expected: "schema-ends-scene-invalid",
+		},
+	] as const)(
+		"returns a privacy-safe field-level code for $label",
+		({ issue, expected }) => {
+			const error = providerError({ name: "ZodError", issues: [issue] });
+			const code = classifyAdmissionFailure(error);
+
+			expect(code).toBe(expected);
+			expect(JSON.stringify(code)).not.toContain(SECRET);
+		},
+	);
+
 	it("uses a generic code for unknown errors without inspecting their message", () => {
 		const error = providerError({ name: "UnexpectedProviderFailure" });
 		expect(classifyAdmissionFailure(error)).toBe("generation-check-failed");
