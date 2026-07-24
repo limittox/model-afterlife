@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 paced final matrix authorized and conservatively reserved; 62/62 ceiling"
-last_updated: "2026-07-24T02:16:00.000Z"
+stopped_at: "02-02 Task 3 paced matrix stopped on Qwen schema-invalid; 38/62 consumed"
+last_updated: "2026-07-24T02:19:13.620Z"
 last_activity: 2026-07-24
-last_activity_desc: "One paced final matrix is authorized with 21-second spacing; cumulative generation ceiling is conservatively reserved at 62/62"
+last_activity_desc: "Paced matrix cleared all six first samples without HTTP 429, then stopped on Qwen schema-invalid; 38/62 cumulative generations consumed"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Task 3 paced final matrix authorized and reserved
-Last activity: 2026-07-24 — one standard paced matrix is authorized with 12 catalog/endpoint checks, at most 30 breadth-first generations, 21-second spacing, and a cumulative generation ceiling of 62/62
+Status: Task 3 blocked on Qwen application-schema validation
+Last activity: 2026-07-24 — the paced matrix passed all 12 catalog/endpoint checks and reached the first generation for all six residents without HTTP 429, then Qwen stopped fail-closed on `schema-invalid`; 6 fresh calls, 38/62 cumulative, no retry or artifact
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: One paced final matrix is authorized with a cumulative ceiling of 62/62. It must use the standard command, 21-second spacing, 12 catalog/endpoint checks, and at most 30 breadth-first generations. No retry, fallback, substitution, second matrix, or call outside that command is authorized.
+- [Phase 2]: Deterministic 21-second pacing resolved the repeated fourth-request HTTP 429 seam. The paced matrix reached all six ordinal-one generations, then Qwen failed local application-schema validation with sanitized `schema-invalid`. Accounting is 38/62 with 24 calls unused; no further provider call is authorized.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
@@ -105,6 +105,7 @@ None yet.
 | 260724-gix | Run the authorized final six-resident OpenRouter admission matrix with 12 catalog checks and at most 30 generations, stopping fail-closed at a cumulative ceiling of 54 calls | 2026-07-24 | 46986a8 | [260724-gix-run-the-authorized-final-six-resident-op](./quick/260724-gix-run-the-authorized-final-six-resident-op/) |
 | 260724-glw | After provider cooldown rerun the authorized final six-resident OpenRouter admission matrix once, stopping fail-closed at cumulative generation ceiling 58 | 2026-07-24 | 0d5e4b1 | [260724-glw-after-provider-cooldown-rerun-the-author](./quick/260724-glw-after-provider-cooldown-rerun-the-author/) |
 | 260724-guf | Add deterministic inter-generation pacing to the live admission matrix after reproducible fourth-request HTTP 429s, verify offline, and make no provider calls | 2026-07-24 | 11d1523 | [260724-guf-add-deterministic-inter-generation-pacin](./quick/260724-guf-add-deterministic-inter-generation-pacin/) |
+| 260724-h0c | Run the one authorized paced final six-resident admission matrix with 21-second generation spacing and cumulative ceiling 62 | 2026-07-24 | bf09b61 | [260724-h0c-run-the-one-authorized-paced-final-six-r](./quick/260724-h0c-run-the-one-authorized-paced-final-six-r/) |
 
 ## Deferred Items
 
