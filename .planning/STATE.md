@@ -6,9 +6,9 @@ current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
 stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-07-24T17:41:02.394+10:00"
+last_updated: "2026-07-24T18:00:38.050+10:00"
 last_activity: 2026-07-24
-last_activity_desc: "One authorized semantic-judge diagnostic passed the full local schema at cumulative 119"
+last_activity_desc: "Prepared guarded reference retry-3 at cumulative 119 with exact cap 134 and privacy-safe judge classification"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 4 of 4
-Status: Plan 02-03 complete; one-shot judge diagnostic passed, full live reference proof remains pending
-Last activity: 2026-07-24 — GPT-4o judge passed strict OpenRouter routing and the full local schema in one bounded paid diagnostic
+Status: Plan 02-03 complete; guarded 15-generation reference retry-3 awaits explicit authorization
+Last activity: 2026-07-24 — retry-3 exact preflight, judge field classification, and offline verification are complete
 
 Progress: [██████████████████░░] 7/8 plans (88%)
 
@@ -98,7 +98,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: The second guarded retry confirmed all four tea-timer resident turns, then stopped fail-closed when the semantic judge returned `schema-invalid`. A separately authorized one-call diagnostic subsequently passed the full local judge schema, ruling out a persistent route or structured-output incompatibility. The earlier invalid field remains unrecoverable; full reference proof is still pending. Cumulative accounting is 119.
+- [Phase 2]: The second guarded retry confirmed all four tea-timer resident turns, then stopped fail-closed when the semantic judge returned `schema-invalid`. A one-call diagnostic subsequently passed the full local schema. Guarded retry-3 is ready with privacy-safe judge field classification; it requires exactly 15 new generations from cumulative 119 to cap 134.
 - [Phase 2]: Human semantic calibration is approved and enabled. The remaining reference proof must preserve the OpenRouter credential outside chat, git, public bundles, and traces; any further paid attempt needs fresh explicit authorization.
 - [Phase 2]: Docker Desktop is stopped, so Plan 02-03's database-backed replay/rebuild check remains explicit verification debt.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
@@ -129,6 +129,7 @@ None yet.
 | 260724-nbq | Run the authorized Phase 2 reference retry-2 with at most 15 generations and cumulative ceiling 128, stop fail-closed, verify, commit, and push | 2026-07-24 | 8b8572c | [260724-nbq-run-the-authorized-phase-2-reference-ret](./quick/260724-nbq-run-the-authorized-phase-2-reference-ret/) |
 | 260724-nhl | Diagnose the Phase 2 semantic judge schema-invalid failure offline, identify the root cause from saved evidence and code paths, make no provider calls, and record findings | 2026-07-24 | 4e41d50 | [260724-nhl-diagnose-the-phase-2-semantic-judge-sche](./quick/260724-nhl-diagnose-the-phase-2-semantic-judge-sche/) |
 | 260724-oha | Run exactly one authorized paid semantic-judge diagnostic generation against an existing reference fixture, cumulative ceiling 119, record only privacy-safe schema and usage evidence, and do not retry | 2026-07-24 | ee714b8 | [260724-oha-run-exactly-one-authorized-paid-semantic](./quick/260724-oha-run-exactly-one-authorized-paid-semantic/) |
+| 260724-oxi | Prepare a guarded Phase 2 reference retry-3 starting at cumulative 119 with exactly 15 generations and cap 134, add privacy-safe judge field classification, verify offline, commit, and push without provider calls | 2026-07-24 | 9c1957f | [260724-oxi-prepare-a-guarded-phase-2-reference-retr](./quick/260724-oxi-prepare-a-guarded-phase-2-reference-retr/) |
 
 ## Deferred Items
 
@@ -140,6 +141,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-24T17:41:02.394+10:00
-Stopped at: One-shot semantic-judge diagnostic passed at cumulative 119; full live reference proof remains pending
+Last session: 2026-07-24T18:00:38.050+10:00
+Stopped at: Guarded reference retry-3 is ready; awaits exact 15-generation authorization with cumulative cap 134
 Resume file: None
