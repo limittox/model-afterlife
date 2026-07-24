@@ -56,5 +56,13 @@ describe("pre-release database migration", () => {
 		expect(publicProvenanceMigration).toContain(
 			'("claim_version_id","revision_id")',
 		);
+		const backfill = await readFile(
+			"scripts/backfill-scene-claim-versions.ts",
+			"utf8",
+		);
+		expect(backfill).toContain('"--dry-run"');
+		expect(backfill).toContain('"--apply"');
+		expect(backfill).toContain('"--check"');
+		expect(backfill).toContain("model_afterlife_app");
 	});
 });

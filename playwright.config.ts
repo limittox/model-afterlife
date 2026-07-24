@@ -12,11 +12,16 @@ export default defineConfig({
 	expect: { timeout: 6_000 },
 	reporter: "line",
 	globalSetup: "./tests/e2e/global-setup.ts",
+	projects: [
+		{
+			name: "chromium",
+			use: devices["Desktop Chrome"],
+		},
+	],
 	use: {
 		baseURL: "http://127.0.0.1:3100",
 		trace: "retain-on-failure",
 		screenshot: "only-on-failure",
-		...devices["Desktop Chrome"],
 		viewport: { width: 1280, height: 720 },
 	},
 	webServer: {

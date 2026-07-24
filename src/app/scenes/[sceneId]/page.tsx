@@ -11,7 +11,13 @@ export default async function CanonicalScenePage({
 	params: Promise<{ sceneId: string }>;
 }) {
 	const { sceneId } = await params;
-	const parsed = CanonicalRevisionIdSchema.safeParse(sceneId);
+	let decodedSceneId: string;
+	try {
+		decodedSceneId = decodeURIComponent(sceneId);
+	} catch {
+		notFound();
+	}
+	const parsed = CanonicalRevisionIdSchema.safeParse(decodedSceneId);
 	if (!parsed.success) notFound();
 
 	const result = await readCanonicalScene(parsed.data);
