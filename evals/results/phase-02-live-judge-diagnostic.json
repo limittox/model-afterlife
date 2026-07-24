@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "phase-02-live-judge-diagnostic-v1",
+  "status": "passed",
+  "startingCumulativeGenerations": 118,
+  "authorizedCheckpointGenerations": 1,
+  "cumulativeGenerationCap": 119,
+  "cumulativeGenerationsConsumed": 119,
+  "labelSetHash": "da152d06706d999d9669e4b07966bb356dde59921b7cc0744e56ca0036457766",
+  "caseId": "quality-gate-scene",
+  "entry": {
+    "kind": "reference-judge",
+    "residentId": "semantic-judge",
+    "status": "passed",
+    "code": "judge-schema-valid",
+    "generationId": "gen-1784878834-J3eGRM9rEZITsJimLci1",
+    "inputTokens": 440,
+    "outputTokens": 158,
+    "costUsd": 0.00268
+  }
+}
