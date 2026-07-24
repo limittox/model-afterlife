@@ -9,6 +9,7 @@ import {
 	worldProjection,
 } from "../../src/db/schema.ts";
 import { rebuildProjection } from "../../src/features/world/domain/replay.ts";
+import { HISTORICAL_CLAIMS } from "../../src/features/world/fixtures/historical-claims.ts";
 import { createProvisionalWorld } from "../../src/features/world/fixtures/provisional-world.ts";
 import { toPublicWorldSnapshot } from "../../src/features/world/server/to-public-snapshot.ts";
 import {
@@ -74,7 +75,7 @@ describe("database seeding", () => {
 		const before = await readCounts();
 		expect(before.models).toBe(6);
 		expect(before.bibles).toBe(6);
-		expect(before.claims).toBe(18);
+		expect(before.claims).toBe(HISTORICAL_CLAIMS.length);
 
 		execFileSync(
 			process.execPath,
