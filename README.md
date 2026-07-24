@@ -122,15 +122,15 @@ corepack pnpm verify:phase-02 -- --offline
 
 Live Phase 2 evaluation is a separate paid checkpoint. The first conditional 45-generation run completed all 30 paced admission samples and the first four resident turns with exact route and schema evidence. It then stopped before its first judge call because the first reference scene failed deterministic validation. That runner did not preserve the individual validator code, so the precise rejection is intentionally not claimed. The failed ledger is preserved at `evals/results/phase-02-live-checkpoint.json`, and cumulative OpenRouter accounting is `105/116`.
 
-The successful admission matrix is not rerun. The first reference-only continuation stopped after three accepted resident turns and one classified generation failure, leaving cumulative accounting at `109/120`. A guarded retry validates both prior failed ledgers, replays all three four-turn scenes and three reject-only judge calls, and writes a separate ledger. Its exact 15-generation cumulative ceiling is `124`. After a fresh explicit authorization, run:
+The successful admission matrix is not rerun. The first retry stopped after four provider-valid turns because canonical model IDs were incorrectly downgraded at the scene conductor boundary, leaving cumulative accounting at `113/124`. The conductor now accepts a canonical observed model only when strict OpenRouter evidence also binds it to the requested alias. A second guarded retry validates every prior ledger and the exact `identity.unverified` rejection before replaying all three four-turn scenes and three reject-only judge calls. Its exact 15-generation cumulative ceiling is `128`. After a fresh explicit authorization, run:
 
 ```powershell
 $env:MODEL_AFTERLIFE_LIVE_EVAL_AUTHORIZATION = "authorized"
-$env:MODEL_AFTERLIFE_LIVE_EVAL_CALL_CAP = "124"
-corepack pnpm eval:phase-02:live:retry
+$env:MODEL_AFTERLIFE_LIVE_EVAL_CALL_CAP = "128"
+corepack pnpm eval:phase-02:live:retry-2
 ```
 
-The retry command writes `phase-02-live-reference-retry.json` after every generation and refuses to start if either reviewed fail-closed state has drifted or a retry ledger already exists. Prompts, response text, and exception messages are never persisted.
+The second retry writes `phase-02-live-reference-retry-2.json` after every generation and refuses to start if any reviewed fail-closed state or validator evidence has drifted, or if its own ledger already exists. Prompts, response text, and exception messages are never persisted.
 
 ## Full verification
 

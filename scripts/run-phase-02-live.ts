@@ -43,6 +43,11 @@ const RETRY_CHECKPOINT_GENERATIONS =
 	REFERENCE_RESIDENT_GENERATIONS + REFERENCE_JUDGE_GENERATIONS;
 const RETRY_REQUIRED_CUMULATIVE_CAP =
 	RETRY_STARTING_CUMULATIVE_GENERATIONS + RETRY_CHECKPOINT_GENERATIONS;
+const RETRY_2_STARTING_CUMULATIVE_GENERATIONS = 113;
+const RETRY_2_CHECKPOINT_GENERATIONS =
+	REFERENCE_RESIDENT_GENERATIONS + REFERENCE_JUDGE_GENERATIONS;
+const RETRY_2_REQUIRED_CUMULATIVE_CAP =
+	RETRY_2_STARTING_CUMULATIVE_GENERATIONS + RETRY_2_CHECKPOINT_GENERATIONS;
 const GENERATION_INTERVAL_MS = 21_000;
 const INITIAL_LEDGER_PATH = resolve(
 	"evals/results/phase-02-live-checkpoint.json",
@@ -52,6 +57,9 @@ const CONTINUATION_LEDGER_PATH = resolve(
 );
 const RETRY_LEDGER_PATH = resolve(
 	"evals/results/phase-02-live-reference-retry.json",
+);
+const RETRY_2_LEDGER_PATH = resolve(
+	"evals/results/phase-02-live-reference-retry-2.json",
 );
 const ADMISSION_RESULT_PATH = resolve(
 	"evals/results/phase-02-live-admission.json",
@@ -86,7 +94,11 @@ type Ledger = {
 };
 
 type RunConfiguration = Readonly<{
-	mode: "initial" | "reference-continuation" | "reference-retry";
+	mode:
+		| "initial"
+		| "reference-continuation"
+		| "reference-retry"
+		| "reference-retry-2";
 	startingCumulativeGenerations: number;
 	checkpointGenerations: number;
 	requiredCumulativeCap: number;
@@ -186,6 +198,66 @@ export function validatePriorRetryCheckpoint(): void {
 	}
 }
 
+export function validatePriorRetry2Checkpoint(): void {
+	validatePriorRetryCheckpoint();
+	if (!existsSync(RETRY_LEDGER_PATH) || !existsSync(REFERENCE_RESULT_PATH)) {
+		throw new Error(
+			"Second reference retry requires the prior failed retry ledger and validator evidence.",
+		);
+	}
+	const prior = JSON.parse(readFileSync(RETRY_LEDGER_PATH, "utf8")) as Ledger;
+	const evidence = JSON.parse(readFileSync(REFERENCE_RESULT_PATH, "utf8")) as {
+		status?: unknown;
+		failure?: {
+			caseId?: unknown;
+			stage?: unknown;
+			validatorCodes?: { id?: unknown; status?: unknown; code?: unknown }[];
+		};
+	};
+	const expectedResidents = [
+		"gpt-4o",
+		"claude-sonnet-4.5",
+		"gpt-4o",
+		"claude-sonnet-4.5",
+	];
+	const entriesMatch = prior.entries.every(
+		(entry, index) =>
+			entry.kind === "reference-resident" &&
+			entry.residentId === expectedResidents[index] &&
+			entry.caseId === "ordinary-01-tea-timer" &&
+			entry.ordinal === index + 1 &&
+			entry.status === "passed",
+	);
+	const identityCode = evidence.failure?.validatorCodes?.find(
+		(result) => result.id === "identity",
+	);
+	const premiseCode = evidence.failure?.validatorCodes?.find(
+		(result) => result.id === "premise",
+	);
+	if (
+		prior.status !== "failed" ||
+		prior.startingCumulativeGenerations !==
+			RETRY_STARTING_CUMULATIVE_GENERATIONS ||
+		prior.authorizedCheckpointGenerations !== RETRY_CHECKPOINT_GENERATIONS ||
+		prior.cumulativeGenerationCap !== RETRY_REQUIRED_CUMULATIVE_CAP ||
+		prior.cumulativeGenerationsConsumed !==
+			RETRY_2_STARTING_CUMULATIVE_GENERATIONS ||
+		prior.entries.length !== 4 ||
+		!entriesMatch ||
+		evidence.status !== "failed" ||
+		evidence.failure?.caseId !== "ordinary-01-tea-timer" ||
+		evidence.failure?.stage !== "deterministic-validation" ||
+		identityCode?.status !== "fail" ||
+		identityCode.code !== "identity.unverified" ||
+		premiseCode?.status !== "pass" ||
+		premiseCode.code !== "premise.pass"
+	) {
+		throw new Error(
+			"The prior retry does not match the reviewed four-pass identity-gate rejection at cumulative 113.",
+		);
+	}
+}
+
 function assertAuthorization(): {
 	apiKey: string;
 	configuration: RunConfiguration;
@@ -193,34 +265,43 @@ function assertAuthorization(): {
 	const args = new Set(process.argv.slice(2).filter((value) => value !== "--"));
 	const continuation = args.has("--reference-only-continuation");
 	const retry = args.has("--reference-only-retry");
-	if (continuation && retry) {
+	const retry2 = args.has("--reference-only-retry-2");
+	if ([continuation, retry, retry2].filter(Boolean).length > 1) {
 		throw new Error("Choose exactly one reference continuation or retry mode.");
 	}
-	const configuration: RunConfiguration = retry
+	const configuration: RunConfiguration = retry2
 		? {
-				mode: "reference-retry",
-				startingCumulativeGenerations: RETRY_STARTING_CUMULATIVE_GENERATIONS,
-				checkpointGenerations: RETRY_CHECKPOINT_GENERATIONS,
-				requiredCumulativeCap: RETRY_REQUIRED_CUMULATIVE_CAP,
-				ledgerPath: RETRY_LEDGER_PATH,
+				mode: "reference-retry-2",
+				startingCumulativeGenerations: RETRY_2_STARTING_CUMULATIVE_GENERATIONS,
+				checkpointGenerations: RETRY_2_CHECKPOINT_GENERATIONS,
+				requiredCumulativeCap: RETRY_2_REQUIRED_CUMULATIVE_CAP,
+				ledgerPath: RETRY_2_LEDGER_PATH,
 			}
-		: continuation
+		: retry
 			? {
-					mode: "reference-continuation",
-					startingCumulativeGenerations:
-						CONTINUATION_STARTING_CUMULATIVE_GENERATIONS,
-					checkpointGenerations: CONTINUATION_CHECKPOINT_GENERATIONS,
-					requiredCumulativeCap: CONTINUATION_REQUIRED_CUMULATIVE_CAP,
-					ledgerPath: CONTINUATION_LEDGER_PATH,
+					mode: "reference-retry",
+					startingCumulativeGenerations: RETRY_STARTING_CUMULATIVE_GENERATIONS,
+					checkpointGenerations: RETRY_CHECKPOINT_GENERATIONS,
+					requiredCumulativeCap: RETRY_REQUIRED_CUMULATIVE_CAP,
+					ledgerPath: RETRY_LEDGER_PATH,
 				}
-			: {
-					mode: "initial",
-					startingCumulativeGenerations:
-						INITIAL_STARTING_CUMULATIVE_GENERATIONS,
-					checkpointGenerations: INITIAL_CHECKPOINT_GENERATIONS,
-					requiredCumulativeCap: INITIAL_REQUIRED_CUMULATIVE_CAP,
-					ledgerPath: INITIAL_LEDGER_PATH,
-				};
+			: continuation
+				? {
+						mode: "reference-continuation",
+						startingCumulativeGenerations:
+							CONTINUATION_STARTING_CUMULATIVE_GENERATIONS,
+						checkpointGenerations: CONTINUATION_CHECKPOINT_GENERATIONS,
+						requiredCumulativeCap: CONTINUATION_REQUIRED_CUMULATIVE_CAP,
+						ledgerPath: CONTINUATION_LEDGER_PATH,
+					}
+				: {
+						mode: "initial",
+						startingCumulativeGenerations:
+							INITIAL_STARTING_CUMULATIVE_GENERATIONS,
+						checkpointGenerations: INITIAL_CHECKPOINT_GENERATIONS,
+						requiredCumulativeCap: INITIAL_REQUIRED_CUMULATIVE_CAP,
+						ledgerPath: INITIAL_LEDGER_PATH,
+					};
 	if (!args.has("--live")) {
 		throw new Error("Phase 2 live proof requires --live.");
 	}
@@ -253,6 +334,9 @@ function assertAuthorization(): {
 	}
 	if (configuration.mode === "reference-retry") {
 		validatePriorRetryCheckpoint();
+	}
+	if (configuration.mode === "reference-retry-2") {
+		validatePriorRetry2Checkpoint();
 	}
 	if (existsSync(configuration.ledgerPath)) {
 		throw new Error(

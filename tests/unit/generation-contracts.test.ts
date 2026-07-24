@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { PublicWorldSnapshotSchema } from "../../src/features/world/contracts/public-world.ts";
 import { createProvisionalWorld } from "../../src/features/world/fixtures/provisional-world.ts";
-import { toPublicWorldSnapshot } from "../../src/features/world/server/to-public-snapshot.ts";
 import { conductSceneAttempt } from "../../src/features/world/generation/conduct-scene.ts";
 import { SceneBriefSchema } from "../../src/features/world/generation/contracts.ts";
 import { validateTracerCandidate } from "../../src/features/world/generation/validate-tracer-candidate.ts";
+import { toPublicWorldSnapshot } from "../../src/features/world/server/to-public-snapshot.ts";
 
 describe("Phase 2 public scene contract", () => {
 	it("accepts an accepted scene with the maximum ten complete turns", () => {
@@ -25,9 +25,7 @@ describe("Phase 2 public scene contract", () => {
 				id: `turn-${index}`,
 				speakerId: index % 2 === 0 ? "atlas" : "ember",
 				exactModelId:
-					index % 2 === 0
-						? "openai/gpt-4o"
-						: "anthropic/claude-sonnet-4.5",
+					index % 2 === 0 ? "openai/gpt-4o" : "anthropic/claude-sonnet-4.5",
 				text: `Validated tracer turn ${index + 1}.`,
 			})),
 		};
@@ -74,6 +72,42 @@ describe("strict resident identity evidence", () => {
 		expect(attempt.identityEvidence).toBe("openrouter_verified");
 	});
 
+	it("keeps verified canonical model observations bound to their requested alias", async () => {
+		const { attempt } = await conductSceneAttempt({
+			brief,
+			attemptId: "verified-canonical-attempt",
+			provider: {
+				generateTurn: async (input) => {
+					const canonicalModelId = `${input.requestedModelId}:canonical`;
+					return {
+						text: `Canonical turn ${input.turnIndex + 1}.`,
+						providerResponseId: `canonical-${input.turnIndex}`,
+						observedModelId: canonicalModelId,
+						identityEvidence: "openrouter_verified",
+						finishReason: "stop",
+						usage: { inputTokens: 2, outputTokens: 2 },
+						provenance: {
+							generationId: `canonical-${input.turnIndex}`,
+							requestedModelId: input.requestedModelId,
+							canonicalModelId,
+							selectedModelId: canonicalModelId,
+							selectedUpstream: "Verified Upstream",
+							strategy: "direct",
+							routeAttempt: 1,
+							pipeline: [],
+							usage: { inputTokens: 2, outputTokens: 2 },
+							warningCodes: [],
+							filterStatus: "clear",
+						},
+					};
+				},
+			},
+			modelForResident: (residentId) => `model/${residentId}`,
+		});
+
+		expect(attempt.identityEvidence).toBe("openrouter_verified");
+	});
+
 	it("records the application-selected editorial attempt ordinal", async () => {
 		const { attempt } = await conductSceneAttempt({
 			brief,
@@ -96,7 +130,10 @@ describe("strict resident identity evidence", () => {
 	});
 
 	it("rejects requested-only and generic provider response evidence", async () => {
-		for (const identityEvidence of ["requested_only", "provider_response"] as const) {
+		for (const identityEvidence of [
+			"requested_only",
+			"provider_response",
+		] as const) {
 			const { attempt, turns } = await conductSceneAttempt({
 				brief,
 				attemptId: `unverified-${identityEvidence}`,

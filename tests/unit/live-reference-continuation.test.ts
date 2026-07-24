@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
 	classifyLiveGenerationFailure,
 	validatePriorCheckpoint,
+	validatePriorRetry2Checkpoint,
 	validatePriorRetryCheckpoint,
 } from "../../scripts/run-phase-02-live.ts";
 
@@ -76,6 +77,42 @@ describe("live reference continuation", () => {
 			residentId: "claude-sonnet-4.5",
 			code: "reference-resident-generation-failed",
 		});
+	});
+
+	it("accepts only the four-pass identity-gate rejection at cumulative 113", () => {
+		expect(() => validatePriorRetry2Checkpoint()).not.toThrow();
+
+		const retry = JSON.parse(
+			readFileSync(
+				resolve("evals/results/phase-02-live-reference-retry.json"),
+				"utf8",
+			),
+		) as {
+			status: string;
+			cumulativeGenerationsConsumed: number;
+			entries: { status: string }[];
+		};
+		const evidence = JSON.parse(
+			readFileSync(
+				resolve("evals/results/phase-02-live-reference.json"),
+				"utf8",
+			),
+		) as {
+			failure: {
+				validatorCodes: { id: string; code: string }[];
+			};
+		};
+
+		expect(retry.status).toBe("failed");
+		expect(retry.cumulativeGenerationsConsumed).toBe(113);
+		expect(retry.entries.every((entry) => entry.status === "passed")).toBe(
+			true,
+		);
+		expect(
+			evidence.failure.validatorCodes.find(
+				(result) => result.id === "identity",
+			),
+		).toMatchObject({ code: "identity.unverified" });
 	});
 
 	it.each([
