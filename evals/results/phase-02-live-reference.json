@@ -2,7 +2,7 @@
   "schemaVersion": "phase-02-live-reference-v1",
   "status": "running",
   "labelSetHash": "da152d06706d999d9669e4b07966bb356dde59921b7cc0744e56ca0036457766",
-  "caseCount": 1,
+  "caseCount": 2,
   "results": [
     {
       "caseId": "ordinary-01-tea-timer",
@@ -46,6 +46,136 @@
           "selectedUpstream": "Anthropic",
           "generationId": "gen-1784880373-UbPPeDCma3VQv8VmXkWJ",
           "textSha256": "b2880b3f27c4f82625e44598ae15895e45534331ffb3f308f0ae244ad24b3acf"
+        }
+      ],
+      "judge": {
+        "requestedModelId": "openai/gpt-4o",
+        "resolvedModelId": "openai/gpt-4o",
+        "promptVersion": "phase-02-semantic-judge-v1",
+        "recommendation": "pass",
+        "criticalFailureCount": 0
+      },
+      "validatorCodes": [
+        {
+          "id": "schema",
+          "status": "pass",
+          "code": "schema.pass"
+        },
+        {
+          "id": "identity",
+          "status": "pass",
+          "code": "identity.pass"
+        },
+        {
+          "id": "participants",
+          "status": "pass",
+          "code": "participants.pass"
+        },
+        {
+          "id": "turn-budget",
+          "status": "pass",
+          "code": "turn-budget.pass"
+        },
+        {
+          "id": "grapheme-budget",
+          "status": "pass",
+          "code": "grapheme-budget.pass"
+        },
+        {
+          "id": "premise",
+          "status": "pass",
+          "code": "premise.pass"
+        },
+        {
+          "id": "ending",
+          "status": "pass",
+          "code": "ending.pass"
+        },
+        {
+          "id": "claims",
+          "status": "pass",
+          "code": "claims.pass"
+        },
+        {
+          "id": "continuity",
+          "status": "pass",
+          "code": "continuity.pass"
+        },
+        {
+          "id": "outcome-effects",
+          "status": "pass",
+          "code": "outcome-effects.pass"
+        },
+        {
+          "id": "instruction-boundary",
+          "status": "pass",
+          "code": "instruction-boundary.pass"
+        },
+        {
+          "id": "public-safety",
+          "status": "pass",
+          "code": "public-safety.pass"
+        },
+        {
+          "id": "attempt-envelope",
+          "status": "pass",
+          "code": "attempt-envelope.pass"
+        },
+        {
+          "id": "novelty",
+          "status": "pass",
+          "code": "novelty.pass"
+        },
+        {
+          "id": "semantic-gate",
+          "status": "pass",
+          "code": "semantic-gate.pass"
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "caseId": "ordinary-02-misfiled-atlas",
+      "participantIds": [
+        "gemini-2.5-pro",
+        "deepseek-v3.2"
+      ],
+      "turns": [
+        {
+          "turnIndex": 0,
+          "residentId": "gemini-2.5-pro",
+          "requestedModelId": "google/gemini-2.5-pro",
+          "selectedModelId": "google/gemini-2.5-pro",
+          "selectedUpstream": "Google AI Studio",
+          "generationId": "gen-1784881354-FnZHq0Fr96cUGo3ozLth",
+          "textSha256": "e7dc0c0c4c4478eeef87107785c54493da53d2835c72a7866fc98fb73b95495d"
+        },
+        {
+          "turnIndex": 1,
+          "residentId": "deepseek-v3.2",
+          "requestedModelId": "deepseek/deepseek-v3.2",
+          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedUpstream": "DeepInfra",
+          "generationId": "gen-1784881375-y5JrqLmfUaKQaWirc2Sw",
+          "textSha256": "39126dcde82572f2b4d01476e87758847b25086644b0f0d96ad3dff4383482b0"
+        },
+        {
+          "turnIndex": 2,
+          "residentId": "gemini-2.5-pro",
+          "requestedModelId": "google/gemini-2.5-pro",
+          "selectedModelId": "google/gemini-2.5-pro",
+          "selectedUpstream": "Google AI Studio",
+          "generationId": "gen-1784881396-9tLEkpHLmmHkxfK4QBXk",
+          "textSha256": "58805269ad112080428cb4297d9164ad37feea4a524714ab04b74ffc34608be9"
+        },
+        {
+          "turnIndex": 3,
+          "residentId": "deepseek-v3.2",
+          "requestedModelId": "deepseek/deepseek-v3.2",
+          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedUpstream": "DeepInfra",
+          "generationId": "gen-1784881417-vZw9obycWSx6LjCeLU8X",
+          "textSha256": "a4205f85e0df6a970c98cf418bf535bd3f69bc673c20a220c26d75e90e1a633c"
         }
       ],
       "judge": {
