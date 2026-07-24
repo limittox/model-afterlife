@@ -74,6 +74,69 @@ export const HISTORICAL_CLAIMS: HistoricalClaimVersion[] = [
 		editorialStatus: "approved",
 	},
 	{
+		claimVersionId: "claim-version:gpt4o-lineage:v1",
+		claimId: "gpt4o-omni-lineage",
+		versionKey: "gpt4o-omni-lineage.v1",
+		residentId: "gpt-4o",
+		stableOrder: 4,
+		category: "documented",
+		statement:
+			"OpenAI introduced GPT-4o as GPT-4's omni-model successor, with the letter o standing for omni.",
+		scope: {
+			residentId: "gpt-4o",
+			exactModelIds: ["openai/gpt-4o"],
+		},
+		source: {
+			title: "Hello GPT-4o",
+			url: "https://openai.com/index/hello-gpt-4o/",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:gpt4o-api-scope:v1",
+		claimId: "gpt4o-api-modality-scope",
+		versionKey: "gpt4o-api-modality-scope.v1",
+		residentId: "gpt-4o",
+		stableOrder: 5,
+		category: "documented",
+		statement:
+			"The GPT-4o API model page documents text and image input with text output; a staged text scene does not establish that every GPT-4o modality is active.",
+		scope: {
+			residentId: "gpt-4o",
+			exactModelIds: ["openai/gpt-4o"],
+		},
+		source: {
+			title: "GPT-4o model documentation",
+			url: "https://developers.openai.com/api/docs/models/gpt-4o",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:gpt4o-retirement-framing:v1",
+		claimId: "gpt4o-fictional-retirement-framing",
+		versionKey: "gpt4o-fictional-retirement-framing.v1",
+		residentId: "gpt-4o",
+		stableOrder: 6,
+		category: "exaggeration",
+		statement:
+			"Presenting GPT-4o as a retired parlour host is fictional staging, not a claim that OpenAI retired the model or that the model is conscious.",
+		scope: {
+			residentId: "gpt-4o",
+			exactModelIds: ["openai/gpt-4o"],
+		},
+		source: {
+			title: "GPT-4o model documentation",
+			url: "https://developers.openai.com/api/docs/models/gpt-4o",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
 		claimVersionId: "claim-version:claude45-capability:v1",
 		claimId: "claude45-coding-and-agents",
 		versionKey: "claude45-coding-and-agents.v1",

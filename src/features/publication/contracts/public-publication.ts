@@ -23,6 +23,143 @@ export function residentProfilePath(residentId: string): string {
 	return `/residents/${encodeURIComponent(residentId)}`;
 }
 
+export const PublicResidentIdSchema = z
+	.string()
+	.trim()
+	.min(1)
+	.max(96)
+	.regex(/^[a-z0-9]+(?:[.-][a-z0-9]+)*$/u);
+
+export const PublicHistoricalClaimSchema = strictObject({
+	claimId: nonBlank,
+	claimVersionId: nonBlank,
+	stableOrder: z.number().int().positive(),
+	category: z.enum(["documented", "reported", "exaggeration"]),
+	categoryLabel: z.enum([
+		"Documented fact",
+		"Reported reputation",
+		"Fictional exaggeration",
+	]),
+	statement: nonBlank,
+	scope: strictObject({
+		residentId: PublicResidentIdSchema,
+		exactModelIds: z.array(nonBlank).min(1),
+	}),
+	source: strictObject({
+		title: nonBlank,
+		url: z
+			.string()
+			.url()
+			.refine((url) => url.startsWith("https://"), {
+				message: "Historical sources must use HTTPS.",
+			}),
+		accessedOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/u),
+	}),
+	confidence: z.enum(["high", "medium"]),
+});
+
+export const PublicResidentProfileSectionSchema = strictObject({
+	id: z.enum([
+		"real-world-significance",
+		"lineage",
+		"architecture-and-capabilities",
+		"documented-limitations",
+		"fictional-retirement",
+	]),
+	title: nonBlank,
+	claims: z.array(PublicHistoricalClaimSchema).min(1),
+});
+
+export const PublicResidentBehaviorSchema = strictObject({
+	id: nonBlank,
+	title: nonBlank,
+	joke: nonBlank,
+	historicalInspiration: z.array(PublicHistoricalClaimSchema).min(1),
+	fictionalExaggeration: z.array(PublicHistoricalClaimSchema).min(1),
+	uncertaintyAndScope: nonBlank,
+	sources: z
+		.array(
+			strictObject({
+				claimVersionId: nonBlank,
+				category: z.enum(["documented", "reported", "exaggeration"]),
+				title: nonBlank,
+				url: z
+					.string()
+					.url()
+					.refine((url) => url.startsWith("https://")),
+				accessedOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/u),
+			}),
+		)
+		.min(1),
+});
+
+export const PublicRelationshipSummarySchema = strictObject({
+	counterpartResidentId: PublicResidentIdSchema,
+	counterpartName: nonBlank,
+	counterpartProfilePath: z.string().startsWith("/residents/"),
+	dimension: z.enum(["friendship", "rivalry", "familiarity"]),
+	description: nonBlank,
+	scene: strictObject({
+		revisionId: CanonicalRevisionIdSchema,
+		href: z.string().startsWith("/scenes/"),
+		label: nonBlank,
+	}),
+});
+
+export const PublicResidentProfileSchema = strictObject({
+	residentId: PublicResidentIdSchema,
+	displayOrder: z.number().int().min(1).max(6),
+	displayName: nonBlank,
+	role: nonBlank,
+	routines: z.array(nonBlank).min(1),
+	portraitVariantId: nonBlank,
+	exactModelIds: z.array(nonBlank).min(1).max(2),
+	profilePath: z.string().startsWith("/residents/"),
+	sections: z.array(PublicResidentProfileSectionSchema).length(5),
+	behaviors: z.array(PublicResidentBehaviorSchema).min(1),
+	relationship: PublicRelationshipSummarySchema.nullable(),
+	disclosures: strictObject({
+		reconstruction: nonBlank,
+		nonAffiliation: nonBlank,
+	}),
+}).superRefine((profile, context) => {
+	const sectionOrder = [
+		"real-world-significance",
+		"lineage",
+		"architecture-and-capabilities",
+		"documented-limitations",
+		"fictional-retirement",
+	];
+	if (
+		profile.sections.some(
+			(section, index) => section.id !== sectionOrder[index],
+		)
+	) {
+		context.addIssue({
+			code: "custom",
+			path: ["sections"],
+			message: "Profile sections must use the approved narrative order.",
+		});
+	}
+	if (profile.profilePath !== residentProfilePath(profile.residentId)) {
+		context.addIssue({
+			code: "custom",
+			path: ["profilePath"],
+			message: "Profile path must derive from the stable resident ID.",
+		});
+	}
+});
+
+export const ResidentProfileReadResultSchema = z.discriminatedUnion("kind", [
+	strictObject({ kind: z.literal("complete"), profile: PublicResidentProfileSchema }),
+	strictObject({ kind: z.literal("not-found") }),
+	strictObject({
+		kind: z.literal("known-unavailable"),
+		residentId: PublicResidentIdSchema,
+		reason: z.literal("profile-evidence-incomplete"),
+	}),
+]);
+
 export const CanonicalSceneCastMemberSchema = strictObject({
 	residentId: nonBlank,
 	displayName: nonBlank,
@@ -253,4 +390,10 @@ export const CanonicalSceneReadResultSchema = z.discriminatedUnion("kind", [
 export type CanonicalScene = z.infer<typeof CanonicalSceneSchema>;
 export type CanonicalSceneReadResult = z.infer<
 	typeof CanonicalSceneReadResultSchema
+>;
+export type PublicResidentBehavior = z.infer<
+	typeof PublicResidentBehaviorSchema
+>;
+export type PublicResidentProfile = z.infer<
+	typeof PublicResidentProfileSchema
 >;
