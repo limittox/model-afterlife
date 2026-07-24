@@ -1,4 +1,4 @@
-import { eq, inArray } from "drizzle-orm";
+import { desc, eq, inArray } from "drizzle-orm";
 import { createWorldDatabase } from "../src/db/client.ts";
 import {
 	characterBibleVersions,
@@ -8,15 +8,46 @@ import {
 	worldProjection,
 	worlds,
 } from "../src/db/schema.ts";
+import { PublicWorldSnapshotSchema } from "../src/features/world/contracts/public-world.ts";
 import { targetTickFor } from "../src/features/world/domain/clock.ts";
+import type { WorldState } from "../src/features/world/domain/types.ts";
+import { LAUNCH_RESIDENTS } from "../src/features/world/fixtures/launch-residents.ts";
 import { WORLD_EPOCH_MS } from "../src/features/world/fixtures/provisional-world.ts";
 import {
 	CANONICAL_WORLD_ID,
 	createEditorialSeedData,
+	createGroundedEnsembleInitializedEvent,
 	createWorldInitializedEvent,
+	GROUNDED_ENSEMBLE_OCCURRENCE_KEY,
 	SEED_OCCURRENCE_KEY,
 } from "../src/features/world/server/seed-data.ts";
 import { toPublicWorldSnapshot } from "../src/features/world/server/to-public-snapshot.ts";
+
+function isCurrentWorldState(value: unknown): value is WorldState {
+	if (!value || typeof value !== "object") return false;
+	const state = value as Partial<WorldState>;
+	if (
+		!Array.isArray(state.residents) ||
+		!Array.isArray(state.relationships) ||
+		!Array.isArray(state.memories) ||
+		!Array.isArray(state.appliedRelationshipEffectKeys) ||
+		!Array.isArray(state.sceneHistory)
+	) {
+		return false;
+	}
+	const expectedResidentIds = LAUNCH_RESIDENTS.map(
+		(resident) => resident.id,
+	).sort();
+	const actualResidentIds = state.residents
+		.map((resident) => resident.id)
+		.sort();
+	return (
+		actualResidentIds.length === expectedResidentIds.length &&
+		actualResidentIds.every(
+			(residentId, index) => residentId === expectedResidentIds[index],
+		)
+	);
+}
 
 export async function seedWorld(): Promise<void> {
 	const { db, close } = createWorldDatabase();
@@ -122,17 +153,106 @@ export async function seedWorld(): Promise<void> {
 				existing.logicalTick,
 			);
 			const snapshot = toPublicWorldSnapshot(seededEvent.payload.state);
-			await transaction
-				.insert(worldProjection)
-				.values({
+			const [projection] = await transaction
+				.select({
+					logicalTick: worldProjection.logicalTick,
+					throughSequence: worldProjection.throughSequence,
+					projection: worldProjection.projection,
+					state: worldProjection.state,
+				})
+				.from(worldProjection)
+				.where(eq(worldProjection.worldId, CANONICAL_WORLD_ID))
+				.limit(1);
+			const projectionIsCurrent =
+				projection !== undefined &&
+				isCurrentWorldState(projection.state) &&
+				PublicWorldSnapshotSchema.safeParse(projection.projection).success;
+
+			if (projectionIsCurrent) return;
+
+			if (!projection && inserted.length > 0) {
+				await transaction.insert(worldProjection).values({
 					worldId: CANONICAL_WORLD_ID,
 					logicalTick: snapshot.logicalTick,
 					throughSequence: snapshot.throughSequence,
 					projection: snapshot,
 					state: seededEvent.payload.state,
 					stateHash: snapshot.stateHash,
+				});
+				return;
+			}
+
+			const [latestEvent] = await transaction
+				.select({ sequence: worldEvents.sequence })
+				.from(worldEvents)
+				.where(eq(worldEvents.worldId, CANONICAL_WORLD_ID))
+				.orderBy(desc(worldEvents.sequence))
+				.limit(1);
+			if (!latestEvent) {
+				throw new Error("The canonical event journal has no initialization.");
+			}
+			const upgradeCandidate = createGroundedEnsembleInitializedEvent(
+				latestEvent.sequence + 1,
+				projection?.logicalTick ?? existing.logicalTick,
+			);
+			await transaction
+				.insert(worldEvents)
+				.values({
+					sequence: upgradeCandidate.sequence,
+					worldId: CANONICAL_WORLD_ID,
+					occurrenceKey: GROUNDED_ENSEMBLE_OCCURRENCE_KEY,
+					logicalTick: upgradeCandidate.logicalTick,
+					type: upgradeCandidate.type,
+					schemaVersion: upgradeCandidate.schemaVersion,
+					payload: upgradeCandidate.payload,
+					publicSnapshot: toPublicWorldSnapshot(upgradeCandidate.payload.state),
 				})
-				.onConflictDoNothing({ target: worldProjection.worldId });
+				.onConflictDoNothing();
+			const [upgradeRow] = await transaction
+				.select({
+					sequence: worldEvents.sequence,
+					logicalTick: worldEvents.logicalTick,
+				})
+				.from(worldEvents)
+				.where(eq(worldEvents.occurrenceKey, GROUNDED_ENSEMBLE_OCCURRENCE_KEY))
+				.limit(1);
+			if (!upgradeRow) {
+				throw new Error(
+					"The grounded ensemble upgrade event could not be read.",
+				);
+			}
+			if (projection && projection.throughSequence > upgradeRow.sequence) {
+				throw new Error(
+					"Refusing to rewind a newer incompatible canonical projection.",
+				);
+			}
+			const upgradeEvent = createGroundedEnsembleInitializedEvent(
+				upgradeRow.sequence,
+				upgradeRow.logicalTick,
+			);
+			const upgradeSnapshot = toPublicWorldSnapshot(upgradeEvent.payload.state);
+			await transaction
+				.insert(worldProjection)
+				.values({
+					worldId: CANONICAL_WORLD_ID,
+					logicalTick: upgradeSnapshot.logicalTick,
+					throughSequence: upgradeSnapshot.throughSequence,
+					projection: upgradeSnapshot,
+					state: upgradeEvent.payload.state,
+					stateHash: upgradeSnapshot.stateHash,
+					updatedAt: new Date(),
+				})
+				.onConflictDoUpdate({
+					target: worldProjection.worldId,
+					set: {
+						logicalTick: upgradeSnapshot.logicalTick,
+						throughSequence: upgradeSnapshot.throughSequence,
+						projection: upgradeSnapshot,
+						state: upgradeEvent.payload.state,
+						stateHash: upgradeSnapshot.stateHash,
+						updatedAt: new Date(),
+					},
+				});
 		});
 	} finally {
 		await close();

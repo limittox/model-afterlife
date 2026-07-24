@@ -625,6 +625,11 @@ h3 {
 }
 
 @media (min-width: 1024px) and (max-width: 1279px) {
+	.home-status-strip {
+		padding-top: var(--space-sm);
+		padding-bottom: var(--space-sm);
+	}
+
 	.observer-stage {
 		grid-template-columns: minmax(0, 1fr) 320px;
 	}

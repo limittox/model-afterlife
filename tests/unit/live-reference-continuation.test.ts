@@ -4,7 +4,6 @@ import { describe, expect, it } from "vitest";
 import {
 	classifyLiveGenerationFailure,
 	validatePriorCheckpoint,
-	validatePriorRetry5Checkpoint,
 	validatePriorRetryCheckpoint,
 } from "../../scripts/run-phase-02-live.ts";
 
@@ -114,9 +113,7 @@ describe("live reference continuation", () => {
 		});
 	});
 
-	it("accepts only the cumulative 135 text-schema stop with two accepted cases", () => {
-		expect(() => validatePriorRetry5Checkpoint()).not.toThrow();
-
+	it("preserves the completed retry-5 ledger and three accepted reference cases", () => {
 		const retry4 = JSON.parse(
 			readFileSync(
 				resolve("evals/results/phase-02-live-reference-retry-4.json"),
@@ -137,6 +134,24 @@ describe("live reference continuation", () => {
 			caseCount: number;
 			results: { caseId: string; accepted: boolean }[];
 		};
+		const retry5 = JSON.parse(
+			readFileSync(
+				resolve("evals/results/phase-02-live-reference-retry-5.json"),
+				"utf8",
+			),
+		) as {
+			status: string;
+			startingCumulativeGenerations: number;
+			authorizedCheckpointGenerations: number;
+			cumulativeGenerationCap: number;
+			cumulativeGenerationsConsumed: number;
+			entries: {
+				kind: string;
+				residentId: string;
+				caseId: string;
+				status: string;
+			}[];
+		};
 
 		expect(retry4).toMatchObject({
 			status: "failed",
@@ -147,9 +162,48 @@ describe("live reference continuation", () => {
 			status: "failed",
 			code: "schema-text-invalid",
 		});
+		expect(retry5).toMatchObject({
+			status: "passed",
+			startingCumulativeGenerations: 135,
+			authorizedCheckpointGenerations: 5,
+			cumulativeGenerationCap: 140,
+			cumulativeGenerationsConsumed: 140,
+		});
+		expect(retry5.entries).toEqual([
+			expect.objectContaining({
+				kind: "reference-resident",
+				residentId: "llama-3.3-70b-instruct",
+				caseId: "ordinary-03-radio-labels",
+				status: "passed",
+			}),
+			expect.objectContaining({
+				kind: "reference-resident",
+				residentId: "qwen3-235b-a22b-2507",
+				caseId: "ordinary-03-radio-labels",
+				status: "passed",
+			}),
+			expect.objectContaining({
+				kind: "reference-resident",
+				residentId: "llama-3.3-70b-instruct",
+				caseId: "ordinary-03-radio-labels",
+				status: "passed",
+			}),
+			expect.objectContaining({
+				kind: "reference-resident",
+				residentId: "qwen3-235b-a22b-2507",
+				caseId: "ordinary-03-radio-labels",
+				status: "passed",
+			}),
+			expect.objectContaining({
+				kind: "reference-judge",
+				residentId: "semantic-judge",
+				caseId: "ordinary-03-radio-labels",
+				status: "passed",
+			}),
+		]);
 		expect(evidence).toMatchObject({
-			status: "running",
-			caseCount: 2,
+			status: "passed",
+			caseCount: 3,
 			results: [
 				{
 					caseId: "ordinary-01-tea-timer",
@@ -157,6 +211,10 @@ describe("live reference continuation", () => {
 				},
 				{
 					caseId: "ordinary-02-misfiled-atlas",
+					accepted: true,
+				},
+				{
+					caseId: "ordinary-03-radio-labels",
 					accepted: true,
 				},
 			],

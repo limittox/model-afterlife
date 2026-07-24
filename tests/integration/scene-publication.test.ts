@@ -1,14 +1,14 @@
+import { eq } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
-import { FakeResidentTurnProvider } from "../../src/features/world/generation/fake-resident-turn-provider.ts";
-import { conductSceneAttempt } from "../../src/features/world/generation/conduct-scene.ts";
-import { SceneBriefSchema } from "../../src/features/world/generation/contracts.ts";
-import { validateTracerCandidate } from "../../src/features/world/generation/validate-tracer-candidate.ts";
-import { persistGenerationAttempt } from "../../src/features/world/server/persist-generation-attempt.ts";
-import { readCanonicalHead } from "../../src/features/world/server/world-repository.ts";
 import { createWorldDatabase } from "../../src/db/client.ts";
 import { generationAttempts } from "../../src/db/schema.ts";
-import { eq } from "drizzle-orm";
+import { conductSceneAttempt } from "../../src/features/world/generation/conduct-scene.ts";
+import { SceneBriefSchema } from "../../src/features/world/generation/contracts.ts";
+import { FakeResidentTurnProvider } from "../../src/features/world/generation/fake-resident-turn-provider.ts";
+import { validateTracerCandidate } from "../../src/features/world/generation/validate-tracer-candidate.ts";
+import { persistGenerationAttempt } from "../../src/features/world/server/persist-generation-attempt.ts";
 import { CANONICAL_WORLD_ID } from "../../src/features/world/server/seed-data.ts";
+import { readCanonicalHead } from "../../src/features/world/server/world-repository.ts";
 
 describe("scene publication faults", () => {
 	it("keeps an identity-rejected candidate private and leaves canon unchanged", async () => {
@@ -45,7 +45,10 @@ describe("scene publication faults", () => {
 			turns,
 			revisionId: "unpublished",
 		});
-		expect(result.result).toMatchObject({ accepted: false, code: "identity" });
+		expect(result.result).toMatchObject({
+			accepted: false,
+			code: "identity.unverified",
+		});
 		await persistGenerationAttempt({
 			worldId: CANONICAL_WORLD_ID,
 			brief,

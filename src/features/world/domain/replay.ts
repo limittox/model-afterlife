@@ -10,10 +10,18 @@ export function replayWorldEvents(
 	initialState: WorldState,
 	events: WorldEvent[],
 ): WorldState {
+	const orderedEvents = [...events].sort(compareEvents);
+	const latestInitializationIndex = orderedEvents.findLastIndex(
+		(event) => event.type === "world_initialized",
+	);
+	const activeEpoch =
+		latestInitializationIndex >= 0
+			? orderedEvents.slice(latestInitializationIndex)
+			: orderedEvents;
 	const seenOccurrences = new Set<string>();
 	let state = initialState;
 
-	for (const event of [...events].sort(compareEvents)) {
+	for (const event of activeEpoch) {
 		if (seenOccurrences.has(event.occurrenceKey)) {
 			continue;
 		}

@@ -11,12 +11,36 @@ describe("pre-release database migration", () => {
 		expect(journal.entries.map((entry) => entry.tag)).toEqual([
 			"0000_world_skeleton",
 			"0001_majestic_mariko_yashida",
+			"0002_lumpy_daimon_hellstrom",
 		]);
 		expect(migration).toContain('"schema_version" integer DEFAULT 1 NOT NULL');
 		expect(migration).toContain('"public_snapshot" jsonb NOT NULL');
 		expect(migration).toContain('"state" jsonb NOT NULL');
 		expect(migration).toContain('"sequence" integer PRIMARY KEY NOT NULL');
-		const sceneMigration = await readFile("drizzle/0001_majestic_mariko_yashida.sql", "utf8");
-		for (const table of ["resident_model_versions", "character_bible_versions", "historical_claim_versions", "scene_briefs", "generation_attempts", "generation_turns", "scene_validation_results", "published_scene_revisions"]) expect(sceneMigration).toContain(`CREATE TABLE "${table}"`);
+		const sceneMigration = await readFile(
+			"drizzle/0001_majestic_mariko_yashida.sql",
+			"utf8",
+		);
+		for (const table of [
+			"resident_model_versions",
+			"character_bible_versions",
+			"historical_claim_versions",
+			"scene_briefs",
+			"generation_attempts",
+			"generation_turns",
+			"scene_validation_results",
+			"published_scene_revisions",
+		])
+			expect(sceneMigration).toContain(`CREATE TABLE "${table}"`);
+		const provenanceMigration = await readFile(
+			"drizzle/0002_lumpy_daimon_hellstrom.sql",
+			"utf8",
+		);
+		expect(provenanceMigration).toContain(
+			'ALTER TABLE "generation_turns" ADD COLUMN "approved_claim_ids"',
+		);
+		expect(provenanceMigration).toContain(
+			'ALTER TABLE "generation_turns" ADD COLUMN "provenance"',
+		);
 	});
 });

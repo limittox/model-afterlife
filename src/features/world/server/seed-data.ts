@@ -10,6 +10,8 @@ import { toPublicWorldSnapshot } from "./to-public-snapshot.ts";
 
 export const CANONICAL_WORLD_ID = "00000000-0000-4000-8000-000000000001";
 export const SEED_OCCURRENCE_KEY = "world-initialized:v1";
+export const GROUNDED_ENSEMBLE_OCCURRENCE_KEY =
+	"world-initialized:grounded-ensemble:v1";
 
 export function createEditorialSeedData() {
 	validateLaunchResidentRegistry({
@@ -63,5 +65,15 @@ export function createWorldInitializedEvent(
 		logicalTick,
 		type: "world_initialized",
 		payload: { state },
+	};
+}
+
+export function createGroundedEnsembleInitializedEvent(
+	sequence: number,
+	logicalTick: number,
+): WorldInitializedEvent {
+	return {
+		...createWorldInitializedEvent(sequence, logicalTick),
+		occurrenceKey: GROUNDED_ENSEMBLE_OCCURRENCE_KEY,
 	};
 }

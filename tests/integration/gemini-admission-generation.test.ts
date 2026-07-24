@@ -61,7 +61,6 @@ describe("Gemini admission generation", () => {
 			output: {
 				text: "Even the tea seems to prefer a moment of reflection.",
 				approvedClaimIds: ["gemini25-deliberative-reputation"],
-				proposedRelationshipEffects: [],
 				endsScene: false,
 			},
 			response: {

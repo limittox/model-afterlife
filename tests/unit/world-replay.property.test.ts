@@ -5,15 +5,16 @@ import {
 	canonicalSerialize,
 	canonicalStateHash,
 } from "../../src/features/world/domain/canonical.ts";
-import type { WorldEvent } from "../../src/features/world/domain/types.ts";
 import {
 	rebuildProjection,
 	replayWorldEvents,
 } from "../../src/features/world/domain/replay.ts";
+import type { WorldEvent } from "../../src/features/world/domain/types.ts";
 import {
 	createProvisionalWorld,
 	PROVISIONAL_WORLD_SEED,
 } from "../../src/features/world/fixtures/provisional-world.ts";
+import { createGroundedEnsembleInitializedEvent } from "../../src/features/world/server/seed-data.ts";
 
 describe("deterministic world replay", () => {
 	it("serializes logically equal objects byte-identically", () => {
@@ -103,6 +104,49 @@ describe("deterministic world replay", () => {
 			replayed.residents.find((resident) => resident.id === "gpt-4o")?.roomId,
 		).toBe("library");
 		expect(replayed.throughSequence).toBe(2);
+	});
+
+	it("replays only the latest initialized epoch when an older roster is incompatible", () => {
+		const legacyInitialization = {
+			schemaVersion: 1,
+			sequence: 1,
+			occurrenceKey: "world-initialized:v1",
+			logicalTick: 1,
+			type: "world_initialized",
+			payload: {
+				state: {
+					schemaVersion: 1,
+					worldId: createProvisionalWorld().worldId,
+					logicalTick: 1,
+					throughSequence: 1,
+					rooms: [],
+					residents: [],
+				},
+			},
+		} as unknown as WorldEvent;
+		const staleRoutine = {
+			schemaVersion: 1,
+			sequence: 2,
+			occurrenceKey: "legacy:routine",
+			logicalTick: 2,
+			type: "quiet_routine_started",
+			payload: {
+				residentId: "former-giant",
+				locationId: "common-room",
+				activity: "Remembering an older roster",
+			},
+		} as WorldEvent;
+		const groundedInitialization = createGroundedEnsembleInitializedEvent(3, 2);
+
+		const replayed = replayWorldEvents(createProvisionalWorld(), [
+			staleRoutine,
+			groundedInitialization,
+			legacyInitialization,
+		]);
+
+		expect(replayed).toEqual(groundedInitialization.payload.state);
+		expect(replayed.residents).toHaveLength(6);
+		expect(replayed.throughSequence).toBe(3);
 	});
 
 	it("rebuilds the exact projection hash and publishes scenes only whole", () => {
