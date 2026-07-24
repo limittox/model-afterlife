@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 Qwen field-level schema diagnostic ready; 38/62 consumed"
-last_updated: "2026-07-24T02:23:00.166Z"
+stopped_at: "02-02 Task 3 one Qwen diagnostic authorized and reserved; 39/62 ceiling"
+last_updated: "2026-07-24T02:25:14.204Z"
 last_activity: 2026-07-24
-last_activity_desc: "Added privacy-safe field-level classification for local admission schema failures; no provider calls; cumulative accounting remains 38/62"
+last_activity_desc: "One Qwen-only diagnostic is authorized: two catalog reads, one generation, no retry or fallback; cumulative ceiling reserved at 39/62"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Task 3 Qwen field-level schema diagnostic ready
-Last activity: 2026-07-24 — privacy-safe Zod issue classification now distinguishes text length/type, approved-claim count/IDs, forbidden relationship effects, and the ends-scene flag without exposing messages or values; no provider call was made and accounting remains 38/62
+Status: Task 3 one Qwen diagnostic authorized and reserved
+Last activity: 2026-07-24 — exactly two read-only catalog requests and one Qwen generation are authorized with exact routing, zero retries, disabled fallback, sanitized output, and a cumulative generation ceiling of 39/62
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Deterministic 21-second pacing resolved the repeated fourth-request HTTP 429 seam. The paced matrix reached all six ordinal-one generations, then Qwen failed local application-schema validation. Privacy-safe field-level classification is now ready to identify the violated constraint on a future canary. Accounting is 38/62 with 24 calls unused; no further provider call is authorized.
+- [Phase 2]: One Qwen-only field-level diagnostic is authorized and conservatively reserved at 39/62: two read-only catalog requests and one generation, with exact routing, zero retries, disabled fallback, sanitized output, and an immediate stop afterward.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
