@@ -132,6 +132,16 @@ corepack pnpm eval:phase-02:live:retry-2
 
 The second retry writes `phase-02-live-reference-retry-2.json` after every generation and refuses to start if any reviewed fail-closed state or validator evidence has drifted, or if its own ledger already exists. Prompts, response text, and exception messages are never persisted.
 
+After a separately authorized one-shot judge diagnostic reaches cumulative 119, the guarded third retry is:
+
+```powershell
+$env:MODEL_AFTERLIFE_LIVE_EVAL_AUTHORIZATION = "authorized"
+$env:MODEL_AFTERLIFE_LIVE_EVAL_CALL_CAP = "134"
+corepack pnpm eval:phase-02:live:retry-3
+```
+
+The third retry makes no admission calls, writes `phase-02-live-reference-retry-3.json` after every generation, requires the exact reviewed retry-2 failure plus successful one-shot diagnostic, and records only privacy-safe judge schema categories. It requires a fresh explicit authorization for exactly 15 generations and cumulative ceiling 134.
+
 ## Full verification
 
 The Playwright project starts Docker services, applies reviewed migrations, seeds only when no canonical projection exists, and starts Next.js. It includes a real two-browser database convergence case plus controlled recovery and UI-state cases:

@@ -5,6 +5,7 @@ import {
 	classifyLiveGenerationFailure,
 	validatePriorCheckpoint,
 	validatePriorRetry2Checkpoint,
+	validatePriorRetry3Checkpoint,
 	validatePriorRetryCheckpoint,
 } from "../../scripts/run-phase-02-live.ts";
 
@@ -113,6 +114,46 @@ describe("live reference continuation", () => {
 				(result) => result.id === "identity",
 			),
 		).toMatchObject({ code: "identity.unverified" });
+	});
+
+	it("accepts only the retry-2 judge rejection plus successful diagnostic at cumulative 119", () => {
+		expect(() => validatePriorRetry3Checkpoint()).not.toThrow();
+
+		const retry2 = JSON.parse(
+			readFileSync(
+				resolve("evals/results/phase-02-live-reference-retry-2.json"),
+				"utf8",
+			),
+		) as {
+			status: string;
+			cumulativeGenerationsConsumed: number;
+			entries: { status: string; code?: string }[];
+		};
+		const diagnostic = JSON.parse(
+			readFileSync(
+				resolve("evals/results/phase-02-live-judge-diagnostic.json"),
+				"utf8",
+			),
+		) as {
+			status: string;
+			cumulativeGenerationsConsumed: number;
+			entry: { status: string; code: string };
+		};
+
+		expect(retry2.status).toBe("failed");
+		expect(retry2.cumulativeGenerationsConsumed).toBe(118);
+		expect(retry2.entries.at(-1)).toMatchObject({
+			status: "failed",
+			code: "schema-invalid",
+		});
+		expect(diagnostic).toMatchObject({
+			status: "passed",
+			cumulativeGenerationsConsumed: 119,
+			entry: {
+				status: "passed",
+				code: "judge-schema-valid",
+			},
+		});
 	});
 
 	it.each([

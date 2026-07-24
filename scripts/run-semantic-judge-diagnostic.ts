@@ -7,10 +7,9 @@ import {
 } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { ZodError } from "zod";
 import { OpenRouterSemanticJudgeProvider } from "../src/features/world/generation/openrouter-semantic-judge-provider.ts";
-import { classifyAdmissionFailure } from "../src/features/world/generation/run-admission-canaries.ts";
 import { runSemanticJudge } from "../src/features/world/generation/semantic-judge.ts";
+import { classifySemanticJudgeFailure } from "../src/features/world/generation/semantic-judge-error-classification.ts";
 import { APPROVED_SEMANTIC_CALIBRATION } from "../src/features/world/generation/semantic-calibration.ts";
 import { buildValidSceneCandidate } from "../tests/fixtures/scene-candidate.ts";
 
@@ -98,29 +97,6 @@ export function validateDiagnosticPreflight(): void {
 			"The saved checkpoint does not match the reviewed cumulative 118 judge-schema failure.",
 		);
 	}
-}
-
-export function classifyJudgeSchemaIssues(error: unknown): string[] {
-	if (!(error instanceof ZodError)) {
-		return [classifyAdmissionFailure(error)];
-	}
-	const codes = error.issues.map((issue) => {
-		const root = issue.path[0];
-		if (root === "scores") return "judge-schema-score-invalid";
-		if (root === "reasons") {
-			if (issue.code === "too_big") return "judge-schema-reason-too-long";
-			if (issue.code === "too_small") return "judge-schema-reason-empty";
-			return "judge-schema-reason-invalid";
-		}
-		if (root === "criticalFailureIds") {
-			if (issue.path.length === 1 && issue.code === "too_big") {
-				return "judge-schema-critical-id-count";
-			}
-			return "judge-schema-critical-id-invalid";
-		}
-		return "judge-schema-invalid";
-	});
-	return [...new Set(codes)].sort();
 }
 
 function assertAuthorization(): string {
@@ -213,7 +189,7 @@ async function main(): Promise<void> {
 			`Semantic judge diagnostic passed at cumulative ${REQUIRED_CUMULATIVE_CAP}.\n`,
 		);
 	} catch (error) {
-		const schemaCodes = classifyJudgeSchemaIssues(error);
+		const schemaCodes = classifySemanticJudgeFailure(error);
 		ledger.status = "failed";
 		ledger.entry = {
 			...ledger.entry,

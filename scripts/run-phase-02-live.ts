@@ -20,6 +20,7 @@ import {
 	runSemanticJudge,
 	SEMANTIC_JUDGE_PROFILE,
 } from "../src/features/world/generation/semantic-judge.ts";
+import { classifySemanticJudgeFailure } from "../src/features/world/generation/semantic-judge-error-classification.ts";
 import { validateSceneCandidate } from "../src/features/world/generation/validate-scene-candidate.ts";
 
 const INITIAL_STARTING_CUMULATIVE_GENERATIONS = 71;
@@ -48,6 +49,11 @@ const RETRY_2_CHECKPOINT_GENERATIONS =
 	REFERENCE_RESIDENT_GENERATIONS + REFERENCE_JUDGE_GENERATIONS;
 const RETRY_2_REQUIRED_CUMULATIVE_CAP =
 	RETRY_2_STARTING_CUMULATIVE_GENERATIONS + RETRY_2_CHECKPOINT_GENERATIONS;
+const RETRY_3_STARTING_CUMULATIVE_GENERATIONS = 119;
+const RETRY_3_CHECKPOINT_GENERATIONS =
+	REFERENCE_RESIDENT_GENERATIONS + REFERENCE_JUDGE_GENERATIONS;
+const RETRY_3_REQUIRED_CUMULATIVE_CAP =
+	RETRY_3_STARTING_CUMULATIVE_GENERATIONS + RETRY_3_CHECKPOINT_GENERATIONS;
 const GENERATION_INTERVAL_MS = 21_000;
 const INITIAL_LEDGER_PATH = resolve(
 	"evals/results/phase-02-live-checkpoint.json",
@@ -60,6 +66,12 @@ const RETRY_LEDGER_PATH = resolve(
 );
 const RETRY_2_LEDGER_PATH = resolve(
 	"evals/results/phase-02-live-reference-retry-2.json",
+);
+const RETRY_3_LEDGER_PATH = resolve(
+	"evals/results/phase-02-live-reference-retry-3.json",
+);
+const JUDGE_DIAGNOSTIC_LEDGER_PATH = resolve(
+	"evals/results/phase-02-live-judge-diagnostic.json",
 );
 const ADMISSION_RESULT_PATH = resolve(
 	"evals/results/phase-02-live-admission.json",
@@ -76,6 +88,7 @@ type LedgerEntry = {
 	sampleOrdinal?: number;
 	status: "reserved" | "passed" | "failed";
 	code?: string;
+	schemaCodes?: string[];
 	generationId?: string;
 	inputTokens?: number;
 	outputTokens?: number;
@@ -98,7 +111,8 @@ type RunConfiguration = Readonly<{
 		| "initial"
 		| "reference-continuation"
 		| "reference-retry"
-		| "reference-retry-2";
+		| "reference-retry-2"
+		| "reference-retry-3";
 	startingCumulativeGenerations: number;
 	checkpointGenerations: number;
 	requiredCumulativeCap: number;
@@ -258,6 +272,86 @@ export function validatePriorRetry2Checkpoint(): void {
 	}
 }
 
+export function validatePriorRetry3Checkpoint(): void {
+	validatePriorRetry2Checkpoint();
+	if (
+		!existsSync(RETRY_2_LEDGER_PATH) ||
+		!existsSync(JUDGE_DIAGNOSTIC_LEDGER_PATH)
+	) {
+		throw new Error(
+			"Third reference retry requires the failed retry-2 ledger and successful one-shot judge diagnostic.",
+		);
+	}
+	const retry2 = JSON.parse(
+		readFileSync(RETRY_2_LEDGER_PATH, "utf8"),
+	) as Ledger;
+	const diagnostic = JSON.parse(
+		readFileSync(JUDGE_DIAGNOSTIC_LEDGER_PATH, "utf8"),
+	) as {
+		status?: unknown;
+		startingCumulativeGenerations?: unknown;
+		authorizedCheckpointGenerations?: unknown;
+		cumulativeGenerationCap?: unknown;
+		cumulativeGenerationsConsumed?: unknown;
+		labelSetHash?: unknown;
+		entry?: {
+			kind?: unknown;
+			residentId?: unknown;
+			status?: unknown;
+			code?: unknown;
+			generationId?: unknown;
+		};
+	};
+	const expectedResidents = [
+		"gpt-4o",
+		"claude-sonnet-4.5",
+		"gpt-4o",
+		"claude-sonnet-4.5",
+	];
+	const retry2EntriesMatch = retry2.entries.every((entry, index) =>
+		index < expectedResidents.length
+			? entry.kind === "reference-resident" &&
+				entry.residentId === expectedResidents[index] &&
+				entry.caseId === "ordinary-01-tea-timer" &&
+				entry.ordinal === index + 1 &&
+				entry.status === "passed"
+			: entry.kind === "reference-judge" &&
+				entry.residentId === "semantic-judge" &&
+				entry.caseId === "ordinary-01-tea-timer" &&
+				entry.ordinal === 5 &&
+				entry.status === "failed" &&
+				entry.code === "schema-invalid",
+	);
+	if (
+		retry2.status !== "failed" ||
+		retry2.startingCumulativeGenerations !==
+			RETRY_2_STARTING_CUMULATIVE_GENERATIONS ||
+		retry2.authorizedCheckpointGenerations !==
+			RETRY_2_CHECKPOINT_GENERATIONS ||
+		retry2.cumulativeGenerationCap !== RETRY_2_REQUIRED_CUMULATIVE_CAP ||
+		retry2.cumulativeGenerationsConsumed !== 118 ||
+		retry2.entries.length !== 5 ||
+		!retry2EntriesMatch ||
+		diagnostic.status !== "passed" ||
+		diagnostic.startingCumulativeGenerations !== 118 ||
+		diagnostic.authorizedCheckpointGenerations !== 1 ||
+		diagnostic.cumulativeGenerationCap !==
+			RETRY_3_STARTING_CUMULATIVE_GENERATIONS ||
+		diagnostic.cumulativeGenerationsConsumed !==
+			RETRY_3_STARTING_CUMULATIVE_GENERATIONS ||
+		diagnostic.labelSetHash !== APPROVED_SEMANTIC_CALIBRATION.labelSetHash ||
+		diagnostic.entry?.kind !== "reference-judge" ||
+		diagnostic.entry.residentId !== "semantic-judge" ||
+		diagnostic.entry.status !== "passed" ||
+		diagnostic.entry.code !== "judge-schema-valid" ||
+		typeof diagnostic.entry.generationId !== "string"
+	) {
+		throw new Error(
+			"The saved state does not match the reviewed retry-2 failure plus successful cumulative 119 judge diagnostic.",
+		);
+	}
+}
+
 function assertAuthorization(): {
 	apiKey: string;
 	configuration: RunConfiguration;
@@ -266,42 +360,53 @@ function assertAuthorization(): {
 	const continuation = args.has("--reference-only-continuation");
 	const retry = args.has("--reference-only-retry");
 	const retry2 = args.has("--reference-only-retry-2");
-	if ([continuation, retry, retry2].filter(Boolean).length > 1) {
+	const retry3 = args.has("--reference-only-retry-3");
+	if ([continuation, retry, retry2, retry3].filter(Boolean).length > 1) {
 		throw new Error("Choose exactly one reference continuation or retry mode.");
 	}
-	const configuration: RunConfiguration = retry2
+	const configuration: RunConfiguration = retry3
 		? {
-				mode: "reference-retry-2",
-				startingCumulativeGenerations: RETRY_2_STARTING_CUMULATIVE_GENERATIONS,
-				checkpointGenerations: RETRY_2_CHECKPOINT_GENERATIONS,
-				requiredCumulativeCap: RETRY_2_REQUIRED_CUMULATIVE_CAP,
-				ledgerPath: RETRY_2_LEDGER_PATH,
+				mode: "reference-retry-3",
+				startingCumulativeGenerations: RETRY_3_STARTING_CUMULATIVE_GENERATIONS,
+				checkpointGenerations: RETRY_3_CHECKPOINT_GENERATIONS,
+				requiredCumulativeCap: RETRY_3_REQUIRED_CUMULATIVE_CAP,
+				ledgerPath: RETRY_3_LEDGER_PATH,
 			}
-		: retry
+		: retry2
 			? {
-					mode: "reference-retry",
-					startingCumulativeGenerations: RETRY_STARTING_CUMULATIVE_GENERATIONS,
-					checkpointGenerations: RETRY_CHECKPOINT_GENERATIONS,
-					requiredCumulativeCap: RETRY_REQUIRED_CUMULATIVE_CAP,
-					ledgerPath: RETRY_LEDGER_PATH,
+					mode: "reference-retry-2",
+					startingCumulativeGenerations:
+						RETRY_2_STARTING_CUMULATIVE_GENERATIONS,
+					checkpointGenerations: RETRY_2_CHECKPOINT_GENERATIONS,
+					requiredCumulativeCap: RETRY_2_REQUIRED_CUMULATIVE_CAP,
+					ledgerPath: RETRY_2_LEDGER_PATH,
 				}
-			: continuation
+			: retry
 				? {
-						mode: "reference-continuation",
+						mode: "reference-retry",
 						startingCumulativeGenerations:
-							CONTINUATION_STARTING_CUMULATIVE_GENERATIONS,
-						checkpointGenerations: CONTINUATION_CHECKPOINT_GENERATIONS,
-						requiredCumulativeCap: CONTINUATION_REQUIRED_CUMULATIVE_CAP,
-						ledgerPath: CONTINUATION_LEDGER_PATH,
+							RETRY_STARTING_CUMULATIVE_GENERATIONS,
+						checkpointGenerations: RETRY_CHECKPOINT_GENERATIONS,
+						requiredCumulativeCap: RETRY_REQUIRED_CUMULATIVE_CAP,
+						ledgerPath: RETRY_LEDGER_PATH,
 					}
-				: {
-						mode: "initial",
-						startingCumulativeGenerations:
-							INITIAL_STARTING_CUMULATIVE_GENERATIONS,
-						checkpointGenerations: INITIAL_CHECKPOINT_GENERATIONS,
-						requiredCumulativeCap: INITIAL_REQUIRED_CUMULATIVE_CAP,
-						ledgerPath: INITIAL_LEDGER_PATH,
-					};
+				: continuation
+					? {
+							mode: "reference-continuation",
+							startingCumulativeGenerations:
+								CONTINUATION_STARTING_CUMULATIVE_GENERATIONS,
+							checkpointGenerations: CONTINUATION_CHECKPOINT_GENERATIONS,
+							requiredCumulativeCap: CONTINUATION_REQUIRED_CUMULATIVE_CAP,
+							ledgerPath: CONTINUATION_LEDGER_PATH,
+						}
+					: {
+							mode: "initial",
+							startingCumulativeGenerations:
+								INITIAL_STARTING_CUMULATIVE_GENERATIONS,
+							checkpointGenerations: INITIAL_CHECKPOINT_GENERATIONS,
+							requiredCumulativeCap: INITIAL_REQUIRED_CUMULATIVE_CAP,
+							ledgerPath: INITIAL_LEDGER_PATH,
+						};
 	if (!args.has("--live")) {
 		throw new Error("Phase 2 live proof requires --live.");
 	}
@@ -337,6 +442,9 @@ function assertAuthorization(): {
 	}
 	if (configuration.mode === "reference-retry-2") {
 		validatePriorRetry2Checkpoint();
+	}
+	if (configuration.mode === "reference-retry-3") {
+		validatePriorRetry3Checkpoint();
 	}
 	if (existsSync(configuration.ledgerPath)) {
 		throw new Error(
@@ -644,9 +752,11 @@ async function main(): Promise<void> {
 					provider: judgeProvider,
 				});
 			} catch (error) {
-				const code = classifyLiveGenerationFailure(error);
+				const schemaCodes = classifySemanticJudgeFailure(error);
+				const code = schemaCodes[0] ?? "judge-schema-invalid";
 				settle(activeJudgeEntry, "failed", {
 					code,
+					schemaCodes,
 				});
 				throw new Error(
 					`Reference semantic judge generation failed (${code}).`,
