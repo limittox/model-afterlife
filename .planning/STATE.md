@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 02
-current_phase_name: grounded-ensemble-and-safe-scenes
-status: executing
-stopped_at: Live three-case reference proof passed at cumulative 140; full verifier awaits Docker
-last_updated: "2026-07-24T18:46:44.2919938+10:00"
+current_phase: 03
+current_phase_name: return-loop-and-inclusive-presentation
+status: ready_to_plan
+stopped_at: Phase 2 complete; ready to discuss and plan Phase 3
+last_updated: "2026-07-24T19:07:23.9306208+10:00"
 last_activity: 2026-07-24
-last_activity_desc: "Completed the three-case live reference proof with all retry-5 generations passed at cumulative 140"
+last_activity_desc: "Completed Phase 2 with full database-backed verification, frozen/live evidence, privacy checks, browser tests, and production build passing"
 progress:
-  total_phases: 2
-  completed_phases: 1
+  total_phases: 4
+  completed_phases: 2
   total_plans: 8
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # Project State
@@ -23,22 +23,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-22)
 
 **Core value:** The retirement home must produce short, memorable, historically grounded character moments that make visitors want to keep watching and return later to see what changed.
-**Current focus:** Phase 02 — grounded-ensemble-and-safe-scenes
+**Current focus:** Phase 03 — return-loop-and-inclusive-presentation
 
 ## Current Position
 
-Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
-Plan: 4 of 4
-Status: Plan 02-04 live reference proof complete; full database-backed verifier awaits Docker Desktop
-Last activity: 2026-07-24 — all three live reference cases passed at exact cumulative cap 140
+Phase: 03 (return-loop-and-inclusive-presentation) — READY TO PLAN
+Plan: Not yet planned
+Status: Phase 2 completed with full offline, live, database, privacy, browser, and build evidence
+Last activity: 2026-07-24 — complete `verify:phase-02` passed
 
-Progress: [██████████████████░░] 7/8 plans (88%)
+Progress: [████████████████████] 8/8 planned plans (100%)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: not recalculated; Plan 02-02 spanned interactive provider checkpoints
 - Total execution time: 2.9 recorded hours plus multi-session Plan 02-02 work
 
@@ -47,12 +47,12 @@ Progress: [██████████████████░░] 7/8 pla
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 | 4 | 111 min | 28 min |
-| 2 | 3 | multi-session | n/a |
+| 2 | 4 | multi-session | n/a |
 
 **Recent Trend:**
 
-- Last 4 plans: 35 min, 39 min, multi-session, 25 min
-- Trend: Plan 02-03 returned to focused offline implementation after the provider-gated admission work
+- Last 4 plans: 39 min, multi-session, 25 min, multi-session
+- Trend: Phase 2 closed with bounded live checkpoints followed by one complete offline release gate
 
 *Updated after each plan completion*
 **Per-Plan Metrics:**
@@ -66,6 +66,7 @@ Progress: [██████████████████░░] 7/8 pla
 | Phase 02 P01 | 39 min | 3 tasks | 57 files |
 | Phase 02 P02 | multi-session | 4 tasks | 44 files |
 | Phase 02 P03 | 25 min | 3 tasks | 33 files |
+| Phase 02 P04 | multi-session | 4 tasks | multi-commit |
 
 ## Accumulated Context
 
@@ -91,6 +92,8 @@ Recent decisions affecting current work:
 - [Phase 02]: Relationships and memories are canonical event-sourced application state; resident-model output cannot directly mutate either.
 - [Phase 02]: Scene selection is pure and observer-independent, using only canonical state, approved briefs, logical time, and stable seeds.
 - [Phase 02]: Cached scenes preserve original revision and model provenance and never republish or reapply relationship or memory effects.
+- [Phase 02]: A versioned grounded-ensemble initialization epoch upgrades the pre-release four-resident journal while replay begins at the latest initialization and preserves earlier events for audit.
+- [Phase 02]: Frozen verification remains credential-free; any future paid provider evidence requires a new explicit bounded authorization.
 
 ### Pending Todos
 
@@ -98,9 +101,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Live reference proof passed all three cases. Retry-5 completed exactly five generations from cumulative 135 to 140 with no failures, fallbacks, or retries.
-- [Phase 2]: The database-free frozen matrix passed 24/24. Full `verify:phase-02` remains blocked locally because Docker Desktop is stopped.
-- [Phase 2]: Docker Desktop is stopped, so Plan 02-03's database-backed replay/rebuild check remains explicit verification debt.
+- [Phase 2]: None. The complete database-backed verifier passed, including 239 tests, exact replay, two 24/24 frozen matrices, privacy scan, 61 browser tests, lint, typecheck, and production build.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
 
@@ -135,6 +136,7 @@ None yet.
 | 260724-phw | Run the authorized Phase 2 reference retry-4 with exactly 10 generations from cumulative 129 to cap 139, stop fail-closed, verify, commit, and push | 2026-07-24 | 521df32 | [260724-phw-run-the-authorized-phase-2-reference-ret](./quick/260724-phw-run-the-authorized-phase-2-reference-ret/) |
 | 260724-prh | Diagnose and fix the retry-4 schema-text-invalid resident failure offline, add focused post-implementation regression coverage, and prepare a guarded final reference checkpoint from cumulative 135 without provider calls | 2026-07-24 | f24d959 | [260724-prh-diagnose-and-fix-the-retry-4-schema-text](./quick/260724-prh-diagnose-and-fix-the-retry-4-schema-text/) |
 | 260724-pzr | Run the authorized Phase 2 reference retry-5 with exactly five generations from cumulative 135 to cap 140, stop fail-closed, verify, commit, and push | 2026-07-24 | e4da50a | [260724-pzr-run-the-authorized-phase-2-reference-ret](./quick/260724-pzr-run-the-authorized-phase-2-reference-ret/) |
+| 260724-q4k | Complete the database-backed Phase 2 verifier, resolve compatibility and layout failures, record the verified state, and make no provider calls | 2026-07-24 | 869fe92 | [260724-q4k-start-local-docker-if-available-run-the-](./quick/260724-q4k-start-local-docker-if-available-run-the-/) |
 
 ## Deferred Items
 
@@ -146,6 +148,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-24T18:46:44.2919938+10:00
-Stopped at: Live three-case reference proof passed; full database-backed verification awaits Docker Desktop
+Last session: 2026-07-24T19:07:23.9306208+10:00
+Stopped at: Phase 2 complete; Phase 3 is ready for discussion and planning
 Resume file: None
