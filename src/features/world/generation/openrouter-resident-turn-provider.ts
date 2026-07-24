@@ -22,7 +22,6 @@ const ModelTurnWireOutputSchema = z
 	.object({
 		text: z.string(),
 		approvedClaimIds: z.array(z.string()),
-		proposedRelationshipEffects: z.array(z.string()),
 		endsScene: z.boolean(),
 	})
 	.strict();
@@ -146,7 +145,11 @@ export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 				metadata: { residentId: input.residentId },
 			},
 		});
-		const output = ModelTurnOutputSchema.parse(result.output);
+		const wireOutput = ModelTurnWireOutputSchema.parse(result.output);
+		const output = ModelTurnOutputSchema.parse({
+			...wireOutput,
+			proposedRelationshipEffects: [],
+		});
 		if (
 			output.approvedClaimIds.some(
 				(claimId) => !prompts.approvedClaimIds.includes(claimId),

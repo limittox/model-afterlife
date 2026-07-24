@@ -34,7 +34,6 @@ const brief = SceneBriefSchema.parse({
 const validModelOutput = {
 	text: "A schema-compatible reply.",
 	approvedClaimIds: [],
-	proposedRelationshipEffects: [],
 	endsScene: false,
 };
 
@@ -142,13 +141,12 @@ describe("strict OpenRouter resident provider", () => {
 					type: "array",
 					items: { type: "string" },
 				},
-				proposedRelationshipEffects: {
-					type: "array",
-					items: { type: "string" },
-				},
 				endsScene: { type: "boolean" },
 			},
 		});
+		expect(responseFormat.schema?.properties).not.toHaveProperty(
+			"proposedRelationshipEffects",
+		);
 		const serializedSchema = JSON.stringify(responseFormat.schema);
 		for (const unsupportedKeyword of [
 			'"not"',
@@ -160,16 +158,23 @@ describe("strict OpenRouter resident provider", () => {
 			expect(serializedSchema).not.toContain(unsupportedKeyword);
 		}
 
-		const structurallyValidOutput = {
-			...validModelOutput,
-			proposedRelationshipEffects: ["local validation must reject this"],
-		};
 		await expect(
 			structuredOutput.parseCompleteOutput(
-				{ text: JSON.stringify(structurallyValidOutput) },
+				{ text: JSON.stringify(validModelOutput) },
 				{},
 			),
-		).resolves.toEqual(structurallyValidOutput);
+		).resolves.toEqual(validModelOutput);
+		await expect(
+			structuredOutput.parseCompleteOutput(
+				{
+					text: JSON.stringify({
+						...validModelOutput,
+						proposedRelationshipEffects: ["model must not own this field"],
+					}),
+				},
+				{},
+			),
+		).rejects.toBeDefined();
 	});
 
 	it.each([
@@ -240,7 +245,6 @@ describe("strict OpenRouter resident provider", () => {
 			output: {
 				text: "A short model-authored reply.",
 				approvedClaimIds: [],
-				proposedRelationshipEffects: [],
 				endsScene: false,
 			},
 			response: {
@@ -334,7 +338,6 @@ describe("strict OpenRouter resident provider", () => {
 			output: {
 				text: "The answer can be shorter than the thinking.",
 				approvedClaimIds: [],
-				proposedRelationshipEffects: [],
 				endsScene: false,
 			},
 			response: {

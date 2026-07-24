@@ -67,7 +67,7 @@ describe("resident prompt boundary", () => {
 		expect(built?.prompt).toContain('"relationships"');
 	});
 
-	it("requires an empty relationship-effects array because relationship state is application-owned", async () => {
+	it("keeps application-owned relationship effects out of the model output contract", async () => {
 		const promptModule = await loadPromptBuilder();
 		expect(promptModule, "resident prompt module must exist").toBeDefined();
 
@@ -85,8 +85,9 @@ describe("resident prompt boundary", () => {
 		);
 
 		expect(built?.system).toContain(
-			'Set "proposedRelationshipEffects" to []; relationship changes are application-owned.',
+			"Do not propose relationship changes; relationship state is application-owned.",
 		);
+		expect(built?.system).not.toContain("proposedRelationshipEffects");
 	});
 
 	it("rejects more than three memories and transcript overflow", async () => {
