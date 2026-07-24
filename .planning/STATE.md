@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 final matrix stopped on DeepSeek provider-http-429; 28/54 consumed"
-last_updated: "2026-07-24T01:58:00.000Z"
+stopped_at: "02-02 Task 3 cooldown rerun authorized and conservatively reserved; 58/58 ceiling"
+last_updated: "2026-07-24T01:59:00.000Z"
 last_activity: 2026-07-24
-last_activity_desc: "The final matrix stopped fail-closed on DeepSeek V3.2 provider-http-429 after four generations; 28/54 cumulative calls are consumed and 26 remain unused"
+last_activity_desc: "One cooldown-delayed final matrix rerun is authorized; cumulative generation ceiling is conservatively reserved at 58/58"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Task 3 blocked by a live DeepSeek V3.2 HTTP 429 during the final matrix
-Last activity: 2026-07-24 — all catalog checks passed and ordinal-one GPT-4o, Claude, and Gemini samples completed; DeepSeek V3.2 then returned sanitized `provider-http-429`, the command stopped, no artifact was written, and accounting is 28/54 with 26 unused
+Status: Task 3 cooldown-delayed final matrix rerun authorized and reserved
+Last activity: 2026-07-24 — one clean rerun is authorized after at least a ten-minute cooldown from the DeepSeek HTTP 429; at most 30 new generations are conservatively reserved, raising cumulative accounting to a 58/58 ceiling
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: The authorized final matrix passed all catalog checks and the first GPT-4o, Claude, and Gemini samples, then stopped fail-closed on DeepSeek V3.2 with sanitized `provider-http-429`. Four generation calls were consumed, bringing cumulative accounting to 28/54 with 26 unused. No retry, fallback, substitution, second matrix, or further provider call is authorized; no partial admission artifact was written.
+- [Phase 2]: One final clean admission rerun is authorized after at least a ten-minute provider cooldown. The prior matrix consumed four generations and stopped on DeepSeek HTTP 429, so this rerun raises the cumulative generation ceiling from 28 to 58. No retry, fallback, substitution, call outside the standard command, or second rerun is authorized.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
