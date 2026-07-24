@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "Qwen3 replacement verified offline; strict-route live admission remains separately authorized; 40/70 consumed"
-last_updated: "2026-07-24T03:03:22.296Z"
+stopped_at: "02-02 conditional Qwen3 canary and final matrix authorized; 71/71 ceiling"
+last_updated: "2026-07-24T03:25:50.737Z"
 last_activity: 2026-07-24
-last_activity_desc: "Replaced the failed Qwen 2.5 7B resident with exact Qwen3 235B A22B Instruct 2507 over DeepInfra FP8, refreshed grounded identity and corpus coverage, and verified offline; accounting remains 40/70"
+last_activity_desc: "One Qwen3 DeepInfra FP8 canary and, only on success, one paced final matrix are authorized; cumulative generation ceiling is conservatively reserved at 71/71"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Qwen3 replacement verified offline; strict-route live admission remains separately authorized
-Last activity: 2026-07-24 — the sixth resident is now Qwen3 235B A22B Instruct 2507 with the exact requested/canonical IDs, DeepInfra FP8 route, non-thinking-only contract, and many-expert archive-curator grounding; no provider call was made
+Status: Conditional Qwen3 canary and final matrix authorized
+Last activity: 2026-07-24 — one Qwen3 canary through the exact DeepInfra FP8 route is authorized and, only if it passes, one standard paced matrix with at most 30 generations; zero retries, disabled fallback, no substitutions, first-failure stop, and cumulative ceiling 71/71
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -91,7 +91,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: The retired Qwen 2.5 7B resident ignored a prose-only relationship constraint twice and repeatedly failed structured admission even after the server-owned relationship boundary removed `proposedRelationshipEffects` from its wire schema. Qwen3 235B A22B Instruct 2507 is now implemented and verified offline, but its exact DeepInfra FP8 route still requires a separately authorized strict-route live admission. Accounting remains 40/70 with 30 calls unused; no further provider call is authorized.
+- [Phase 2]: One Qwen3 canary through the exact DeepInfra FP8 route and, conditional on its success, one paced final matrix are authorized. The combined hard ceiling is 31 new generations and 71/71 cumulative, with at most 14 associated read-only catalog requests. Zero retries, disabled fallback, no route/model substitutions, first-failure stop, and sanitized output remain mandatory.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
