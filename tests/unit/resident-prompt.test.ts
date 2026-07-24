@@ -67,6 +67,28 @@ describe("resident prompt boundary", () => {
 		expect(built?.prompt).toContain('"relationships"');
 	});
 
+	it("requires an empty relationship-effects array because relationship state is application-owned", async () => {
+		const promptModule = await loadPromptBuilder();
+		expect(promptModule, "resident prompt module must exist").toBeDefined();
+
+		const built = promptModule?.buildResidentPrompt(
+			{
+				brief,
+				residentId: "gpt-4o",
+				residentGuidance: "Be concise.",
+				allowedClaims: [],
+				relationships: [],
+				memories: [],
+				priorTurns: [],
+			},
+			"relationship-boundary",
+		);
+
+		expect(built?.system).toContain(
+			'Set "proposedRelationshipEffects" to []; relationship changes are application-owned.',
+		);
+	});
+
 	it("rejects more than three memories and transcript overflow", async () => {
 		const promptModule = await loadPromptBuilder();
 
