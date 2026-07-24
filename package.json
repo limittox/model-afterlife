@@ -26,6 +26,7 @@
 		"eval:phase-02:live:continue": "node --env-file-if-exists=.env --experimental-strip-types scripts/run-phase-02-live.ts --live --reference-only-continuation",
 		"eval:phase-02:live:retry": "node --env-file-if-exists=.env --experimental-strip-types scripts/run-phase-02-live.ts --live --reference-only-retry",
 		"eval:phase-02:live:retry-2": "node --env-file-if-exists=.env --experimental-strip-types scripts/run-phase-02-live.ts --live --reference-only-retry-2",
+		"eval:phase-02:judge-diagnostic": "node --env-file-if-exists=.env --experimental-strip-types scripts/run-semantic-judge-diagnostic.ts --live --one-judge",
 		"privacy:phase-02": "node --experimental-strip-types scripts/scan-phase-02-privacy.ts",
 		"verify:phase-02": "node --experimental-strip-types scripts/verify-phase-02.ts",
 		"rebuild-world": "node --env-file-if-exists=.env --experimental-strip-types scripts/rebuild-world.ts",
