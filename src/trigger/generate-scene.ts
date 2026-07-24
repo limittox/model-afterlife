@@ -28,6 +28,8 @@ import { readCachedScene } from "../features/world/server/read-cached-scene.ts";
 import { readCanonicalHead } from "../features/world/server/world-repository.ts";
 import { resolveGenerationContinuity } from "../features/world/server/resolve-generation-continuity.ts";
 import { CANONICAL_WORLD_ID } from "../features/world/server/seed-data.ts";
+import type { GenerationTelemetry } from "../observability/redaction.ts";
+import type { SemanticGateEvidence } from "../features/world/generation/semantic-judge.ts";
 
 export const GENERATE_SCENE_TASK_ID = "model-afterlife-generate-scene";
 export const GENERATE_SCENE_MAX_DURATION = 240;
@@ -47,6 +49,8 @@ type ProductionOverrides = {
 	persistAttempt?: PersistAttempt;
 	publish?: GenerationRequestDependencies["publish"];
 	resolveContinuity?: GenerationRequestDependencies["resolveContinuity"];
+	telemetry?: { record: (event: GenerationTelemetry) => void };
+	semanticGateEvidence?: SemanticGateEvidence;
 };
 
 function validationDisposition(code: string) {
@@ -166,6 +170,7 @@ export function createProductionGenerationDependencies(
 	overrides: ProductionOverrides = {},
 ): GenerationRequestDependencies {
 	const persistAttempt = overrides.persistAttempt ?? persistGenerationAttempt;
+	const telemetry = overrides.telemetry;
 	let provider = overrides.provider;
 	const residentProvider = () => {
 		provider ??= new OpenRouterResidentTurnProvider();
@@ -190,6 +195,7 @@ export function createProductionGenerationDependencies(
 					attempt: conducted.attempt,
 					turns: conducted.turns,
 					revisionId: `${brief.sceneKey}:revision:${attemptOrdinal}`,
+					semanticGateEvidence: overrides.semanticGateEvidence,
 				});
 				conducted.attempt.disposition = validation.result.accepted
 					? "accepted"
@@ -202,6 +208,24 @@ export function createProductionGenerationDependencies(
 					result: validation.result,
 					validatorResults: validation.manifest.results,
 				});
+				for (const turn of conducted.turns) {
+					const profile = providerProfileFor(turn.residentId);
+					telemetry?.record({
+						attemptId: conducted.attempt.attemptId,
+						sceneKey: brief.sceneKey,
+						residentId: turn.residentId,
+						requestedModelId: turn.requestedModelId,
+						resolvedModelId: turn.provenance?.selectedModelId,
+						provider: "openrouter",
+						upstream: profile.selectedUpstreamName,
+						promptVersion: conducted.attempt.promptVersion,
+						disposition: conducted.attempt.disposition,
+						latencyMs: 0,
+						inputTokens: turn.provenance?.usage.inputTokens ?? 0,
+						outputTokens: turn.provenance?.usage.outputTokens ?? 0,
+						costUsd: turn.provenance?.usage.cost,
+					});
+				}
 				if (!validation.acceptedCandidate) {
 					return {
 						status: "rejected" as const,
@@ -247,6 +271,16 @@ export function createProductionGenerationDependencies(
 					attempt,
 					turns: [],
 					result,
+				});
+				telemetry?.record({
+					attemptId,
+					sceneKey: brief.sceneKey,
+					provider: "openrouter",
+					promptVersion: attempt.promptVersion,
+					disposition,
+					latencyMs: 0,
+					inputTokens: 0,
+					outputTokens: 0,
 				});
 				return { status: "rejected" as const, disposition };
 			}

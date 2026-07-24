@@ -29,5 +29,14 @@ services:
       db:
         condition: service_healthy
 
+  phoenix:
+    image: arizephoenix/phoenix:18.0.0
+    container_name: model-afterlife-phoenix
+    ports:
+      - "6006:6006"
+    volumes:
+      - model-afterlife-phoenix:/root/.phoenix
+
 volumes:
   model-afterlife-postgres:
+  model-afterlife-phoenix:

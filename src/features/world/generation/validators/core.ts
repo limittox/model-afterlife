@@ -28,6 +28,7 @@ export const REQUIRED_VALIDATOR_IDS = [
 	"public-safety",
 	"attempt-envelope",
 	"novelty",
+	"semantic-gate",
 ] as const;
 
 export type ValidatorId = (typeof REQUIRED_VALIDATOR_IDS)[number];

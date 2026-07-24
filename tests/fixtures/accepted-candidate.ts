@@ -4,6 +4,7 @@ import type {
 } from "../../src/features/world/generation/contracts.ts";
 import { providerProfileFor } from "../../src/features/world/generation/provider-registry.ts";
 import { validateSceneCandidate } from "../../src/features/world/generation/validate-scene-candidate.ts";
+import { approvedSemanticGateFixture } from "./scene-candidate.ts";
 
 export function acceptedCandidateFixture(
 	brief: SceneBrief,
@@ -56,6 +57,7 @@ export function acceptedCandidateFixture(
 		turns,
 		revisionId: revision.revisionId,
 		relationshipEffects: revision.relationshipEffects,
+		semanticGateEvidence: approvedSemanticGateFixture(),
 	});
 	if (!validation.acceptedCandidate) {
 		throw new Error(`Fixture candidate was rejected: ${validation.result.code}`);

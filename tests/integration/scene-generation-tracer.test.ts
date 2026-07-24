@@ -14,6 +14,7 @@ import { publishSceneRevision } from "../../src/features/world/server/publish-sc
 import { readCanonicalHead } from "../../src/features/world/server/world-repository.ts";
 import { createWorldDatabase } from "../../src/db/client.ts";
 import { CANONICAL_WORLD_ID } from "../../src/features/world/server/seed-data.ts";
+import { approvedSemanticGateFixture } from "../fixtures/scene-candidate.ts";
 
 describe("private-to-canonical scene tracer", () => {
 	it("persists a four-turn private attempt and exposes exactly one accepted revision", async () => {
@@ -49,6 +50,7 @@ describe("private-to-canonical scene tracer", () => {
 			attempt,
 			turns,
 			revisionId: "tracer-revision-1",
+			semanticGateEvidence: approvedSemanticGateFixture(),
 		});
 		expect(validation.result.accepted).toBe(true);
 		if (!validation.acceptedCandidate)

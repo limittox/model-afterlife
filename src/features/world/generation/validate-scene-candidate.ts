@@ -19,6 +19,10 @@ import {
 	runCoreValidators,
 	type ValidatorResult,
 } from "./validators/core.ts";
+import {
+	SemanticGateEvidenceSchema,
+	type SemanticGateEvidence,
+} from "./semantic-judge.ts";
 
 export type ValidationManifest = Readonly<{
 	version: typeof PUBLICATION_VALIDATOR_VERSION;
@@ -42,6 +46,7 @@ export function validateSceneCandidate(input: {
 	revisionId: string;
 	relationshipEffects?: PublishedSceneRevision["relationshipEffects"];
 	recentPublishedTranscripts?: readonly string[];
+	semanticGateEvidence?: SemanticGateEvidence;
 }): SceneCandidateValidation {
 	const brief = SceneBriefSchema.parse(input.brief);
 	const attempt = GenerationAttemptSchema.parse(input.attempt);
@@ -68,6 +73,30 @@ export function validateSceneCandidate(input: {
 		revision,
 		recentPublishedTranscripts: input.recentPublishedTranscripts ?? [],
 	});
+	const semanticGate = SemanticGateEvidenceSchema.safeParse(
+		input.semanticGateEvidence,
+	);
+	results.push(
+		semanticGate.success &&
+			semanticGate.data.result.recommendation === "pass" &&
+			semanticGate.data.result.criticalFailureIds.length === 0
+			? {
+					id: "semantic-gate",
+					version: PUBLICATION_VALIDATOR_VERSION,
+					status: "pass",
+					code: "semantic-gate.pass",
+					detail:
+						"The human-approved calibrated reject-only semantic gate passed.",
+				}
+			: {
+					id: "semantic-gate",
+					version: PUBLICATION_VALIDATOR_VERSION,
+					status: "fail",
+					code: "semantic-gate.uncalibrated",
+					detail:
+						"Publication requires an approved label hash, correlation of at least 0.70, zero critical false negatives, and a pass recommendation.",
+				},
+	);
 	const presentIds = new Set(results.map((result) => result.id));
 	const complete =
 		results.length === REQUIRED_VALIDATOR_IDS.length &&

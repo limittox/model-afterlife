@@ -5,6 +5,7 @@ import {
 } from "../../src/features/world/generation/contracts.ts";
 import { acceptedCandidateFixture } from "../fixtures/accepted-candidate.ts";
 import { providerProfileFor } from "../../src/features/world/generation/provider-registry.ts";
+import { approvedSemanticGateFixture } from "../fixtures/scene-candidate.ts";
 
 async function loadGenerationRunner() {
 	try {
@@ -244,6 +245,7 @@ describe("generation Trigger task", () => {
 				},
 			},
 			persistAttempt,
+			semanticGateEvidence: approvedSemanticGateFixture(),
 			publish: async () => ({ revisionId: revision.revisionId }),
 			resolveContinuity: async () => ({ mode: "quiet" }),
 		});

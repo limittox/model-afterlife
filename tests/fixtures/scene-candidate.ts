@@ -4,6 +4,41 @@ import {
 	type ResidentTurn,
 } from "../../src/features/world/generation/contracts.ts";
 import { providerProfileFor } from "../../src/features/world/generation/provider-registry.ts";
+import {
+	SEMANTIC_JUDGE_PROFILE,
+	SEMANTIC_JUDGE_PROMPT_VERSION,
+	type SemanticGateEvidence,
+} from "../../src/features/world/generation/semantic-judge.ts";
+
+export function approvedSemanticGateFixture(): SemanticGateEvidence {
+	return {
+		status: "approved",
+		labelSetHash: "a".repeat(64),
+		correlation: 0.9,
+		criticalFalseNegatives: 0,
+		result: {
+			scores: {
+				responsiveness: 4,
+				voice: 4,
+				affection: 4,
+				novelty: 4,
+				resolution: 4,
+			},
+			reasons: {
+				responsiveness: "The exchange responds directly.",
+				voice: "The resident voices remain recognizable.",
+				affection: "The tone preserves dignity.",
+				novelty: "The beat is distinct from recent scenes.",
+				resolution: "The scene reaches a clear ending.",
+			},
+			recommendation: "pass",
+			criticalFailureIds: [],
+			requestedModelId: SEMANTIC_JUDGE_PROFILE.requestedModelId,
+			resolvedModelId: SEMANTIC_JUDGE_PROFILE.canonicalModelId,
+			promptVersion: SEMANTIC_JUDGE_PROMPT_VERSION,
+		},
+	};
+}
 
 export function buildValidSceneCandidate() {
 	const brief = SceneBriefSchema.parse({
@@ -77,5 +112,6 @@ export function buildValidSceneCandidate() {
 		attempt,
 		turns,
 		revisionId: "quality-gate-revision",
+		semanticGateEvidence: approvedSemanticGateFixture(),
 	};
 }

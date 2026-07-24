@@ -40,4 +40,20 @@ describe("publication capability boundary", () => {
 		expect(validation.manifest.accepted).toBe(false);
 		expect(validation.acceptedCandidate).toBeUndefined();
 	});
+
+	it("keeps publication fail-closed when calibration evidence is absent", () => {
+		const { semanticGateEvidence: _omitted, ...input } =
+			buildValidSceneCandidate();
+		const validation = validateSceneCandidate(input);
+
+		expect(
+			validation.manifest.results.find(
+				(result) => result.id === "semantic-gate",
+			),
+		).toMatchObject({
+			status: "fail",
+			code: "semantic-gate.uncalibrated",
+		});
+		expect(validation.acceptedCandidate).toBeUndefined();
+	});
 });
