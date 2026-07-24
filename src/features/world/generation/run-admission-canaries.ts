@@ -93,6 +93,7 @@ export function classifyAdmissionFailure(error: unknown): string {
 		return "provider-timeout";
 	}
 	if (failure.name === "AI_NoObjectGeneratedError") return "schema-no-object";
+	if (failure.name === "AI_NoOutputGeneratedError") return "generation-no-output";
 	if (failure.name === "ZodError") return "schema-invalid";
 	return "generation-check-failed";
 }

@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 diagnostic consumed: Gemini AI_NoOutputGeneratedError; 17/43 cumulative"
-last_updated: "2026-07-23T15:16:07.003Z"
+stopped_at: "02-02 Task 3 Gemini diagnostic defect fixed offline and human-verified; 17/43 cumulative"
+last_updated: "2026-07-23T23:58:54.702Z"
 last_activity: 2026-07-24
-last_activity_desc: "Consumed the sole Gemini-only diagnostic call; AI SDK raised AI_NoOutputGeneratedError before local validation; 17/43 cumulative consumed and no further provider call is authorized"
+last_activity_desc: "Fixed and human-verified the Gemini reasoning-envelope defect offline; 17/43 cumulative calls remain consumed and no further provider call is authorized"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Blocked at Task 3 while the consumed Gemini diagnostic is resolved offline
-Last activity: 2026-07-24 — the sole Gemini-only diagnostic call failed as `AI_NoOutputGeneratedError` before local validation; 17/43 cumulative calls are consumed and no further provider call is authorized
+Status: Blocked at Task 3 pending separately authorized post-fix live admission
+Last activity: 2026-07-24 — the Gemini `AI_NoOutputGeneratedError` defect is fixed and human-verified offline; 17/43 cumulative calls remain consumed and no further provider call is authorized
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Plan 02-02 admission is blocked after the sole Gemini-only diagnostic failed as `AI_NoOutputGeneratedError` before local structured-output, metadata, or cost validation. 17/43 cumulative calls are consumed; no retry, fallback, route/model substitution, catalog/provider call, second generation, admission matrix, or Task 4 work is authorized.
+- [Phase 2]: Plan 02-02 admission remains blocked pending separate authorization for post-fix live admission. The Gemini `AI_NoOutputGeneratedError` defect is fixed and human-verified offline; 17/43 cumulative calls are consumed, and no retry, fallback, route/model substitution, catalog/provider call, second generation, admission matrix, or Task 4 work is authorized.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.

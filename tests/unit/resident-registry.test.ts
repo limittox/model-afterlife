@@ -22,7 +22,8 @@ const EXPECTED_RESIDENTS = [
 		requestedModelId: "google/gemini-2.5-pro",
 		canonicalModelId: "google/gemini-2.5-pro",
 		approvedUpstream: "google-ai-studio",
-		maxOutputTokens: 180,
+		maxOutputTokens: 1024,
+		reasoning: { max_tokens: 128, exclude: true },
 	},
 	{
 		id: "deepseek-r1-0528",

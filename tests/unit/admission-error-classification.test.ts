@@ -1,3 +1,4 @@
+import { NoOutputGeneratedError } from "ai";
 import { describe, expect, it } from "vitest";
 import { OpenRouterIdentityError } from "../../src/features/world/generation/openrouter-metadata.ts";
 import { classifyAdmissionFailure } from "../../src/features/world/generation/run-admission-canaries.ts";
@@ -34,6 +35,14 @@ describe("admission failure classification", () => {
 		);
 		const code = classifyAdmissionFailure(error);
 		expect(code).toBe("router-metadata-missing");
+		expect(JSON.stringify(code)).not.toContain(SECRET);
+	});
+
+	it("returns a stable code when a non-stop generation has no structured output", () => {
+		const error = new NoOutputGeneratedError();
+		const code = classifyAdmissionFailure(error);
+
+		expect(code).toBe("generation-no-output");
 		expect(JSON.stringify(code)).not.toContain(SECRET);
 	});
 

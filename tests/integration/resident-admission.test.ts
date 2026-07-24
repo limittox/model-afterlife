@@ -106,8 +106,21 @@ describe("resident admission canaries", () => {
 			reasoning: { effort: "minimal", exclude: true },
 		});
 		expect(
+			result.residents.find(
+				(resident) => resident.residentId === "gemini-2.5-pro",
+			),
+		).toMatchObject({
+			approvedUpstream: "google-ai-studio",
+			maxOutputTokens: 1024,
+			reasoning: { max_tokens: 128, exclude: true },
+		});
+		expect(
 			result.residents
-				.filter((resident) => resident.residentId !== "deepseek-r1-0528")
+				.filter(
+					(resident) =>
+						resident.residentId !== "deepseek-r1-0528" &&
+						resident.residentId !== "gemini-2.5-pro",
+				)
 				.every(
 					(resident) =>
 						resident.maxOutputTokens === 180 &&

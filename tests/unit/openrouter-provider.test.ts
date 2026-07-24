@@ -418,4 +418,89 @@ describe("strict OpenRouter resident provider", () => {
 			},
 		});
 	});
+
+	it("reserves bounded Gemini thinking headroom without exposing reasoning", async () => {
+		const providerModule = await loadProvider();
+		expect(providerModule, "OpenRouter provider module must exist").toBeDefined();
+		if (!providerModule) throw new Error("OpenRouter provider module is missing.");
+
+		const model = Symbol("gemini-model");
+		const modelFactory = vi.fn(() => model);
+		const generateText = vi.fn(async (_options: Record<string, unknown>) => ({
+			output: validModelOutput,
+			response: {
+				id: "gen-gemini-1",
+				modelId: "google/gemini-2.5-pro",
+				body: {
+					openrouter_metadata: {
+						requested: "google/gemini-2.5-pro",
+						strategy: "direct",
+						attempt: 1,
+						endpoints: {
+							total: 1,
+							available: [
+								{
+									provider: "Google AI Studio",
+									model: "google/gemini-2.5-pro",
+									selected: true,
+								},
+							],
+						},
+						attempts: [
+							{
+								provider: "Google AI Studio",
+								model: "google/gemini-2.5-pro",
+								status: 200,
+							},
+						],
+						pipeline: [],
+					},
+				},
+			},
+			providerMetadata: { openrouter: { provider: "Google AI Studio" } },
+			finishReason: "stop",
+			usage: { inputTokens: 20, outputTokens: 100 },
+		}));
+		const provider = new providerModule.OpenRouterResidentTurnProvider({
+			apiKey: "test-key",
+			createRouter: vi.fn(() => modelFactory),
+			generateText,
+		});
+
+		await provider.generateTurn({
+			brief: SceneBriefSchema.parse({
+				...brief,
+				sceneKey: "gemini-policy",
+				participantIds: ["gemini-2.5-pro", "claude-sonnet-4.5"],
+				speakerOrder: [
+					"gemini-2.5-pro",
+					"claude-sonnet-4.5",
+					"gemini-2.5-pro",
+					"claude-sonnet-4.5",
+				],
+				allowedFactIds: ["gemini25-thinking-and-multimodal"],
+			}),
+			turnIndex: 0,
+			residentId: "gemini-2.5-pro",
+			requestedModelId: "google/gemini-2.5-pro",
+			priorTurns: [],
+		});
+
+		expect(modelFactory).toHaveBeenCalledWith("google/gemini-2.5-pro", {
+			extraBody: {
+				provider: {
+					only: ["google-ai-studio"],
+					allow_fallbacks: false,
+					require_parameters: true,
+					data_collection: "deny",
+				},
+			},
+			reasoning: { max_tokens: 128, exclude: true },
+		});
+		expect(generateText.mock.calls[0]?.[0]).toMatchObject({
+			maxOutputTokens: 1024,
+			maxRetries: 0,
+			timeout: { totalMs: 30_000 },
+		});
+	});
 });

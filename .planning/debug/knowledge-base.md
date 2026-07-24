@@ -53,3 +53,13 @@ Resolved debug sessions. Used by `gsd-debugger` to surface known-pattern hypothe
 - **Why not caught:** No integration gate exercised the production Gemini profile with an exact-version approved claim outside the first stable-order item; existing provider fixtures covered GPT-4o or DeepSeek.
 - **Recurrence guard:** Regression test `tests/integration/gemini-admission-generation.test.ts` — `admits an exact-version approved Gemini claim from its bounded canary context` proves a non-first approved claim is admitted and all three exact-version Gemini claim IDs are included in the prompt.
 ---
+
+## gemini-live-error-detail — Gemini dynamic thinking exhausted the non-reasoning output profile
+- **Date:** 2026-07-24
+- **Error patterns:** generation-check-failed, AI_NoOutputGeneratedError, generation-no-output, Gemini 2.5 Pro, google-ai-studio, dynamic thinking, maxOutputTokens
+- **Root cause(s):** Gemini 2.5 Pro was assigned the 180-token non-reasoning profile with no explicit thinking budget while the model uses dynamic thinking whose tokens share the output envelope; the resulting non-stop structured generation left `Output.object` unresolved, and the admission classifier hid `AI_NoOutputGeneratedError` behind `generation-check-failed`.
+- **Fix:** Give Gemini a bounded 1,024-token total envelope with an explicit 128-token thinking budget and returned reasoning excluded, preserve the 240-character public-line schema, and classify the SDK error as sanitized `generation-no-output`.
+- **Files changed:** src/features/world/domain/types.ts, src/features/world/fixtures/launch-residents.ts, src/features/world/generation/provider-registry.ts, src/features/world/generation/run-admission-canaries.ts, tests/unit/admission-error-classification.test.ts, tests/unit/openrouter-provider.test.ts, tests/unit/provider-registry.test.ts, tests/unit/resident-registry.test.ts, tests/integration/resident-admission.test.ts, .planning/phases/02-grounded-ensemble-and-safe-scenes/02-AI-SPEC.md
+- **Why not caught:** No offline gate asserted Gemini's exact reasoning-aware production profile or exercised the AI SDK's non-stop/no-output error; successful-stop fixtures and a broad non-DeepSeek assertion reinforced the incorrect assumption.
+- **Recurrence guard:** Regression tests in `tests/unit/provider-registry.test.ts`, `tests/unit/openrouter-provider.test.ts`, `tests/unit/admission-error-classification.test.ts`, and `tests/integration/resident-admission.test.ts` enforce the 1,024/128-token Gemini policy and sanitized `generation-no-output` classification.
+---

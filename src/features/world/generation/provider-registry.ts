@@ -6,10 +6,10 @@ export type ResidentProviderProfile = {
 	selectedUpstreamName: string;
 	requiredQuantization?: "fp4" | "fp8";
 	maxOutputTokens: 180 | 1024;
-	reasoning?: Readonly<{
-		effort: "minimal";
-		exclude: true;
-	}>;
+	reasoning?: Readonly<
+		| { effort: "minimal"; exclude: true }
+		| { max_tokens: 128; exclude: true }
+	>;
 	adapterVersion: "@openrouter/ai-sdk-provider@3.0.0";
 	routingPolicyVersion: "strict-openrouter-v1";
 };
@@ -41,7 +41,8 @@ export const RESIDENT_PROVIDER_PROFILES = [
 		canonicalModelId: "google/gemini-2.5-pro",
 		approvedUpstream: "google-ai-studio",
 		selectedUpstreamName: "Google AI Studio",
-		maxOutputTokens: 180,
+		maxOutputTokens: 1024,
+		reasoning: { max_tokens: 128, exclude: true },
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
 	},

@@ -63,10 +63,10 @@ export type LaunchResident = {
 	approvedUpstream: string;
 	requiredQuantization?: "fp4" | "fp8";
 	maxOutputTokens: 180 | 1024;
-	reasoning?: Readonly<{
-		effort: "minimal";
-		exclude: true;
-	}>;
+	reasoning?: Readonly<
+		| { effort: "minimal"; exclude: true }
+		| { max_tokens: 128; exclude: true }
+	>;
 	transport: "openrouter";
 	adapterVersion: "@openrouter/ai-sdk-provider@3.0.0";
 	routingPolicyVersion: "strict-openrouter-v1";
