@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 DeepSeek V3.2 replacement verified offline; live canary not authorized; 23/47 cumulative"
-last_updated: "2026-07-24T01:40:00.000Z"
+stopped_at: "02-02 Task 3 one V3.2 canary authorized and conservatively reserved; 24/47 cumulative"
+last_updated: "2026-07-24T01:46:00.000Z"
 last_activity: 2026-07-24
-last_activity_desc: "DeepSeek R1 was replaced offline by V3.2 with reasoning disabled; 23/47 cumulative calls remain consumed and no further provider call is authorized"
+last_activity_desc: "Exactly one DeepSeek V3.2 generation via DeepInfra FP4 is authorized; accounting is conservatively reserved at 24/47 before invocation"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Task 3 implementation ready; blocked only on authorization for a fresh V3.2 live canary
-Last activity: 2026-07-24 — DeepSeek R1 0528 was replaced by `deepseek/deepseek-v3.2` in explicit non-thinking mode after two failed R1 diagnostics; accounting remains 23/47 and no further provider call is authorized
+Status: Task 3 V3.2 canary authorized and reserved; invocation pending
+Last activity: 2026-07-24 — exactly one `deepseek/deepseek-v3.2` generation through DeepInfra FP4 is authorized with no catalog call, retry, fallback, other model, or second sample; accounting is conservatively reserved at 24/47
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Plan 02-02 admission is blocked only on a separately authorized V3.2 live canary. The two prior R1 experiments ended with `generation-no-output`; accounting remains 23/47. No catalog request, generation, retry, fallback, route/model/quantization substitution, full matrix, or other paid provider call is authorized.
+- [Phase 2]: Exactly one V3.2 generation canary is authorized through DeepInfra FP4 with reasoning disabled, 180 output tokens, a 30-second timeout, zero retries, and fallback disabled. Accounting is conservatively reserved at 24/47 before invocation. No catalog request, second generation, other provider/model, substitution, or full matrix is authorized.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
