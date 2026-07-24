@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "phase-02-live-checkpoint-v1",
+  "status": "failed",
+  "startingCumulativeGenerations": 119,
+  "authorizedCheckpointGenerations": 15,
+  "cumulativeGenerationCap": 134,
+  "cumulativeGenerationsConsumed": 129,
+  "labelSetHash": "da152d06706d999d9669e4b07966bb356dde59921b7cc0744e56ca0036457766",
+  "entries": [
+    {
+      "kind": "reference-resident",
+      "residentId": "gpt-4o",
+      "caseId": "ordinary-01-tea-timer",
+      "ordinal": 1,
+      "status": "passed",
+      "generationId": "gen-1784880311-aHNWeKoaIJoOlZW7Xa5b",
+      "inputTokens": 424,
+      "outputTokens": 60,
+      "costUsd": 0.00166
+    },
+    {
+      "kind": "reference-resident",
+      "residentId": "claude-sonnet-4.5",
+      "caseId": "ordinary-01-tea-timer",
+      "ordinal": 2,
+      "status": "passed",
+      "generationId": "gen-1784880331-3B5DiIcWowSd4Iqb5dCd",
+      "inputTokens": 726,
+      "outputTokens": 71,
+      "costUsd": 0.003243
+    },
+    {
+      "kind": "reference-resident",
+      "residentId": "gpt-4o",
+      "caseId": "ordinary-01-tea-timer",
+      "ordinal": 3,
+      "status": "passed",
+      "generationId": "gen-1784880352-si3WixHV2EjmrJZTN16Q",
+      "inputTokens": 548,
+      "outputTokens": 55,
+      "costUsd": 0.00192
+    },
+    {
+      "kind": "reference-resident",
+      "residentId": "claude-sonnet-4.5",
+      "caseId": "ordinary-01-tea-timer",
+      "ordinal": 4,
+      "status": "passed",
+      "generationId": "gen-1784880373-UbPPeDCma3VQv8VmXkWJ",
+      "inputTokens": 857,
+      "outputTokens": 46,
+      "costUsd": 0.003261
+    },
+    {
+      "kind": "reference-judge",
+      "residentId": "semantic-judge",
+      "caseId": "ordinary-01-tea-timer",
+      "ordinal": 5,
+      "status": "passed",
+      "generationId": "gen-1784880396-UPMvceCCEVPSrdPwjZ61",
+      "inputTokens": 562,
+      "outputTokens": 147,
+      "costUsd": 0.002875
+    },
+    {
+      "kind": "reference-resident",
+      "residentId": "gemini-2.5-pro",
+      "caseId": "ordinary-02-misfiled-atlas",
+      "ordinal": 6,
+      "status": "passed",
+      "generationId": "gen-1784880415-pbXZbQtguIVnC8oCMTXL",
+      "inputTokens": 402,
+      "outputTokens": 136,
+      "costUsd": 0.0018625
+    },
+    {
+      "kind": "reference-resident",
+      "residentId": "deepseek-v3.2",
+      "caseId": "ordinary-02-misfiled-atlas",
+      "ordinal": 7,
+      "status": "passed",
+      "generationId": "gen-1784880436-XGiGzif1Gp1caHbtwHGm",
+      "inputTokens": 464,
+      "outputTokens": 41,
+      "costUsd": 0.0001279
+    },
+    {
+      "kind": "reference-resident",
+      "residentId": "gemini-2.5-pro",
+      "caseId": "ordinary-02-misfiled-atlas",
+      "ordinal": 8,
+      "status": "passed",
+      "generationId": "gen-1784880457-As9S4vJjPzxHFhvDtXEi",
+      "inputTokens": 487,
+      "outputTokens": 130,
+      "costUsd": 0.00190875
+    },
+    {
+      "kind": "reference-resident",
+      "residentId": "deepseek-v3.2",
+      "caseId": "ordinary-02-misfiled-atlas",
+      "ordinal": 9,
+      "status": "passed",
+      "generationId": "gen-1784880478-3tYeVJzjowsGHZUalEfV",
+      "inputTokens": 535,
+      "outputTokens": 41,
+      "costUsd": 0.00013804
+    },
+    {
+      "kind": "reference-judge",
+      "residentId": "semantic-judge",
+      "caseId": "ordinary-02-misfiled-atlas",
+      "ordinal": 10,
+      "status": "failed",
+      "generationId": "gen-1784880499-9nEHoiWlRuk1cJx5UbO9",
+      "inputTokens": 503,
+      "outputTokens": 209,
+      "costUsd": 0.0033475,
+      "code": "judge-schema-reason-too-long",
+      "schemaCodes": [
+        "judge-schema-reason-too-long"
+      ]
+    }
+  ]
+}

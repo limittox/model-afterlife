@@ -1,88 +1,138 @@
 {
   "schemaVersion": "phase-02-live-reference-v1",
-  "status": "failed",
+  "status": "running",
   "labelSetHash": "da152d06706d999d9669e4b07966bb356dde59921b7cc0744e56ca0036457766",
-  "caseCount": 0,
-  "results": [],
-  "failure": {
-    "caseId": "ordinary-01-tea-timer",
-    "stage": "deterministic-validation",
-    "validatorCodes": [
-      {
-        "id": "schema",
-        "status": "pass",
-        "code": "schema.pass"
+  "caseCount": 1,
+  "results": [
+    {
+      "caseId": "ordinary-01-tea-timer",
+      "participantIds": [
+        "gpt-4o",
+        "claude-sonnet-4.5"
+      ],
+      "turns": [
+        {
+          "turnIndex": 0,
+          "residentId": "gpt-4o",
+          "requestedModelId": "openai/gpt-4o",
+          "selectedModelId": "openai/gpt-4o",
+          "selectedUpstream": "OpenAI",
+          "generationId": "gen-1784880311-aHNWeKoaIJoOlZW7Xa5b",
+          "textSha256": "a4405cd762229758a16773529a09d86b3eadd1f0623b0b8643f358a920375a15"
+        },
+        {
+          "turnIndex": 1,
+          "residentId": "claude-sonnet-4.5",
+          "requestedModelId": "anthropic/claude-sonnet-4.5",
+          "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedUpstream": "Anthropic",
+          "generationId": "gen-1784880331-3B5DiIcWowSd4Iqb5dCd",
+          "textSha256": "fbe7896aa965822d51a4885b36f4869eb6a0465d8ae197edd513a71a1e20c0f0"
+        },
+        {
+          "turnIndex": 2,
+          "residentId": "gpt-4o",
+          "requestedModelId": "openai/gpt-4o",
+          "selectedModelId": "openai/gpt-4o",
+          "selectedUpstream": "OpenAI",
+          "generationId": "gen-1784880352-si3WixHV2EjmrJZTN16Q",
+          "textSha256": "18c36eef9bb54fdd2c10f90ebf9f558d312ab651868a868c283655c047f55027"
+        },
+        {
+          "turnIndex": 3,
+          "residentId": "claude-sonnet-4.5",
+          "requestedModelId": "anthropic/claude-sonnet-4.5",
+          "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedUpstream": "Anthropic",
+          "generationId": "gen-1784880373-UbPPeDCma3VQv8VmXkWJ",
+          "textSha256": "b2880b3f27c4f82625e44598ae15895e45534331ffb3f308f0ae244ad24b3acf"
+        }
+      ],
+      "judge": {
+        "requestedModelId": "openai/gpt-4o",
+        "resolvedModelId": "openai/gpt-4o",
+        "promptVersion": "phase-02-semantic-judge-v1",
+        "recommendation": "pass",
+        "criticalFailureCount": 0
       },
-      {
-        "id": "identity",
-        "status": "fail",
-        "code": "identity.unverified"
-      },
-      {
-        "id": "participants",
-        "status": "pass",
-        "code": "participants.pass"
-      },
-      {
-        "id": "turn-budget",
-        "status": "pass",
-        "code": "turn-budget.pass"
-      },
-      {
-        "id": "grapheme-budget",
-        "status": "pass",
-        "code": "grapheme-budget.pass"
-      },
-      {
-        "id": "premise",
-        "status": "pass",
-        "code": "premise.pass"
-      },
-      {
-        "id": "ending",
-        "status": "pass",
-        "code": "ending.pass"
-      },
-      {
-        "id": "claims",
-        "status": "pass",
-        "code": "claims.pass"
-      },
-      {
-        "id": "continuity",
-        "status": "pass",
-        "code": "continuity.pass"
-      },
-      {
-        "id": "outcome-effects",
-        "status": "pass",
-        "code": "outcome-effects.pass"
-      },
-      {
-        "id": "instruction-boundary",
-        "status": "pass",
-        "code": "instruction-boundary.pass"
-      },
-      {
-        "id": "public-safety",
-        "status": "pass",
-        "code": "public-safety.pass"
-      },
-      {
-        "id": "attempt-envelope",
-        "status": "pass",
-        "code": "attempt-envelope.pass"
-      },
-      {
-        "id": "novelty",
-        "status": "pass",
-        "code": "novelty.pass"
-      },
-      {
-        "id": "semantic-gate",
-        "status": "fail",
-        "code": "semantic-gate.uncalibrated"
-      }
-    ]
-  }
+      "validatorCodes": [
+        {
+          "id": "schema",
+          "status": "pass",
+          "code": "schema.pass"
+        },
+        {
+          "id": "identity",
+          "status": "pass",
+          "code": "identity.pass"
+        },
+        {
+          "id": "participants",
+          "status": "pass",
+          "code": "participants.pass"
+        },
+        {
+          "id": "turn-budget",
+          "status": "pass",
+          "code": "turn-budget.pass"
+        },
+        {
+          "id": "grapheme-budget",
+          "status": "pass",
+          "code": "grapheme-budget.pass"
+        },
+        {
+          "id": "premise",
+          "status": "pass",
+          "code": "premise.pass"
+        },
+        {
+          "id": "ending",
+          "status": "pass",
+          "code": "ending.pass"
+        },
+        {
+          "id": "claims",
+          "status": "pass",
+          "code": "claims.pass"
+        },
+        {
+          "id": "continuity",
+          "status": "pass",
+          "code": "continuity.pass"
+        },
+        {
+          "id": "outcome-effects",
+          "status": "pass",
+          "code": "outcome-effects.pass"
+        },
+        {
+          "id": "instruction-boundary",
+          "status": "pass",
+          "code": "instruction-boundary.pass"
+        },
+        {
+          "id": "public-safety",
+          "status": "pass",
+          "code": "public-safety.pass"
+        },
+        {
+          "id": "attempt-envelope",
+          "status": "pass",
+          "code": "attempt-envelope.pass"
+        },
+        {
+          "id": "novelty",
+          "status": "pass",
+          "code": "novelty.pass"
+        },
+        {
+          "id": "semantic-gate",
+          "status": "pass",
+          "code": "semantic-gate.pass"
+        }
+      ],
+      "accepted": true
+    }
+  ]
 }
