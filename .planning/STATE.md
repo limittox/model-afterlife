@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 Gemini diagnostic defect fixed offline and human-verified; 17/43 cumulative"
-last_updated: "2026-07-23T23:58:54.702Z"
+stopped_at: "02-02 Task 3 post-fix admission authorized; 17/47 cumulative before one fresh 30-call matrix"
+last_updated: "2026-07-24T00:08:29.450Z"
 last_activity: 2026-07-24
-last_activity_desc: "Fixed and human-verified the Gemini reasoning-envelope defect offline; 17/43 cumulative calls remain consumed and no further provider call is authorized"
+last_activity_desc: "Authorized exactly one fresh 30-call post-fix admission matrix after 17 consumed calls, for a cumulative cap of 47"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Blocked at Task 3 pending separately authorized post-fix live admission
-Last activity: 2026-07-24 — the Gemini `AI_NoOutputGeneratedError` defect is fixed and human-verified offline; 17/43 cumulative calls remain consumed and no further provider call is authorized
+Status: Task 3 post-fix live admission authorized under a one-shot 47-call cumulative cap
+Last activity: 2026-07-24 — 17 cumulative generation calls are consumed and exactly 30 fresh calls are authorized for one complete post-fix admission matrix
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Plan 02-02 admission remains blocked pending separate authorization for post-fix live admission. The Gemini `AI_NoOutputGeneratedError` defect is fixed and human-verified offline; 17/43 cumulative calls are consumed, and no retry, fallback, route/model substitution, catalog/provider call, second generation, admission matrix, or Task 4 work is authorized.
+- [Phase 2]: Plan 02-02 post-fix admission is authorized with a cumulative cap of 47: 17 generation calls are already consumed and exactly 30 fresh generation calls may be used by one `check:resident-admission -- --live --samples=5` matrix. No retry, fallback, route/model substitution, diagnostic or follow-up provider call, second matrix, or partial admission persistence is authorized; Task 4 may start only after all 30 fresh samples succeed.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
