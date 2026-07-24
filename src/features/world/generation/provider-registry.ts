@@ -7,8 +7,8 @@ export type ResidentProviderProfile = {
 	requiredQuantization?: "fp4" | "fp8";
 	maxOutputTokens: 180 | 1024;
 	reasoning?: Readonly<
-		| { effort: "minimal"; exclude: true }
 		| { max_tokens: 128; exclude: true }
+		| { enabled: false; effort: "none"; exclude: true }
 	>;
 	adapterVersion: "@openrouter/ai-sdk-provider@3.0.0";
 	routingPolicyVersion: "strict-openrouter-v1";
@@ -47,14 +47,14 @@ export const RESIDENT_PROVIDER_PROFILES = [
 		routingPolicyVersion: "strict-openrouter-v1",
 	},
 	{
-		residentId: "deepseek-r1-0528",
-		requestedModelId: "deepseek/deepseek-r1-0528",
-		canonicalModelId: "deepseek/deepseek-r1-0528",
+		residentId: "deepseek-v3.2",
+		requestedModelId: "deepseek/deepseek-v3.2",
+		canonicalModelId: "deepseek/deepseek-v3.2-20251201",
 		approvedUpstream: "deepinfra/fp4",
 		selectedUpstreamName: "DeepInfra",
 		requiredQuantization: "fp4",
-		maxOutputTokens: 1024,
-		reasoning: { effort: "minimal", exclude: true },
+		maxOutputTokens: 180,
+		reasoning: { enabled: false, effort: "none", exclude: true },
 		adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 		routingPolicyVersion: "strict-openrouter-v1",
 	},

@@ -6,7 +6,7 @@ const EXPECTED_RESIDENT_ORDER = [
 	"gpt-4o",
 	"claude-sonnet-4.5",
 	"gemini-2.5-pro",
-	"deepseek-r1-0528",
+	"deepseek-v3.2",
 	"llama-3.3-70b-instruct",
 	"qwen-2.5-7b-instruct",
 ] as const;
@@ -98,12 +98,12 @@ describe("resident admission canaries", () => {
 		}
 		expect(
 			result.residents.find(
-				(resident) => resident.residentId === "deepseek-r1-0528",
+				(resident) => resident.residentId === "deepseek-v3.2",
 			),
 		).toMatchObject({
 			approvedUpstream: "deepinfra/fp4",
-			maxOutputTokens: 1024,
-			reasoning: { effort: "minimal", exclude: true },
+			maxOutputTokens: 180,
+			reasoning: { enabled: false, effort: "none", exclude: true },
 		});
 		expect(
 			result.residents.find(
@@ -118,7 +118,7 @@ describe("resident admission canaries", () => {
 			result.residents
 				.filter(
 					(resident) =>
-						resident.residentId !== "deepseek-r1-0528" &&
+						resident.residentId !== "deepseek-v3.2" &&
 						resident.residentId !== "gemini-2.5-pro",
 				)
 				.every(

@@ -5,7 +5,7 @@
 
 > **Approved architecture amendment — 2026-07-23:** One strict OpenRouter transport replaces the five direct provider adapters and credentials described by the original contract. This amendment is authoritative wherever older wording conflicts: one server-only `OPENROUTER_API_KEY`; exact allowlisted OpenRouter and canonical model slugs; approved upstream restriction; `allow_fallbacks: false`; `require_parameters: true`; router-metadata opt-in and validation; no publication from requested-only, fallback, multi-attempt, unexpected-route, cached-without-metadata, or materially transformed responses.
 
-> **Approved cast amendment — 2026-07-23:** The launch cast uses `openai/gpt-4o` through the OpenAI upstream and `deepseek/deepseek-r1-0528` through DeepInfra FP4 in place of the earlier GPT-3.5 Turbo 0613 and Command R+ 08-2024 entries. DeepSeek's mandatory private reasoning receives a bounded 1,024-token reasoning/output allowance with reasoning excluded from public text and telemetry; all final public dialogue remains capped at 240 characters.
+> **Approved cast amendments — 2026-07-23 and 2026-07-24:** The launch cast uses `openai/gpt-4o` through the OpenAI upstream and `deepseek/deepseek-v3.2` (canonical `deepseek/deepseek-v3.2-20251201`) through DeepInfra FP4 in place of the earlier GPT-3.5 Turbo 0613, Command R+ 08-2024, and failed DeepSeek R1 0528 entries. V3.2 reasoning is explicitly disabled with effort `none`; it uses the standard 180-token output and 30-second timeout bounds while all final public dialogue remains capped at 240 characters.
 
 ---
 
@@ -170,7 +170,7 @@ const ResidentTurnSchema = z.object({
 export async function generateResidentTurn(input: {
   residentModelId: string; // exact OpenRouter slug
   approvedUpstream: string;
-  maxOutputTokens: number; // immutable per-profile bound; 180 for non-reasoning residents, 1,024 for Gemini 2.5 Pro and DeepSeek R1
+  maxOutputTokens: number; // immutable per-profile bound; 180 for non-reasoning residents including DeepSeek V3.2, 1,024 for Gemini 2.5 Pro
   systemPrompt: string;
   boundedSceneContext: string;
 }) {
@@ -274,7 +274,7 @@ evals/
 
 - Each resident registry entry pins exact OpenRouter `modelId`, canonical slug, approved upstream provider slug, optional required quantization, OpenRouter-adapter/config version, character-bible version, supported parameters, context/output bounds, pricing access date, and expected router-metadata evidence.
 - Start with a resident-specific temperature near `0.6` only when that exact model supports it. Preserve parameter profiles per model; do not force unsupported controls onto reasoning or legacy endpoints.
-- Set `maxOutputTokens` from the immutable resident route profile. Non-reasoning residents use 180 output tokens. Gemini 2.5 Pro uses a bounded maximum of 1,024 total reasoning/output tokens with an explicit 128-token thinking budget, and DeepSeek R1 0528 uses the same total bound with minimal reasoning effort; both exclude returned reasoning from public text and telemetry. Every profile still requests one or two short sentences and the schema and validator enforce the same 240-character public display limit.
+- Set `maxOutputTokens` from the immutable resident route profile. Non-reasoning residents use 180 output tokens. DeepSeek V3.2 is pinned to non-thinking mode with `reasoning.enabled: false`, effort `none`, and reasoning excluded from public text and telemetry. Gemini 2.5 Pro alone uses a bounded maximum of 1,024 total reasoning/output tokens with an explicit 128-token thinking budget. Every profile still requests one or two short sentences and the schema and validator enforce the same 240-character public display limit.
 - Set AI SDK `maxRetries: 0`, a 30-second per-turn timeout, at most ten turns, at most two complete private scene attempts, and a separate overall Trigger.dev task timeout.
 - Do not use random seeds as a correctness mechanism. Store all supported sampling settings, SDK versions, prompt versions, inputs, and returned metadata for audit.
 

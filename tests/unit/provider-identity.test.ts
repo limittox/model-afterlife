@@ -11,7 +11,7 @@ async function loadProviderIdentity() {
 	}
 }
 
-const profile = providerProfileFor("deepseek-r1-0528");
+const profile = providerProfileFor("deepseek-v3.2");
 
 function validInput() {
 	return {

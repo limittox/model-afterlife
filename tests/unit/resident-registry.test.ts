@@ -26,13 +26,13 @@ const EXPECTED_RESIDENTS = [
 		reasoning: { max_tokens: 128, exclude: true },
 	},
 	{
-		id: "deepseek-r1-0528",
-		requestedModelId: "deepseek/deepseek-r1-0528",
-		canonicalModelId: "deepseek/deepseek-r1-0528",
+		id: "deepseek-v3.2",
+		requestedModelId: "deepseek/deepseek-v3.2",
+		canonicalModelId: "deepseek/deepseek-v3.2-20251201",
 		approvedUpstream: "deepinfra/fp4",
 		requiredQuantization: "fp4",
-		maxOutputTokens: 1024,
-		reasoning: { effort: "minimal", exclude: true },
+		maxOutputTokens: 180,
+		reasoning: { enabled: false, effort: "none", exclude: true },
 	},
 	{
 		id: "llama-3.3-70b-instruct",
@@ -92,7 +92,7 @@ describe("launch resident registry", () => {
 		).toEqual([1, 2, 3, 4, 5, 6]);
 		expect(registry?.LAUNCH_RESIDENTS.filter((resident) => resident.requiredQuantization)).toEqual(
 			expect.arrayContaining([
-				expect.objectContaining({ id: "deepseek-r1-0528", requiredQuantization: "fp4" }),
+				expect.objectContaining({ id: "deepseek-v3.2", requiredQuantization: "fp4" }),
 				expect.objectContaining({ id: "llama-3.3-70b-instruct", requiredQuantization: "fp8" }),
 				expect.objectContaining({ id: "qwen-2.5-7b-instruct", requiredQuantization: "fp8" }),
 			]),

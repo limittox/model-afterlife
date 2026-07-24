@@ -30,6 +30,7 @@ export async function seedWorld(): Promise<void> {
 					inArray(residentModelVersions.modelVersionId, [
 						"model:gpt-3.5-turbo-0613:v1",
 						"model:command-r-plus-08-2024:v1",
+						"model:deepseek-r1-0528:v1",
 					]),
 				);
 			await transaction
@@ -38,6 +39,7 @@ export async function seedWorld(): Promise<void> {
 					inArray(characterBibleVersions.bibleVersionId, [
 						"bible:gpt-3.5-turbo-0613:v1",
 						"bible:command-r-plus-08-2024:v1",
+						"bible:deepseek-r1-0528:v1",
 					]),
 				);
 			await transaction
@@ -50,6 +52,9 @@ export async function seedWorld(): Promise<void> {
 						"claim-version:commandr-capability:v1",
 						"claim-version:commandr-reputation:v1",
 						"claim-version:commandr-tea-index:v1",
+						"claim-version:deepseek-r1-0528-capability:v1",
+						"claim-version:deepseek-r1-0528-reputation:v1",
+						"claim-version:deepseek-r1-0528-tea-proof:v1",
 					]),
 				);
 			await transaction

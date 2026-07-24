@@ -323,7 +323,7 @@ describe("strict OpenRouter resident provider", () => {
 		});
 	});
 
-	it("uses the immutable reasoning-aware DeepSeek budget without exposing reasoning", async () => {
+	it("disables DeepSeek V3.2 reasoning within the standard short-turn envelope", async () => {
 		const providerModule = await loadProvider();
 		expect(providerModule, "OpenRouter provider module must exist").toBeDefined();
 		if (!providerModule) throw new Error("OpenRouter provider module is missing.");
@@ -339,10 +339,10 @@ describe("strict OpenRouter resident provider", () => {
 			},
 			response: {
 				id: "gen-deepseek-1",
-				modelId: "deepseek/deepseek-r1-0528",
+				modelId: "deepseek/deepseek-v3.2-20251201",
 				body: {
 					openrouter_metadata: {
-						requested: "deepseek/deepseek-r1-0528",
+						requested: "deepseek/deepseek-v3.2",
 						strategy: "direct",
 						attempt: 1,
 						endpoints: {
@@ -350,7 +350,7 @@ describe("strict OpenRouter resident provider", () => {
 							available: [
 								{
 									provider: "DeepInfra",
-									model: "deepseek/deepseek-r1-0528",
+									model: "deepseek/deepseek-v3.2-20251201",
 									selected: true,
 								},
 							],
@@ -358,7 +358,7 @@ describe("strict OpenRouter resident provider", () => {
 						attempts: [
 							{
 								provider: "DeepInfra",
-								model: "deepseek/deepseek-r1-0528",
+								model: "deepseek/deepseek-v3.2-20251201",
 								status: 200,
 							},
 						],
@@ -380,23 +380,23 @@ describe("strict OpenRouter resident provider", () => {
 			brief: SceneBriefSchema.parse({
 				...brief,
 				sceneKey: "deepseek-policy",
-				participantIds: ["deepseek-r1-0528", "claude-sonnet-4.5"],
+				participantIds: ["deepseek-v3.2", "claude-sonnet-4.5"],
 				speakerOrder: [
-					"deepseek-r1-0528",
+					"deepseek-v3.2",
 					"claude-sonnet-4.5",
-					"deepseek-r1-0528",
+					"deepseek-v3.2",
 					"claude-sonnet-4.5",
 				],
-				allowedFactIds: ["deepseek-r1-0528-reasoning"],
+				allowedFactIds: ["deepseek-v32-dual-mode"],
 			}),
 			turnIndex: 0,
-			residentId: "deepseek-r1-0528",
-			requestedModelId: "deepseek/deepseek-r1-0528",
+			residentId: "deepseek-v3.2",
+			requestedModelId: "deepseek/deepseek-v3.2",
 			priorTurns: [],
 		});
 
 		expect(modelFactory).toHaveBeenCalledWith(
-			"deepseek/deepseek-r1-0528",
+			"deepseek/deepseek-v3.2",
 			{
 				extraBody: {
 					provider: {
@@ -407,11 +407,13 @@ describe("strict OpenRouter resident provider", () => {
 						quantizations: ["fp4"],
 					},
 				},
-				reasoning: { effort: "minimal", exclude: true },
+				reasoning: { enabled: false, effort: "none", exclude: true },
 			},
 		);
 		expect(generateText.mock.calls[0]?.[0]).toMatchObject({
-			maxOutputTokens: 1024,
+			maxOutputTokens: 180,
+			maxRetries: 0,
+			timeout: { totalMs: 30_000 },
 			experimental_telemetry: {
 				recordInputs: false,
 				recordOutputs: false,
