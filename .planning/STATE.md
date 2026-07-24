@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-07-24T18:00:38.050+10:00"
+stopped_at: Reference retry-3 stopped fail-closed at cumulative 129
+last_updated: "2026-07-24T18:10:15.1511800+10:00"
 last_activity: 2026-07-24
-last_activity_desc: "Prepared guarded reference retry-3 at cumulative 119 with exact cap 134 and privacy-safe judge classification"
+last_activity_desc: "Reference retry-3 stopped fail-closed on judge-schema-reason-too-long at cumulative 129"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 4 of 4
-Status: Plan 02-03 complete; guarded 15-generation reference retry-3 awaits explicit authorization
-Last activity: 2026-07-24 — retry-3 exact preflight, judge field classification, and offline verification are complete
+Status: Plan 02-03 complete; reference retry-3 stopped fail-closed at cumulative 129
+Last activity: 2026-07-24 — retry-3 preserved one accepted case and stopped on `judge-schema-reason-too-long`
 
 Progress: [██████████████████░░] 7/8 plans (88%)
 
@@ -98,8 +98,8 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: The second guarded retry confirmed all four tea-timer resident turns, then stopped fail-closed when the semantic judge returned `schema-invalid`. A one-call diagnostic subsequently passed the full local schema. Guarded retry-3 is ready with privacy-safe judge field classification; it requires exactly 15 new generations from cumulative 119 to cap 134.
-- [Phase 2]: Human semantic calibration is approved and enabled. The remaining reference proof must preserve the OpenRouter credential outside chat, git, public bundles, and traces; any further paid attempt needs fresh explicit authorization.
+- [Phase 2]: Reference retry-3 accepted the tea-timer case, then stopped fail-closed on the second case when its semantic judge returned a reason longer than the local schema permits. The durable counter is cumulative 129; five authorized calls were not made.
+- [Phase 2]: Human semantic calibration is approved and enabled. The remaining reference proof must preserve the OpenRouter credential outside chat, git, public bundles, and traces; any further paid attempt needs fresh explicit authorization and a new exact cumulative cap.
 - [Phase 2]: Docker Desktop is stopped, so Plan 02-03's database-backed replay/rebuild check remains explicit verification debt.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
@@ -130,6 +130,7 @@ None yet.
 | 260724-nhl | Diagnose the Phase 2 semantic judge schema-invalid failure offline, identify the root cause from saved evidence and code paths, make no provider calls, and record findings | 2026-07-24 | 4e41d50 | [260724-nhl-diagnose-the-phase-2-semantic-judge-sche](./quick/260724-nhl-diagnose-the-phase-2-semantic-judge-sche/) |
 | 260724-oha | Run exactly one authorized paid semantic-judge diagnostic generation against an existing reference fixture, cumulative ceiling 119, record only privacy-safe schema and usage evidence, and do not retry | 2026-07-24 | ee714b8 | [260724-oha-run-exactly-one-authorized-paid-semantic](./quick/260724-oha-run-exactly-one-authorized-paid-semantic/) |
 | 260724-oxi | Prepare a guarded Phase 2 reference retry-3 starting at cumulative 119 with exactly 15 generations and cap 134, add privacy-safe judge field classification, verify offline, commit, and push without provider calls | 2026-07-24 | 9c1957f | [260724-oxi-prepare-a-guarded-phase-2-reference-retr](./quick/260724-oxi-prepare-a-guarded-phase-2-reference-retr/) |
+| 260724-p32 | Run the authorized Phase 2 reference retry-3 with exactly 15 generations from cumulative 119 to cap 134, stop fail-closed, verify, commit, and push | 2026-07-24 | c88ab93 | [260724-p32-run-the-authorized-phase-2-reference-ret](./quick/260724-p32-run-the-authorized-phase-2-reference-ret/) |
 
 ## Deferred Items
 
@@ -141,6 +142,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-24T18:00:38.050+10:00
-Stopped at: Guarded reference retry-3 is ready; awaits exact 15-generation authorization with cumulative cap 134
+Last session: 2026-07-24T18:10:15.1511800+10:00
+Stopped at: Reference retry-3 stopped fail-closed on `judge-schema-reason-too-long` at cumulative 129
 Resume file: None
