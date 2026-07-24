@@ -39,12 +39,42 @@ Affectionate character comedy comes before technical documentation, but factual 
 | Tool | Manual Tailwind CSS 4 token layer, extending the implemented Phase 1 custom properties |
 | Preset | Not applicable; shadcn is not initialized |
 | Component library | Native semantic HTML; Radix Primitives may be added only for a focus-managed disclosure or popover that cannot be implemented robustly with native elements |
-| Icon library | Project-authored 16px SVG icons with adjacent visible labels; icon-only variants require accessible names and focus/hover tooltips |
+| Icon library | Lucide React for standard utility controls; original project-authored pixel SVG or atlas icons only for branded identity symbols such as residents, rooms, and the shared world |
 | Interface font | Atkinson Hyperlegible Next, self-hosted |
 | Display font | Pixelify Sans, self-hosted; restricted to the wordmark, home clock, resident display names, and short display headings |
 | Pixel renderer | Phaser remains a client-only visual enhancement; React owns all semantic content and essential controls |
 
-No shadcn or third-party registry block is permitted. New DOM components consume the existing named CSS custom properties. New Phaser art consumes typed presentation tokens derived from the same semantic palette.
+No shadcn or third-party registry block is permitted. `lucide-react` is an ISC-licensed npm dependency, not a shadcn or other component-registry block; its use does not change `shadcn_initialized: false`, the manual Tailwind approach, or the registry-safety decision. New DOM components consume the existing named CSS custom properties. New Phaser art consumes typed presentation tokens derived from the same semantic palette.
+
+### Icon Contract
+
+Standard utility controls use the following named Lucide React components:
+
+| Utility | Lucide component |
+|---------|------------------|
+| `Live home` | `House` |
+| `Residents` | `Users` |
+| `Recent scenes` | `Archive` |
+| `Since your last visit` | `History` |
+| Pause / resume presentation | `Pause` / `Play` |
+| `Jump to live` | `Radio` |
+| Zoom in / zoom out | `ZoomIn` / `ZoomOut` |
+| `Reset view` | `RotateCcw` |
+| Follow / unfollow resident | `Eye` / `EyeOff` |
+| `Share this scene` | `Share2` |
+| `Copy scene link` / copied confirmation | `Copy` / `Check` |
+| External source link | `ExternalLink` |
+| Retry an available action | `RefreshCw` |
+| Error or unavailable warning | `TriangleAlert` |
+| Disclosure expansion | `ChevronDown` |
+| Dismiss recap | `X` |
+
+- Use named individual imports from `lucide-react` for each component; do not import a namespace, dynamic icon map, or whole icon set.
+- Icons inherit semantic foreground color through `currentColor`, render at 16px when inline and 20px in controls, and use `strokeWidth={2}`. Control icons remain inside the existing minimum 44×44px interactive targets.
+- Visible text remains the preferred label wherever space permits. An icon-only control requires an accessible name and a focus/hover tooltip that repeats or clarifies that name.
+- Decorative icons use `aria-hidden="true"` and never contribute duplicate accessible text.
+- Do not mix Lucide with another standard utility icon set. Original custom icons are reserved for branded identity: resident, room, world, and other identity-specific symbols must remain semantically distinct project-authored pixel SVG or atlas art.
+- Do not copy or derive provider logos, mascots, or marks. Identity-specific art must remain original to Model Afterlife.
 
 ---
 
@@ -379,7 +409,7 @@ Applicable state considerations resolved: 83 covered, 0 backstop, 0 unresolved
 
 | Registry | Blocks Used | Safety Gate |
 |----------|-------------|-------------|
-| None | None | Not applicable — the established manual Tailwind system uses no shadcn or third-party registry blocks |
+| None | None | Not applicable — the established manual Tailwind system uses no shadcn or third-party registry blocks; the ISC-licensed `lucide-react` npm dependency is an icon library, not a component-registry block |
 
 ---
 
