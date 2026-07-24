@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: Reference retry-4 stopped fail-closed at cumulative 135
-last_updated: "2026-07-24T18:25:19.8788659+10:00"
+stopped_at: Guarded five-generation reference retry-5 is ready at cumulative 135
+last_updated: "2026-07-24T18:39:03.2352603+10:00"
 last_activity: 2026-07-24
-last_activity_desc: "Reference retry-4 accepted the second case and stopped on schema-text-invalid at cumulative 135"
+last_activity_desc: "Prepared retry-5 with resident-turn-v2 text bounds and exactly five generations through cap 140"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 4 of 4
-Status: Plan 02-03 complete; reference retry-4 stopped fail-closed at cumulative 135
-Last activity: 2026-07-24 — retry-4 preserved two accepted cases and stopped on `schema-text-invalid`
+Status: Plan 02-03 complete; guarded five-generation reference retry-5 awaits explicit authorization
+Last activity: 2026-07-24 — added resident-turn-v2 text bounds and prepared the final single-case continuation
 
 Progress: [██████████████████░░] 7/8 plans (88%)
 
@@ -98,8 +98,8 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Reference retry-4 accepted the misfiled-atlas case, bringing the preserved proof to two accepted cases, then stopped fail-closed when the first radio-labels resident turn returned `schema-text-invalid`.
-- [Phase 2]: The durable counter is cumulative 135 and four authorized calls were not made. Completing the final radio-labels case requires a new guarded checkpoint and fresh explicit authorization.
+- [Phase 2]: Retry-4’s privacy-safe evidence cannot distinguish empty text from an over-grapheme-budget turn. Resident prompt v2 now requires non-empty text of at most 180 graphemes while the 240-grapheme publication gate remains unchanged.
+- [Phase 2]: Guarded retry-5 reuses both accepted cases and requires exactly five generations from cumulative 135 to cap 140. It needs fresh explicit authorization before any paid call.
 - [Phase 2]: Docker Desktop is stopped, so Plan 02-03's database-backed replay/rebuild check remains explicit verification debt.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
@@ -133,6 +133,7 @@ None yet.
 | 260724-p32 | Run the authorized Phase 2 reference retry-3 with exactly 15 generations from cumulative 119 to cap 134, stop fail-closed, verify, commit, and push | 2026-07-24 | c88ab93 | [260724-p32-run-the-authorized-phase-2-reference-ret](./quick/260724-p32-run-the-authorized-phase-2-reference-ret/) |
 | 260724-pa6 | Fix semantic judge reason-length failures offline, add focused post-implementation regression coverage, and prepare a guarded reference retry from cumulative 129 without provider calls | 2026-07-24 | 35c08f1 | [260724-pa6-fix-semantic-judge-reason-length-failure](./quick/260724-pa6-fix-semantic-judge-reason-length-failure/) |
 | 260724-phw | Run the authorized Phase 2 reference retry-4 with exactly 10 generations from cumulative 129 to cap 139, stop fail-closed, verify, commit, and push | 2026-07-24 | 521df32 | [260724-phw-run-the-authorized-phase-2-reference-ret](./quick/260724-phw-run-the-authorized-phase-2-reference-ret/) |
+| 260724-prh | Diagnose and fix the retry-4 schema-text-invalid resident failure offline, add focused post-implementation regression coverage, and prepare a guarded final reference checkpoint from cumulative 135 without provider calls | 2026-07-24 | f24d959 | [260724-prh-diagnose-and-fix-the-retry-4-schema-text](./quick/260724-prh-diagnose-and-fix-the-retry-4-schema-text/) |
 
 ## Deferred Items
 
@@ -144,6 +145,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-24T18:25:19.8788659+10:00
-Stopped at: Reference retry-4 stopped fail-closed on `schema-text-invalid` at cumulative 135
+Last session: 2026-07-24T18:39:03.2352603+10:00
+Stopped at: Guarded retry-5 is ready for exactly five generations from cumulative 135 to cap 140
 Resume file: None
