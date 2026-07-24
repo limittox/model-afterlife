@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 conditional Qwen canary and final matrix authorized; 70/70 ceiling"
-last_updated: "2026-07-24T02:32:32.243Z"
+stopped_at: "02-02 Task 3 Qwen prompt-only fix failed canary; 40/70 consumed"
+last_updated: "2026-07-24T02:33:26.596Z"
 last_activity: 2026-07-24
-last_activity_desc: "One post-fix Qwen canary and, only on success, one paced final matrix are authorized; cumulative generation ceiling is conservatively reserved at 70/70"
+last_activity_desc: "Post-fix Qwen canary again returned schema-relationship-effects-forbidden; matrix was not started; cumulative accounting is 40/70"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Task 3 conditional Qwen canary and final matrix authorized
-Last activity: 2026-07-24 — one post-fix Qwen canary is authorized and, only if it passes, one standard paced matrix with at most 30 generations; exact routing, zero retries, disabled fallback, first-failure stop, and cumulative ceiling 70/70
+Status: Task 3 blocked because Qwen ignores the relationship-effects prose constraint
+Last activity: 2026-07-24 — the post-fix Qwen canary again returned `schema-relationship-effects-forbidden`; exactly one generation was consumed, no retry or fallback occurred, and the conditional matrix was not started
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: One post-fix Qwen canary and, conditional on its success, one paced final matrix are authorized. The combined hard ceiling is 31 new generations and 70/70 cumulative. Exact routing, zero retries, disabled fallback, first-failure stop, and sanitized output remain mandatory.
+- [Phase 2]: Qwen ignored the explicit prompt instruction and again populated forbidden `proposedRelationshipEffects`. The conditional matrix was correctly not started. Accounting is 40/70 with 30 calls unused; no further provider call is authorized.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
@@ -109,6 +109,7 @@ None yet.
 | 260724-h57 | Add privacy-safe field-level classification for local admission schema failures, with no provider calls | 2026-07-24 | 9f031bc | [260724-h57-add-privacy-safe-field-level-classificat](./quick/260724-h57-add-privacy-safe-field-level-classificat/) |
 | 260724-h91 | Run one privacy-safe Qwen admission diagnostic with two catalog reads, one generation, and cumulative ceiling 39 | 2026-07-24 | 4ec7c22 | [260724-h91-run-one-privacy-safe-qwen-admission-diag](./quick/260724-h91-run-one-privacy-safe-qwen-admission-diag/) |
 | 260724-hc9 | Make the resident prompt explicitly require an empty relationship-effects array, verified offline with TDD and no provider calls | 2026-07-24 | e12e751 | [260724-hc9-make-the-resident-prompt-explicitly-requ](./quick/260724-hc9-make-the-resident-prompt-explicitly-requ/) |
+| 260724-hf4 | Run one post-fix Qwen canary and, only if it passes, one paced final admission matrix with cumulative ceiling 70 | 2026-07-24 | ecdb4c9 | [260724-hf4-run-one-post-fix-qwen-canary-and-only-if](./quick/260724-hf4-run-one-post-fix-qwen-canary-and-only-if/) |
 
 ## Deferred Items
 
