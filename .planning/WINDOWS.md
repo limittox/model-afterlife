@@ -2,9 +2,9 @@
 schema_version: 1
 open_count: 0
 waived_count: 0
-fixed_count: 7
-total_count: 7
-last_updated: 2026-07-24T17:53:07.016Z
+fixed_count: 11
+total_count: 11
+last_updated: 2026-07-24T18:22:45.698Z
 ---
 
 # Broken Windows Ledger
@@ -22,6 +22,10 @@ last_updated: 2026-07-24T17:53:07.016Z
 | 5 | 03 | deviation | tests/integration/phase-03-resident-reader.test.ts |  | Used direct pinned executables because the literal pnpm Vitest command was unavailable in this Windows sandbox. | fixed |  | 2026-07-24T17:52:40.646Z | 2026-07-24T17:53:05.778Z |
 | 6 | 03 | deviation | tests/integration/phase-03-resident-reader.test.ts |  | Replaced a substring privacy assertion that matched the reviewed word parameters with exact public DTO key inspection. | fixed |  | 2026-07-24T17:52:41.274Z | 2026-07-24T17:53:06.381Z |
 | 7 | 03 | deviation | .planning/STATE.md |  | Reconciled stale state-handler plan-count prose, total phase count, and Phase 03 decision attribution. | fixed |  | 2026-07-24T17:52:41.920Z | 2026-07-24T17:53:07.016Z |
+| 8 | 03 | deviation | src/features/return-loop/client/last-visit-marker.ts |  | Selected exact baseline fields from a valid observed snapshot | fixed |  | 2026-07-24T18:20:53.694Z | 2026-07-24T18:21:24.704Z |
+| 9 | 03 | deviation | src/features/return-loop/client/ReturnRecapController.tsx |  | Kept the frozen recap request alive while polling advanced | fixed |  | 2026-07-24T18:20:54.314Z | 2026-07-24T18:21:25.317Z |
+| 10 | 03 | deviation | src/app/globals.css |  | Added required responsive recap and navigation styles omitted from the plan file list | fixed |  | 2026-07-24T18:20:54.953Z | 2026-07-24T18:21:25.949Z |
+| 11 | 03 | deviation | .planning/STATE.md |  | Reconciled state-handler phase count, progress prose, activity, and Phase 03 decision attribution | fixed |  | 2026-07-24T18:22:44.801Z | 2026-07-24T18:22:45.698Z |
 
 ````json
 [
@@ -108,6 +112,54 @@ last_updated: 2026-07-24T17:53:07.016Z
     "reason": "",
     "recorded_at": "2026-07-24T17:52:41.920Z",
     "resolved_at": "2026-07-24T17:53:07.016Z"
+  },
+  {
+    "id": 8,
+    "kind": "deviation",
+    "phase": "03",
+    "file": "src/features/return-loop/client/last-visit-marker.ts",
+    "line": null,
+    "description": "Selected exact baseline fields from a valid observed snapshot",
+    "status": "fixed",
+    "reason": "",
+    "recorded_at": "2026-07-24T18:20:53.694Z",
+    "resolved_at": "2026-07-24T18:21:24.704Z"
+  },
+  {
+    "id": 9,
+    "kind": "deviation",
+    "phase": "03",
+    "file": "src/features/return-loop/client/ReturnRecapController.tsx",
+    "line": null,
+    "description": "Kept the frozen recap request alive while polling advanced",
+    "status": "fixed",
+    "reason": "",
+    "recorded_at": "2026-07-24T18:20:54.314Z",
+    "resolved_at": "2026-07-24T18:21:25.317Z"
+  },
+  {
+    "id": 10,
+    "kind": "deviation",
+    "phase": "03",
+    "file": "src/app/globals.css",
+    "line": null,
+    "description": "Added required responsive recap and navigation styles omitted from the plan file list",
+    "status": "fixed",
+    "reason": "",
+    "recorded_at": "2026-07-24T18:20:54.953Z",
+    "resolved_at": "2026-07-24T18:21:25.949Z"
+  },
+  {
+    "id": 11,
+    "kind": "deviation",
+    "phase": "03",
+    "file": ".planning/STATE.md",
+    "line": null,
+    "description": "Reconciled state-handler phase count, progress prose, activity, and Phase 03 decision attribution",
+    "status": "fixed",
+    "reason": "",
+    "recorded_at": "2026-07-24T18:22:44.801Z",
+    "resolved_at": "2026-07-24T18:22:45.698Z"
   }
 ]
 ````

@@ -62,11 +62,11 @@
 ### Archive, Recap, and Return Loop
 
 - [x] **RTRN-01**: Visitors can browse a finite recent-scenes archive containing each scene's title, residents, home time, premise, transcript, outcome, and links to resident context.
-- [ ] **RTRN-02**: The site records an anonymous local last-visit marker without requiring an account.
-- [ ] **RTRN-03**: When meaningful events occurred after a visitor's last visit, the visitor receives a significance-ranked recap containing no more than five concise causal beats.
-- [ ] **RTRN-04**: Every recap beat links to a canonical scene or resident profile and identifies genuine relationship changes only when canon records them.
-- [ ] **RTRN-05**: A recap ends with the home's current situation and lets the visitor dismiss it, review it later, open a referenced scene, or jump to live.
-- [ ] **RTRN-06**: The viewing experience can surface unresolved threads and restrained callbacks without adding streaks, currencies, or absence penalties.
+- [x] **RTRN-02**: The site records an anonymous local last-visit marker without requiring an account.
+- [x] **RTRN-03**: When meaningful events occurred after a visitor's last visit, the visitor receives a significance-ranked recap containing no more than five concise causal beats.
+- [x] **RTRN-04**: Every recap beat links to a canonical scene or resident profile and identifies genuine relationship changes only when canon records them.
+- [x] **RTRN-05**: A recap ends with the home's current situation and lets the visitor dismiss it, review it later, open a referenced scene, or jump to live.
+- [x] **RTRN-06**: The viewing experience can surface unresolved threads and restrained callbacks without adding streaks, currencies, or absence penalties.
 
 ### Profiles, Transparency, and Corrections
 
@@ -191,11 +191,11 @@
 | VIEW-07 | Phase 3 | Pending |
 | VIEW-08 | Phase 1 | Complete |
 | RTRN-01 | Phase 3 | Complete |
-| RTRN-02 | Phase 3 | Pending |
-| RTRN-03 | Phase 3 | Pending |
-| RTRN-04 | Phase 3 | Pending |
-| RTRN-05 | Phase 3 | Pending |
-| RTRN-06 | Phase 3 | Pending |
+| RTRN-02 | Phase 3 | Complete |
+| RTRN-03 | Phase 3 | Complete |
+| RTRN-04 | Phase 3 | Complete |
+| RTRN-05 | Phase 3 | Complete |
+| RTRN-06 | Phase 3 | Complete |
 | TRNS-01 | Phase 2 | Complete |
 | TRNS-02 | Phase 2 | Complete |
 | TRNS-03 | Phase 2 | Complete |
