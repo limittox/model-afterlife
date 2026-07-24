@@ -95,10 +95,33 @@ export type WorldResident = {
 	nextEligibleTick: number;
 };
 
+export const RELATIONSHIP_DIMENSIONS = [
+	"friendship",
+	"rivalry",
+	"familiarity",
+] as const;
+
+export type RelationshipDimension =
+	(typeof RELATIONSHIP_DIMENSIONS)[number];
+
 export type WorldRelationship = {
 	residentAId: string;
 	residentBId: string;
-	affinity: number;
+	friendship: number;
+	rivalry: number;
+	familiarity: number;
+	recentExperienceIds: string[];
+};
+
+export type SharedExperienceMemory = {
+	id: string;
+	source: "published";
+	causeRevisionId: string;
+	sceneKey: string;
+	participantIds: string[];
+	summary: string;
+	tags: string[];
+	logicalTick: number;
 };
 
 export type WorldDialogueTurn = {
@@ -133,6 +156,8 @@ export type WorldState = {
 	rooms: WorldRoom[];
 	residents: WorldResident[];
 	relationships: WorldRelationship[];
+	memories: SharedExperienceMemory[];
+	appliedRelationshipEffectKeys: string[];
 	scene: CompleteWorldScene | null;
 	quiet: QuietWorldStatus | null;
 };
@@ -188,13 +213,23 @@ export type SceneCompletedEvent = WorldEventBase<
 	{ sceneId: string; locationId: WorldRoomId }
 >;
 
-export type RelationshipChangedEvent = WorldEventBase<
-	"relationship_changed",
+export type RelationshipEffectAppliedEvent = WorldEventBase<
+	"relationship_effect_applied",
 	{
+		effectKey: string;
+		causeRevisionId: string;
+		sceneKey: string;
+		effectOrdinal: number;
 		residentAId: string;
 		residentBId: string;
-		delta: number;
+		dimension: RelationshipDimension;
+		delta: -1 | 0 | 1;
 	}
+>;
+
+export type SharedExperienceRecordedEvent = WorldEventBase<
+	"shared_experience_recorded",
+	{ memory: SharedExperienceMemory }
 >;
 
 export type WorldInitializedEvent = WorldEventBase<
@@ -210,7 +245,8 @@ export type WorldEvent =
 	| SceneGenerationRequestedEvent
 	| ScenePublishedEvent
 	| SceneCompletedEvent
-	| RelationshipChangedEvent;
+	| RelationshipEffectAppliedEvent
+	| SharedExperienceRecordedEvent;
 
 export type WorldRule = {
 	id: string;

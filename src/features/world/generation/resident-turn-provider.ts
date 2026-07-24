@@ -1,4 +1,5 @@
 import type { SceneBrief } from "./contracts.ts";
+import type { PromptMemory } from "./select-prompt-memories.ts";
 
 export type ProviderTurnResponse = {
 	text: string;
@@ -34,6 +35,6 @@ export interface ResidentTurnProvider {
 			dimension: string;
 			value: number;
 		}[];
-		memories?: readonly string[];
+		memories?: readonly PromptMemory[];
 	}): Promise<ProviderTurnResponse>;
 }

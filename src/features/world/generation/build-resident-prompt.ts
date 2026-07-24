@@ -3,6 +3,7 @@ import type { SceneBrief } from "./contracts.ts";
 import { CHARACTER_BIBLES } from "../fixtures/character-bibles.ts";
 import { HISTORICAL_CLAIMS } from "../fixtures/historical-claims.ts";
 import { LAUNCH_RESIDENTS } from "../fixtures/launch-residents.ts";
+import type { PromptMemory } from "./select-prompt-memories.ts";
 
 export type ResidentPromptInput = {
 	brief: SceneBrief;
@@ -14,7 +15,7 @@ export type ResidentPromptInput = {
 		dimension: string;
 		value: number;
 	}[];
-	memories: readonly string[];
+	memories: readonly PromptMemory[];
 	priorTurns: readonly { residentId: string; text: string }[];
 };
 

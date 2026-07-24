@@ -5,6 +5,26 @@ export const GENERATION_SCHEMA_VERSION = 1 as const;
 const nonBlank = z.string().trim().min(1);
 const strictObject = <T extends z.ZodRawShape>(shape: T) => z.object(shape).strict();
 
+export const RelationshipDimensionSchema = z.enum([
+	"friendship",
+	"rivalry",
+	"familiarity",
+]);
+
+export const PermittedRelationshipEffectSchema = strictObject({
+	residentAId: nonBlank,
+	residentBId: nonBlank,
+	dimension: RelationshipDimensionSchema,
+});
+
+export const AcceptedRelationshipEffectSchema = strictObject({
+	effectOrdinal: z.number().int().nonnegative(),
+	residentAId: nonBlank,
+	residentBId: nonBlank,
+	dimension: RelationshipDimensionSchema,
+	delta: z.union([z.literal(-1), z.literal(0), z.literal(1)]),
+});
+
 export const SceneBriefSchema = strictObject({
 	schemaVersion: z.literal(GENERATION_SCHEMA_VERSION),
 	sceneKey: nonBlank,
@@ -17,6 +37,10 @@ export const SceneBriefSchema = strictObject({
 	tone: nonBlank,
 	turnBudget: z.number().int().min(4).max(10),
 	permittedOutcome: nonBlank,
+	permittedRelationshipEffects: z
+		.array(PermittedRelationshipEffectSchema)
+		.max(4)
+		.default([]),
 }).superRefine((brief, context) => {
 	if (brief.speakerOrder.length !== brief.turnBudget) context.addIssue({ code: "custom", message: "speakerOrder must match turnBudget", path: ["speakerOrder"] });
 	for (const residentId of brief.speakerOrder) if (!brief.participantIds.includes(residentId)) context.addIssue({ code: "custom", message: "speakerOrder may name only participants", path: ["speakerOrder"] });
@@ -79,6 +103,14 @@ export const PublishedSceneRevisionSchema = strictObject({
 	sceneKey: nonBlank,
 	expectedWorldHead: z.number().int().positive(),
 	turns: z.array(ResidentTurnSchema).min(4).max(10),
+	relationshipEffects: z
+		.array(AcceptedRelationshipEffectSchema)
+		.max(4)
+		.default([]),
+	sharedExperience: strictObject({
+		summary: nonBlank.max(240),
+		tags: z.array(nonBlank.max(40)).max(8),
+	}).optional(),
 });
 
 export type SceneBrief = z.infer<typeof SceneBriefSchema>;

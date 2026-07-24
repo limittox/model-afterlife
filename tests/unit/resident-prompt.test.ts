@@ -46,7 +46,13 @@ describe("resident prompt boundary", () => {
 				relationships: [
 					{ residentId: "claude-sonnet-4.5", dimension: "familiarity", value: 1 },
 				],
-				memories: ["A prior accepted scene ended over tea."],
+				memories: [
+					{
+						id: "memory:accepted-tea",
+						summary: "A prior accepted scene ended over tea.",
+						logicalTick: 12,
+					},
+				],
 				priorTurns: [
 					{
 						residentId: "claude-sonnet-4.5",
@@ -104,7 +110,16 @@ describe("resident prompt boundary", () => {
 		};
 		expect(() =>
 			promptModule?.buildResidentPrompt(
-				{ ...base, memories: ["one", "two", "three", "four"] },
+				{
+					...base,
+					memories: ["one", "two", "three", "four"].map(
+						(summary, logicalTick) => ({
+							id: `memory:${logicalTick}`,
+							summary,
+							logicalTick,
+						}),
+					),
+				},
 				"memory-overflow",
 			),
 		).toThrow(/three memories/i);

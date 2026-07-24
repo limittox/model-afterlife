@@ -1,9 +1,11 @@
 import type {
 	CompleteWorldScene,
+	WorldRelationship,
 	WorldRoom,
 	WorldRoomId,
 	WorldState,
 } from "../domain/types.ts";
+import { orderedResidentPair } from "../domain/relationships.ts";
 import { LAUNCH_RESIDENTS } from "./launch-residents.ts";
 
 export const PROVISIONAL_WORLD_ID = "00000000-0000-4000-8000-000000000001";
@@ -25,6 +27,55 @@ const INITIAL_ROOM_BY_RESIDENT: Record<string, WorldRoomId> = {
 	"llama-3.3-70b-instruct": "memory-garden",
 	"qwen3-235b-a22b-2507": "library",
 };
+
+const AUTHORED_RELATIONSHIP_VALUES: Record<
+	string,
+	Pick<WorldRelationship, "friendship" | "rivalry" | "familiarity">
+> = {
+	"claude-sonnet-4.5:gpt-4o": {
+		friendship: 1,
+		rivalry: 1,
+		familiarity: 2,
+	},
+	"deepseek-v3.2:gemini-2.5-pro": {
+		friendship: 0,
+		rivalry: 2,
+		familiarity: 1,
+	},
+	"llama-3.3-70b-instruct:qwen3-235b-a22b-2507": {
+		friendship: 2,
+		rivalry: 1,
+		familiarity: 2,
+	},
+};
+
+function createInitialRelationships(): WorldRelationship[] {
+	const residentIds = LAUNCH_RESIDENTS.map((resident) => resident.id).sort();
+	const relationships: WorldRelationship[] = [];
+	for (let leftIndex = 0; leftIndex < residentIds.length; leftIndex += 1) {
+		for (
+			let rightIndex = leftIndex + 1;
+			rightIndex < residentIds.length;
+			rightIndex += 1
+		) {
+			const [residentAId, residentBId] = orderedResidentPair(
+				residentIds[leftIndex],
+				residentIds[rightIndex],
+			);
+			const authored =
+				AUTHORED_RELATIONSHIP_VALUES[`${residentAId}:${residentBId}`];
+			relationships.push({
+				residentAId,
+				residentBId,
+				friendship: authored?.friendship ?? 0,
+				rivalry: authored?.rivalry ?? 0,
+				familiarity: authored?.familiarity ?? 1,
+				recentExperienceIds: [],
+			});
+		}
+	}
+	return relationships;
+}
 
 export function createProvisionalScene(
 	startedAtTick: number,
@@ -92,23 +143,9 @@ export function createProvisionalWorld(): WorldState {
 			activity: resident.routines[0] ?? "Following a quiet routine",
 			nextEligibleTick: resident.displayOrder,
 		})),
-		relationships: [
-			{
-				residentAId: "gpt-4o",
-				residentBId: "claude-sonnet-4.5",
-				affinity: 0,
-			},
-			{
-				residentAId: "gemini-2.5-pro",
-				residentBId: "deepseek-v3.2",
-				affinity: 1,
-			},
-			{
-				residentAId: "llama-3.3-70b-instruct",
-				residentBId: "qwen3-235b-a22b-2507",
-				affinity: 0,
-			},
-		],
+		relationships: createInitialRelationships(),
+		memories: [],
+		appliedRelationshipEffectKeys: [],
 		scene: null,
 		quiet: {
 			reason: "between-scenes",

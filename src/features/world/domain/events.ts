@@ -1,8 +1,9 @@
 import type { WorldEvent, WorldState } from "./types.ts";
-
-function clampAffinity(value: number): number {
-	return Math.max(-5, Math.min(5, value));
-}
+import { recordSharedExperience } from "./memories.ts";
+import {
+	applyRelationshipEffects,
+	relationshipEffectFromEvent,
+} from "./relationships.ts";
 
 export function reduceWorldEvent(
 	current: WorldState,
@@ -16,7 +17,16 @@ export function reduceWorldEvent(
 		residents: current.residents.map((resident) => ({ ...resident })),
 		relationships: current.relationships.map((relationship) => ({
 			...relationship,
+			recentExperienceIds: [...relationship.recentExperienceIds],
 		})),
+		memories: current.memories.map((memory) => ({
+			...memory,
+			participantIds: [...memory.participantIds],
+			tags: [...memory.tags],
+		})),
+		appliedRelationshipEffectKeys: [
+			...current.appliedRelationshipEffectKeys,
+		],
 		scene: current.scene
 			? {
 					...current.scene,
@@ -37,8 +47,19 @@ export function reduceWorldEvent(
 					...resident,
 				})),
 				relationships: event.payload.state.relationships.map(
-					(relationship) => ({ ...relationship }),
+					(relationship) => ({
+						...relationship,
+						recentExperienceIds: [...relationship.recentExperienceIds],
+					}),
 				),
+				memories: event.payload.state.memories.map((memory) => ({
+					...memory,
+					participantIds: [...memory.participantIds],
+					tags: [...memory.tags],
+				})),
+				appliedRelationshipEffectKeys: [
+					...event.payload.state.appliedRelationshipEffectKeys,
+				],
 				scene: event.payload.state.scene
 					? {
 							...event.payload.state.scene,
@@ -114,18 +135,24 @@ export function reduceWorldEvent(
 			}
 			break;
 		}
-		case "relationship_changed": {
-			state.relationships = state.relationships.map((relationship) =>
-				relationship.residentAId === event.payload.residentAId &&
-				relationship.residentBId === event.payload.residentBId
-					? {
-							...relationship,
-							affinity: clampAffinity(
-								relationship.affinity + event.payload.delta,
-							),
-						}
-					: relationship,
+		case "relationship_effect_applied": {
+			const applied = applyRelationshipEffects(
+				state.relationships,
+				[relationshipEffectFromEvent(event)],
+				state.appliedRelationshipEffectKeys,
 			);
+			state.relationships = applied.relationships;
+			state.appliedRelationshipEffectKeys = applied.appliedEffectKeys;
+			break;
+		}
+		case "shared_experience_recorded": {
+			const recorded = recordSharedExperience(
+				state.memories,
+				state.relationships,
+				event.payload.memory,
+			);
+			state.memories = recorded.memories;
+			state.relationships = recorded.relationships;
 			break;
 		}
 	}

@@ -114,26 +114,6 @@ function eventsForTick(
 		});
 	}
 
-	if (tick % 5 === 0) {
-		const relationship =
-			state.relationships[Math.abs(seed + tick) % state.relationships.length];
-		events.push({
-			schemaVersion: 1,
-			occurrenceKey: eventKey(
-				state,
-				tick,
-				`relationship:${relationship.residentAId}:${relationship.residentBId}`,
-			),
-			logicalTick: tick,
-			type: "relationship_changed",
-			payload: {
-				residentAId: relationship.residentAId,
-				residentBId: relationship.residentBId,
-				delta: (seed + tick) % 2 === 0 ? 1 : -1,
-			},
-		});
-	}
-
 	return events;
 }
 
