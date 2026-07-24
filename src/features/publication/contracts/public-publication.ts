@@ -180,6 +180,56 @@ export const ResidentDirectoryResultSchema = z.discriminatedUnion("kind", [
 	strictObject({ kind: z.literal("error") }),
 ]);
 
+export const ReturnRecapResidentLinkSchema = strictObject({
+	residentId: PublicResidentIdSchema,
+	displayName: nonBlank,
+	profilePath: z.string().startsWith("/residents/"),
+});
+
+export const ReturnRecapBeatSchema = strictObject({
+	revisionId: CanonicalRevisionIdSchema,
+	publicationSequence: z.number().int().positive(),
+	significance: z.enum([
+		"relationship-change",
+		"shared-experience",
+		"ordinary-publication",
+	]),
+	development: nonBlank.max(960),
+	home: strictObject({
+		homeDay: z.number().int().positive(),
+		homeTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/u),
+		dayPeriod: z.enum(["morning", "afternoon", "evening", "night"]),
+	}),
+	scene: strictObject({
+		href: z.string().startsWith("/scenes/"),
+		label: nonBlank,
+	}),
+	residents: z.array(ReturnRecapResidentLinkSchema).min(1).max(3),
+	relationshipNote: nonBlank.max(960).nullable(),
+});
+
+export const ReturnRecapResponseSchema = strictObject({
+	worldId: z.string().uuid(),
+	afterSequence: z.number().int().positive(),
+	throughSequence: z.number().int().positive(),
+	partial: z.boolean(),
+	beats: z.array(ReturnRecapBeatSchema).max(5),
+	currentSituation: strictObject({
+		homeDay: z.number().int().positive(),
+		homeTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/u),
+		dayPeriod: z.enum(["morning", "afternoon", "evening", "night"]),
+		description: nonBlank.max(960),
+	}),
+}).superRefine((response, context) => {
+	if (response.afterSequence > response.throughSequence) {
+		context.addIssue({
+			code: "custom",
+			path: ["afterSequence"],
+			message: "Recap cursors cannot point beyond the frozen response boundary.",
+		});
+	}
+});
+
 export const CanonicalSceneCastMemberSchema = strictObject({
 	residentId: nonBlank,
 	displayName: nonBlank,
@@ -423,3 +473,5 @@ export type PublicResidentDirectoryEntry = z.infer<
 export type ResidentDirectoryResult = z.infer<
 	typeof ResidentDirectoryResultSchema
 >;
+export type ReturnRecapBeat = z.infer<typeof ReturnRecapBeatSchema>;
+export type ReturnRecapResponse = z.infer<typeof ReturnRecapResponseSchema>;

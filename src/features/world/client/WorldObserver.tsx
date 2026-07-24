@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ReturnRecapController } from "../../return-loop/client/ReturnRecapController.tsx";
 import { ConnectionBanner } from "../components/ConnectionBanner.tsx";
 import { HomeStatusStrip } from "../components/HomeStatusStrip.tsx";
 import { ObserverControlDock } from "../components/ObserverControlDock.tsx";
@@ -60,6 +61,7 @@ export function WorldObserver() {
 				mode={state.mode}
 				connection={state.connection}
 			/>
+			<ReturnRecapController snapshot={snapshot} onJumpLive={jumpToLive} />
 			<TransparencyNotice />
 			<p className="desktop-notice" role="note">
 				For the full home view and camera controls, visit on a wider screen.
