@@ -1,7 +1,21 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { validatePriorCheckpoint } from "../../scripts/run-phase-02-live.ts";
+import {
+	classifyLiveGenerationFailure,
+	validatePriorCheckpoint,
+} from "../../scripts/run-phase-02-live.ts";
+
+const SENSITIVE =
+	"private prompt, generated dialogue, response body, authorization header";
+
+function providerError(properties: Record<string, unknown>): Error {
+	return Object.assign(new Error(SENSITIVE), properties, {
+		responseBody: SENSITIVE,
+		requestBodyValues: { prompt: SENSITIVE },
+		responseHeaders: { authorization: SENSITIVE },
+	});
+}
 
 describe("live reference continuation", () => {
 	it("accepts only the preserved successful-admission fail-closed checkpoint", () => {
@@ -30,4 +44,31 @@ describe("live reference continuation", () => {
 			true,
 		);
 	});
+
+	it.each([
+		{
+			error: providerError({ name: "AI_APICallError", statusCode: 503 }),
+			expected: "provider-http-503",
+		},
+		{
+			error: providerError({ name: "TimeoutError" }),
+			expected: "provider-timeout",
+		},
+		{
+			error: providerError({ name: "AI_NoObjectGeneratedError" }),
+			expected: "schema-no-object",
+		},
+		{
+			error: providerError({ name: "UnexpectedProviderFailure" }),
+			expected: "generation-check-failed",
+		},
+	])(
+		"records only the stable $expected code for live generation failures",
+		({ error, expected }) => {
+			const code = classifyLiveGenerationFailure(error);
+
+			expect(code).toBe(expected);
+			expect(JSON.stringify(code)).not.toContain(SENSITIVE);
+		},
+	);
 });

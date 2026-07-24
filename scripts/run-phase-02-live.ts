@@ -8,6 +8,7 @@ import { OpenRouterResidentTurnProvider } from "../src/features/world/generation
 import { OpenRouterSemanticJudgeProvider } from "../src/features/world/generation/openrouter-semantic-judge-provider.ts";
 import { providerProfileFor } from "../src/features/world/generation/provider-registry.ts";
 import {
+	classifyAdmissionFailure,
 	createLiveAdmissionDependencies,
 	runAdmissionCanaries,
 } from "../src/features/world/generation/run-admission-canaries.ts";
@@ -324,6 +325,10 @@ function writeReferenceEvidence(
 	});
 }
 
+export function classifyLiveGenerationFailure(error: unknown): string {
+	return classifyAdmissionFailure(error);
+}
+
 async function main(): Promise<void> {
 	const { apiKey, configuration } = assertAuthorization();
 	const { ledger, reserve, settle } = createLedger(configuration);
@@ -429,11 +434,14 @@ async function main(): Promise<void> {
 									: { costUsd: response.provenance.usage.cost }),
 							});
 							return response;
-						} catch {
+						} catch (error) {
+							const code = classifyLiveGenerationFailure(error);
 							settle(entry, "failed", {
-								code: "reference-resident-generation-failed",
+								code,
 							});
-							throw new Error("Reference resident generation failed.");
+							throw new Error(
+								`Reference resident generation failed (${code}).`,
+							);
 						}
 					},
 				},
@@ -484,11 +492,14 @@ async function main(): Promise<void> {
 					},
 					provider: judgeProvider,
 				});
-			} catch {
+			} catch (error) {
+				const code = classifyLiveGenerationFailure(error);
 				settle(activeJudgeEntry, "failed", {
-					code: "reference-judge-generation-failed",
+					code,
 				});
-				throw new Error("Reference semantic judge generation failed.");
+				throw new Error(
+					`Reference semantic judge generation failed (${code}).`,
+				);
 			} finally {
 				activeJudgeEntry = undefined;
 			}
