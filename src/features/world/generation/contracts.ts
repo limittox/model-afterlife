@@ -25,6 +25,24 @@ export const AcceptedRelationshipEffectSchema = strictObject({
 	delta: z.union([z.literal(-1), z.literal(0), z.literal(1)]),
 });
 
+export const TurnProvenanceSchema = strictObject({
+	generationId: nonBlank,
+	requestedModelId: nonBlank,
+	canonicalModelId: nonBlank,
+	selectedModelId: nonBlank,
+	selectedUpstream: nonBlank,
+	strategy: z.literal("direct"),
+	routeAttempt: z.literal(1),
+	pipeline: z.tuple([]),
+	usage: strictObject({
+		inputTokens: z.number().int().nonnegative(),
+		outputTokens: z.number().int().nonnegative(),
+		cost: z.number().nonnegative().optional(),
+	}),
+	warningCodes: z.array(nonBlank).max(20),
+	filterStatus: z.enum(["clear", "filtered"]),
+});
+
 export const SceneBriefSchema = strictObject({
 	schemaVersion: z.literal(GENERATION_SCHEMA_VERSION),
 	briefId: nonBlank.default("legacy-tracer"),
@@ -51,7 +69,9 @@ export const ResidentTurnSchema = strictObject({
 	turnIndex: z.number().int().nonnegative(),
 	residentId: nonBlank,
 	requestedModelId: nonBlank,
-	text: nonBlank.max(240),
+	text: nonBlank.max(960),
+	approvedClaimIds: z.array(nonBlank).max(3).default([]),
+	provenance: TurnProvenanceSchema.optional(),
 	ending: z.boolean(),
 	effects: z.array(strictObject({
 		occurrenceKey: nonBlank,
@@ -121,6 +141,7 @@ export const PublishedSceneRevisionSchema = strictObject({
 
 export type SceneBrief = z.infer<typeof SceneBriefSchema>;
 export type ResidentTurn = z.infer<typeof ResidentTurnSchema>;
+export type TurnProvenance = z.infer<typeof TurnProvenanceSchema>;
 export type GenerationAttempt = z.infer<typeof GenerationAttemptSchema>;
 export type ValidationResult = z.infer<typeof ValidationResultSchema>;
 export type PublishedSceneRevision = z.infer<typeof PublishedSceneRevisionSchema>;

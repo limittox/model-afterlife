@@ -8,6 +8,7 @@ import { FakeResidentTurnProvider } from "../../src/features/world/generation/fa
 import { conductSceneAttempt } from "../../src/features/world/generation/conduct-scene.ts";
 import { SceneBriefSchema } from "../../src/features/world/generation/contracts.ts";
 import { validateTracerCandidate } from "../../src/features/world/generation/validate-tracer-candidate.ts";
+import { providerProfileFor } from "../../src/features/world/generation/provider-registry.ts";
 import { persistGenerationAttempt } from "../../src/features/world/server/persist-generation-attempt.ts";
 import { publishSceneRevision } from "../../src/features/world/server/publish-scene-revision.ts";
 import { readCanonicalHead } from "../../src/features/world/server/world-repository.ts";
@@ -40,7 +41,8 @@ describe("private-to-canonical scene tracer", () => {
 			brief,
 			attemptId: "tracer-attempt-1",
 			provider,
-			modelForResident: (residentId) => `${residentId}-model-v1`,
+			modelForResident: (residentId) =>
+				providerProfileFor(residentId).requestedModelId,
 		});
 		const validation = validateTracerCandidate({
 			brief,
@@ -49,7 +51,7 @@ describe("private-to-canonical scene tracer", () => {
 			revisionId: "tracer-revision-1",
 		});
 		expect(validation.result.accepted).toBe(true);
-		if (!validation.revision)
+		if (!validation.acceptedCandidate)
 			throw new Error("Expected accepted tracer revision.");
 		await persistGenerationAttempt({
 			worldId: CANONICAL_WORLD_ID,
@@ -60,11 +62,11 @@ describe("private-to-canonical scene tracer", () => {
 		});
 		const first = await publishSceneRevision(
 			CANONICAL_WORLD_ID,
-			validation.revision,
+			validation.acceptedCandidate,
 		);
 		const second = await publishSceneRevision(
 			CANONICAL_WORLD_ID,
-			validation.revision,
+			validation.acceptedCandidate,
 		);
 		expect(first.published).toBe(true);
 		expect(second).toEqual({
@@ -79,10 +81,10 @@ describe("private-to-canonical scene tracer", () => {
 		expect(
 			after.snapshot.scene?.turns.map((turn) => turn.exactModelId),
 		).toEqual([
-			"gpt-4o-model-v1",
-			"claude-sonnet-4.5-model-v1",
-			"gpt-4o-model-v1",
-			"claude-sonnet-4.5-model-v1",
+			"openai/gpt-4o",
+			"anthropic/claude-sonnet-4.5",
+			"openai/gpt-4o",
+			"anthropic/claude-sonnet-4.5",
 		]);
 		const publicKeys = JSON.stringify(after.snapshot);
 		for (const privateKey of [

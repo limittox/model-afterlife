@@ -3,6 +3,7 @@ import type { PromptMemory } from "./select-prompt-memories.ts";
 
 export type ProviderTurnResponse = {
 	text: string;
+	approvedClaimIds?: string[];
 	providerResponseId?: string;
 	observedModelId?: string;
 	identityEvidence?: "openrouter_verified" | "provider_response" | "requested_only";

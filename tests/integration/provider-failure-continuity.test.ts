@@ -12,6 +12,7 @@ import { runGenerationRequest } from "../../src/features/world/generation/run-ge
 import { createProvisionalWorld } from "../../src/features/world/fixtures/provisional-world.ts";
 import { cachedSceneFromPublishedRevision } from "../../src/features/world/server/read-cached-scene.ts";
 import { classifyProviderFailure } from "../../src/trigger/generate-scene.ts";
+import { acceptedCandidateFixture } from "../fixtures/accepted-candidate.ts";
 
 const request = {
 	sceneKey: "failed-scene",
@@ -65,6 +66,7 @@ const originalRevision = PublishedSceneRevisionSchema.parse({
 		effects: [],
 	})),
 });
+const acceptedCandidate = acceptedCandidateFixture(failedBrief, originalRevision);
 
 function cachedScene(): CompleteWorldScene {
 	const scene = cachedSceneFromPublishedRevision({
@@ -137,7 +139,7 @@ describe("provider failure continuity", () => {
 	it("records stale completion once and does not spend a second attempt", async () => {
 		const runAttempt = vi.fn(async () => ({
 			status: "accepted" as const,
-			revision: originalRevision,
+			candidate: acceptedCandidate,
 		}));
 		const resolveContinuity = vi.fn(async () => ({
 			mode: "quiet" as const,
@@ -173,7 +175,7 @@ describe("provider failure continuity", () => {
 			loadBrief: async () => failedBrief,
 			runAttempt: async () => ({
 				status: "accepted",
-				revision: originalRevision,
+				candidate: acceptedCandidate,
 			}),
 			publish: async () => ({
 				revisionId: originalRevision.revisionId,

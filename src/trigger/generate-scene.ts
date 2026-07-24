@@ -1,5 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import { task } from "@trigger.dev/sdk";
+import { ZodError } from "zod";
 import { createWorldDatabase } from "../db/client.ts";
 import {
 	generationAttempts,
@@ -18,7 +19,7 @@ import {
 	runGenerationRequest,
 	type GenerationRequestDependencies,
 } from "../features/world/generation/run-generation-request.ts";
-import { validateTracerCandidate } from "../features/world/generation/validate-tracer-candidate.ts";
+import { validateSceneCandidate } from "../features/world/generation/validate-scene-candidate.ts";
 import type { ResidentTurnProvider } from "../features/world/generation/resident-turn-provider.ts";
 import type { CommittedGenerationRequest } from "../features/world/server/advance-world-to.ts";
 import { persistGenerationAttempt } from "../features/world/server/persist-generation-attempt.ts";
@@ -47,6 +48,18 @@ type ProductionOverrides = {
 	publish?: GenerationRequestDependencies["publish"];
 	resolveContinuity?: GenerationRequestDependencies["resolveContinuity"];
 };
+
+function validationDisposition(code: string) {
+	if (code.startsWith("identity.")) return "identity_rejected" as const;
+	if (code.startsWith("claims.")) return "fact_rejected" as const;
+	if (
+		code.startsWith("instruction-boundary.") ||
+		code.startsWith("public-safety.")
+	) {
+		return "safety_rejected" as const;
+	}
+	return "schema_rejected" as const;
+}
 
 async function loadPersistedBrief(request: CommittedGenerationRequest) {
 	const { db, close } = createWorldDatabase();
@@ -111,6 +124,8 @@ async function recordPersistentContinuity(
 			.values({
 				validationId: `${latest.attemptId}:${input.terminalDisposition}`,
 				attemptId: latest.attemptId,
+				validatorId: "continuity",
+				validatorVersion: "phase-02-continuity-v1",
 				accepted: false,
 				code: input.terminalDisposition,
 				detail: `Attempt dispositions: ${input.attemptDispositions.join(", ")}.`,
@@ -170,7 +185,7 @@ export function createProductionGenerationDependencies(
 					modelForResident: (residentId) =>
 						providerProfileFor(residentId).requestedModelId,
 				});
-				const validation = validateTracerCandidate({
+				const validation = validateSceneCandidate({
 					brief,
 					attempt: conducted.attempt,
 					turns: conducted.turns,
@@ -178,27 +193,34 @@ export function createProductionGenerationDependencies(
 				});
 				conducted.attempt.disposition = validation.result.accepted
 					? "accepted"
-					: validation.result.code === "identity"
-						? "identity_rejected"
-						: "schema_rejected";
+					: validationDisposition(validation.result.code);
 				await persistAttempt({
 					worldId: CANONICAL_WORLD_ID,
 					brief,
 					attempt: conducted.attempt,
 					turns: conducted.turns,
 					result: validation.result,
+					validatorResults: validation.manifest.results,
 				});
-				if (!validation.revision) {
+				if (!validation.acceptedCandidate) {
 					return {
 						status: "rejected" as const,
-						disposition: conducted.attempt.disposition as
+					disposition: conducted.attempt.disposition as
 							| "schema_rejected"
-							| "identity_rejected",
+							| "identity_rejected"
+							| "fact_rejected"
+							| "safety_rejected",
 					};
 				}
-				return { status: "accepted" as const, revision: validation.revision };
+				return {
+					status: "accepted" as const,
+					candidate: validation.acceptedCandidate,
+				};
 			} catch (error) {
-				const disposition = classifyProviderFailure(error);
+				const disposition =
+					error instanceof ZodError
+						? ("schema_rejected" as const)
+						: classifyProviderFailure(error);
 				const attempt = GenerationAttemptSchema.parse({
 					attemptId,
 					sceneKey: brief.sceneKey,

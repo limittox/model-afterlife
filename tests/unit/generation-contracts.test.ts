@@ -121,7 +121,7 @@ describe("strict resident identity evidence", () => {
 
 			expect(validation.result).toMatchObject({
 				accepted: false,
-				code: "identity",
+				code: "identity.unverified",
 			});
 		}
 	});

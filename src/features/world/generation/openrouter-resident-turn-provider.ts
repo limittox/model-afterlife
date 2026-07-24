@@ -9,9 +9,19 @@ import type {
 	ResidentTurnProvider,
 } from "./resident-turn-provider.ts";
 
+const graphemeSegmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
+
 const ModelTurnOutputSchema = z
 	.object({
-		text: z.string().trim().min(1).max(240),
+		text: z
+			.string()
+			.trim()
+			.min(1)
+			.max(960)
+			.refine(
+				(text) => [...graphemeSegmenter.segment(text)].length <= 240,
+				"Turn text must contain at most 240 Unicode graphemes.",
+			),
 		approvedClaimIds: z.array(z.string().trim().min(1)).max(3),
 		proposedRelationshipEffects: z.array(z.string()).max(0),
 		endsScene: z.boolean(),
@@ -175,6 +185,7 @@ export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 		const cost = costFromProviderMetadata(result.providerMetadata);
 		return {
 			text: output.text,
+			approvedClaimIds: output.approvedClaimIds,
 			providerResponseId: evidence.generationId,
 			observedModelId: evidence.selectedModelId,
 			identityEvidence: evidence.evidenceKind,

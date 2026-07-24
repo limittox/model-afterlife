@@ -2,6 +2,10 @@ import { eq, sql } from "drizzle-orm";
 import { createWorldDatabase } from "../../../db/client.ts";
 import { publishedSceneRevisions, sceneBriefs, worldEvents, worldProjection, worlds } from "../../../db/schema.ts";
 import { SceneBriefSchema, type PublishedSceneRevision } from "../generation/contracts.ts";
+import {
+	acceptedRevision,
+	type AcceptedCandidate,
+} from "../generation/accepted-candidate.ts";
 import type {
 	CompleteWorldScene,
 	WorldEvent,
@@ -14,7 +18,8 @@ import {
 } from "../domain/relationships.ts";
 import { toPublicWorldSnapshot } from "./to-public-snapshot.ts";
 
-export async function publishSceneRevision(worldId: string, revision: PublishedSceneRevision): Promise<{ revisionId: string; published: boolean }> {
+export async function publishSceneRevision(worldId: string, candidate: AcceptedCandidate): Promise<{ revisionId: string; published: boolean }> {
+	const revision: PublishedSceneRevision = acceptedRevision(candidate);
 	const { db, close } = createWorldDatabase();
 	try {
 		return await db.transaction(async (transaction) => {

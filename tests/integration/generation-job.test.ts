@@ -3,6 +3,8 @@ import {
 	PublishedSceneRevisionSchema,
 	SceneBriefSchema,
 } from "../../src/features/world/generation/contracts.ts";
+import { acceptedCandidateFixture } from "../fixtures/accepted-candidate.ts";
+import { providerProfileFor } from "../../src/features/world/generation/provider-registry.ts";
 
 async function loadGenerationRunner() {
 	try {
@@ -64,13 +66,14 @@ const revision = PublishedSceneRevisionSchema.parse({
 		effects: [],
 	})),
 });
+const candidate = acceptedCandidateFixture(brief, revision);
 
 describe("durable generation request runner", () => {
 	it("publishes an accepted first attempt once", async () => {
 		const runnerModule = await loadGenerationRunner();
 
 		expect(runnerModule, "generation runner module must exist").toBeDefined();
-		const runAttempt = vi.fn(async () => ({ status: "accepted" as const, revision }));
+		const runAttempt = vi.fn(async () => ({ status: "accepted" as const, candidate }));
 		const publish = vi.fn(async () => ({ revisionId: revision.revisionId, published: true }));
 		const resolveContinuity = vi.fn(async () => ({ mode: "quiet" as const }));
 		const result = await runnerModule?.runGenerationRequest(request, {
@@ -146,7 +149,7 @@ describe("durable generation request runner", () => {
 		const runAttempt = vi
 			.fn()
 			.mockRejectedValueOnce(new Error("provider timed out"))
-			.mockResolvedValueOnce({ status: "accepted", revision });
+			.mockResolvedValueOnce({ status: "accepted", candidate });
 		const result = await runnerModule?.runGenerationRequest(request, {
 			loadBrief: async () => brief,
 			runAttempt,
@@ -182,7 +185,7 @@ describe("generation Trigger task", () => {
 		const taskModule = await loadGenerationTask();
 
 		expect(taskModule, "generation Trigger module must exist").toBeDefined();
-		const runAttempt = vi.fn(async () => ({ status: "accepted" as const, revision }));
+		const runAttempt = vi.fn(async () => ({ status: "accepted" as const, candidate }));
 		const publish = vi.fn(async () => ({ revisionId: revision.revisionId }));
 		const result = await taskModule?.runGenerateScene(request, {
 			loadBrief: async () => brief,
@@ -210,15 +213,35 @@ describe("generation Trigger task", () => {
 			provider: {
 				generateTurn: async (input: {
 					turnIndex: number;
+					residentId: string;
 					requestedModelId: string;
-				}) => ({
-					text: `Frozen verified turn ${input.turnIndex + 1}.`,
-					providerResponseId: `gen-frozen-${input.turnIndex}`,
-					observedModelId: input.requestedModelId,
-					identityEvidence: "openrouter_verified" as const,
-					finishReason: "stop",
-					usage: { inputTokens: 4, outputTokens: 3 },
-				}),
+				}) => {
+					const profile = providerProfileFor(input.residentId);
+					return {
+						text:
+							input.turnIndex === 0
+								? `A committed request reaches a bounded attempt; frozen turn ${input.turnIndex + 1}.`
+								: `Frozen verified turn ${input.turnIndex + 1}.`,
+						providerResponseId: `gen-frozen-${input.turnIndex}`,
+						observedModelId: input.requestedModelId,
+						identityEvidence: "openrouter_verified" as const,
+						finishReason: "stop",
+						usage: { inputTokens: 4, outputTokens: 3 },
+						provenance: {
+							generationId: `gen-frozen-${input.turnIndex}`,
+							requestedModelId: profile.requestedModelId,
+							canonicalModelId: profile.canonicalModelId,
+							selectedModelId: profile.canonicalModelId,
+							selectedUpstream: profile.selectedUpstreamName,
+							strategy: "direct" as const,
+							routeAttempt: 1 as const,
+							pipeline: [] as [],
+							usage: { inputTokens: 4, outputTokens: 3 },
+							warningCodes: [],
+							filterStatus: "clear" as const,
+						},
+					};
+				},
 			},
 			persistAttempt,
 			publish: async () => ({ revisionId: revision.revisionId }),

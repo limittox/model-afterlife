@@ -150,6 +150,8 @@ export const generationTurns = pgTable("generation_turns", {
 	residentId: text("resident_id").notNull(),
 	requestedModelId: text("requested_model_id").notNull(),
 	text: text("text").notNull(),
+	approvedClaimIds: jsonb("approved_claim_ids").$type<string[]>().notNull().default([]),
+	provenance: jsonb("provenance").$type<Record<string, unknown>>(),
 	ending: boolean("ending").notNull(),
 	effects: jsonb("effects").$type<Record<string, unknown>[]>().notNull(),
 	createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -158,6 +160,8 @@ export const generationTurns = pgTable("generation_turns", {
 export const sceneValidationResults = pgTable("scene_validation_results", {
 	validationId: text("validation_id").primaryKey(),
 	attemptId: text("attempt_id").notNull().references(() => generationAttempts.attemptId, { onDelete: "restrict" }),
+	validatorId: text("validator_id").notNull().default("legacy"),
+	validatorVersion: text("validator_version").notNull().default("legacy-v1"),
 	accepted: boolean("accepted").notNull(),
 	code: text("code").notNull(),
 	detail: text("detail").notNull(),

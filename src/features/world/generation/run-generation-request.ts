@@ -1,4 +1,5 @@
-import type { PublishedSceneRevision, SceneBrief } from "./contracts.ts";
+import type { SceneBrief } from "./contracts.ts";
+import type { AcceptedCandidate } from "./accepted-candidate.ts";
 import type { CommittedGenerationRequest } from "../server/advance-world-to.ts";
 
 export type GenerationAttemptDisposition =
@@ -14,7 +15,7 @@ export type GenerationAttemptDisposition =
 	| "provider_failed";
 
 export type GenerationAttemptResult =
-	| { status: "accepted"; revision: PublishedSceneRevision }
+	| { status: "accepted"; candidate: AcceptedCandidate }
 	| {
 			status: "rejected";
 			disposition: GenerationAttemptDisposition;
@@ -26,7 +27,7 @@ export type GenerationRequestDependencies = {
 		brief: SceneBrief;
 		attemptOrdinal: 1 | 2;
 	}) => Promise<GenerationAttemptResult>;
-	publish: (revision: PublishedSceneRevision) => Promise<{
+	publish: (candidate: AcceptedCandidate) => Promise<{
 		revisionId: string;
 		published?: boolean;
 	}>;
@@ -88,7 +89,7 @@ export async function runGenerationRequest(
 
 		if (result.status === "accepted") {
 			try {
-				const publication = await dependencies.publish(result.revision);
+				const publication = await dependencies.publish(result.candidate);
 				if (publication.published === false) {
 					return {
 						status: "duplicate" as const,
