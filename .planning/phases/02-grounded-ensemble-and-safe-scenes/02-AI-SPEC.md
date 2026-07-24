@@ -276,6 +276,7 @@ evals/
 - Start with a resident-specific temperature near `0.6` only when that exact model supports it. Preserve parameter profiles per model; do not force unsupported controls onto reasoning or legacy endpoints.
 - Set `maxOutputTokens` from the immutable resident route profile. Non-reasoning residents use 180 output tokens. DeepSeek V3.2 is pinned to non-thinking mode with `reasoning.enabled: false`, effort `none`, and reasoning excluded from public text and telemetry. Gemini 2.5 Pro alone uses a bounded maximum of 1,024 total reasoning/output tokens with an explicit 128-token thinking budget. Every profile still requests one or two short sentences and the schema and validator enforce the same 240-character public display limit.
 - Set AI SDK `maxRetries: 0`, a 30-second per-turn timeout, at most ten turns, at most two complete private scene attempts, and a separate overall Trigger.dev task timeout.
+- Pace credentialed admission generation starts at least 21 seconds apart. This protects the clean matrix from observed request-rate limits without adding retries, fallbacks, or autonomous backoff to production dialogue generation.
 - Do not use random seeds as a correctness mechanism. Store all supported sampling settings, SDK versions, prompt versions, inputs, and returned metadata for audit.
 
 **Core Pattern:**

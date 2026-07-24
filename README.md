@@ -77,7 +77,7 @@ The offline conformance suite is safe to run without provider credentials:
 corepack pnpm test -- tests/unit/resident-prompt.test.ts tests/unit/provider-identity.test.ts tests/integration/resident-admission.test.ts
 ```
 
-The live admission gate makes exactly five bounded generation calls for each of the six launch residents. It incurs OpenRouter usage charges and fails closed on any model, upstream, quantization, metadata, schema, privacy, or usage mismatch. Put the key only in the server-side `.env` file; never paste it into command output or browser code.
+The live admission gate makes exactly five bounded generation calls for each of the six launch residents. Generation starts are paced at least 21 seconds apart, so a successful run takes at least ten minutes. It incurs OpenRouter usage charges and fails closed on any model, upstream, quantization, metadata, schema, privacy, usage, or rate-limit mismatch. Put the key only in the server-side `.env` file; never paste it into command output or browser code.
 
 ```powershell
 corepack pnpm check:resident-admission -- --live --samples=5

@@ -133,6 +133,44 @@ describe("resident admission canaries", () => {
 		}
 	});
 
+	it("paces explicitly configured generation starts without delaying the first", async () => {
+		const admission = await loadAdmissionRunner();
+		expect(admission, "admission runner module must exist").toBeDefined();
+		if (!admission) return;
+
+		const events: string[] = [];
+		const wait = vi.fn(async (milliseconds: number) => {
+			events.push(`wait:${milliseconds}`);
+		});
+		const generateSample = vi.fn(async (profile, ordinal) => {
+			events.push(`generate:${profile.residentId}:${ordinal}`);
+			return sample(profile, ordinal);
+		});
+
+		await admission.runAdmissionCanaries(
+			{
+				samples: 5,
+				checkedAt: "2026-07-23T02:00:00.000Z",
+				generationIntervalMs: 21_000,
+			},
+			{
+				checkCatalog: async (profile) => catalogEvidence(profile),
+				generateSample,
+				wait,
+			},
+		);
+
+		expect(wait).toHaveBeenCalledTimes(29);
+		expect(wait).toHaveBeenCalledWith(21_000);
+		expect(events.slice(0, 5)).toEqual([
+			"generate:gpt-4o:1",
+			"wait:21000",
+			"generate:claude-sonnet-4.5:1",
+			"wait:21000",
+			"generate:gemini-2.5-pro:1",
+		]);
+	});
+
 	it("pauses the exact resident and exposes only a sanitized route reason on failure", async () => {
 		const admission = await loadAdmissionRunner();
 		expect(admission, "admission runner module must exist").toBeDefined();
@@ -180,6 +218,7 @@ describe("resident admission canaries", () => {
 		);
 		expect(script).toContain("--live");
 		expect(script).toContain("--samples=5");
+		expect(script).toContain("generationIntervalMs: 21_000");
 		expect(script).toContain("callsConsumed");
 		expect(script).not.toMatch(/console\.(log|error)\([^)]*OPENROUTER_API_KEY/u);
 	});

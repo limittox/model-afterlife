@@ -24,6 +24,7 @@ export type AdmissionDependencies = {
 		ordinal: number,
 		catalogEvidence: AdmissionCatalogEvidence,
 	) => Promise<RawAdmissionSample>;
+	wait?: (milliseconds: number) => Promise<void>;
 };
 
 export type ResidentAdmissionSummary = {
@@ -99,12 +100,26 @@ export function classifyAdmissionFailure(error: unknown): string {
 }
 
 export async function runAdmissionCanaries(
-	options: { samples: number; checkedAt?: string },
+	options: {
+		samples: number;
+		checkedAt?: string;
+		generationIntervalMs?: number;
+	},
 	dependencies: AdmissionDependencies,
 ): Promise<AdmissionSummary> {
 	if (options.samples !== 5) {
 		throw new RangeError("Resident admission requires exactly five samples per resident.");
 	}
+	const generationIntervalMs = options.generationIntervalMs ?? 0;
+	if (!Number.isInteger(generationIntervalMs) || generationIntervalMs < 0) {
+		throw new RangeError("Resident admission generation pacing must be whole milliseconds.");
+	}
+	const wait =
+		dependencies.wait ??
+		((milliseconds: number) =>
+			new Promise<void>((resolve) => {
+				setTimeout(resolve, milliseconds);
+			}));
 
 	let callsConsumed = 0;
 	const preparedResidents: {
@@ -132,6 +147,9 @@ export async function runAdmissionCanaries(
 		for (const prepared of preparedResidents) {
 			const { profile, catalogEvidence, samples } = prepared;
 			try {
+				if (callsConsumed > 0 && generationIntervalMs > 0) {
+					await wait(generationIntervalMs);
+				}
 				callsConsumed += 1;
 				const sample = await dependencies.generateSample(
 					profile,

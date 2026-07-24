@@ -18,7 +18,7 @@ async function main(): Promise<void> {
 	if (!apiKey) throw new Error("Live resident admission requires the server API key.");
 
 	const result = await runAdmissionCanaries(
-		{ samples: 5 },
+		{ samples: 5, generationIntervalMs: 21_000 },
 		createLiveAdmissionDependencies({ apiKey }),
 	);
 	await mkdir("evals/results", { recursive: true });
