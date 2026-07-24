@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 03
 current_phase_name: return-loop-and-inclusive-presentation
 status: executing
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-07-24T16:53:29.074Z"
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-07-24T17:21:17.735Z"
 last_activity: 2026-07-25
 last_activity_desc: Phase 03 execution started
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 15
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # Project State
@@ -28,17 +28,17 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 03 (return-loop-and-inclusive-presentation) — EXECUTING
-Plan: 2 of 7
-Status: In progress
+Plan: 3 of 7
+Status: Ready to execute
 Last activity: 2026-07-25 — Phase 03 execution started
 
-Progress: [████████████░░░░░░░░] 9/15 milestone plans complete (60%)
+Progress: [█████████████░░░░░░░] 10/15 milestone plans complete (67%)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 8
+- Total plans completed: 10
 - Average duration: not recalculated; Plan 02-02 spanned interactive provider checkpoints
 - Total execution time: 2.9 recorded hours plus multi-session Plan 02-02 work
 
@@ -68,6 +68,7 @@ Progress: [████████████░░░░░░░░] 9/15 mi
 | Phase 02 P03 | 25 min | 3 tasks | 33 files |
 | Phase 02 P04 | multi-session | 4 tasks | multi-commit |
 | Phase 03 P01 | 23min | 1 tasks | 15 files |
+| Phase 03 P02 | 18min | 2 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -98,6 +99,9 @@ Recent decisions affecting current work:
 - [Phase 03]: D-16 remains one-way: immutable published revision IDs are the only durable public scene identity.
 - [Phase 03]: Every approved stable claim ID resolves to exactly one approved immutable version under historical-claims-v1, or the publication transaction fails.
 - [Phase 03]: Canonical public reads return complete, known-unavailable, or not-found and never substitute current claims or expose partial scenes.
+- [Phase 03]: Backfill execution is restricted to the configured local model_afterlife_app or model_afterlife_test database and fails closed for every other target.
+- [Phase 03]: The archive uses scene_published sequence plus immutable revisionId ordering, and cached presentations normalize to originalRevisionId without creating another public identity.
+- [Phase 03]: Incomplete canonical rows are omitted and produce a partial archive notice rather than fragmentary public content.
 
 ### Pending Todos
 
@@ -153,6 +157,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-24T16:53:19.355Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-07-24T17:21:17.722Z
+Stopped at: Completed 03-02-PLAN.md
 Resume file: None
