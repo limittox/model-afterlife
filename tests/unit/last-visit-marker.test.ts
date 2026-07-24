@@ -57,6 +57,14 @@ describe("anonymous last-visit marker", () => {
 		const observed = { worldId: WORLD_ID, throughSequence: 9 };
 		const baseline = baselineMarker(observed);
 		expect(baseline).toEqual({ version: 1, ...observed });
+		const fullObservedSnapshot = {
+			...observed,
+			schemaVersion: 1,
+			logicalTick: 7,
+		};
+		expect(
+			baselineMarker(fullObservedSnapshot),
+		).toEqual({ version: 1, ...observed });
 		expect(
 			markerDisposition(
 				{ version: 1, worldId: WORLD_ID, throughSequence: 8 },

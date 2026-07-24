@@ -12,6 +12,11 @@ import { activeSceneState } from "../../src/features/world/fixtures/ui-states.ts
 function canonicalScene(
 	revisionId = "recap-scene",
 	publicationSequence = 82,
+	outcome: CanonicalScene["outcome"] = {
+		summary: "The timer works again.",
+		sharedExperience: "They now share a memory of the repaired timer.",
+		relationshipChanges: [],
+	},
 ): CanonicalScene {
 	return {
 		revisionId,
@@ -55,11 +60,7 @@ function canonicalScene(
 			text: `Canonical turn ${turnIndex + 1}`,
 			claimVersionIds: [],
 		})),
-		outcome: {
-			summary: "The timer works again.",
-			sharedExperience: "They now share a memory of the repaired timer.",
-			relationshipChanges: [],
-		},
+		outcome,
 		historicalContext: [],
 		disclosures: {
 			stagedFiction: "Staged fiction.",
@@ -125,5 +126,203 @@ describe("deterministic return recap", () => {
 		expect(JSON.stringify(recap)).not.toMatch(
 			/prompt|providerResponse|usage|cost|hiddenReasoning|calibration|delta/iu,
 		);
+	});
+
+	it("ranks cause-backed relationship change, shared experience, then publication with stable ties", async () => {
+		const ordinary = canonicalScene("ordinary", 84, {
+			summary: "An ordinary complete publication.",
+			sharedExperience: null,
+			relationshipChanges: [],
+		});
+		const shared = canonicalScene("shared", 83, {
+			summary: "A shared publication.",
+			sharedExperience: "An accepted canonical shared experience.",
+			relationshipChanges: [],
+		});
+		const relationshipOld = canonicalScene("relationship-a", 81, {
+			summary: "An older relationship publication.",
+			sharedExperience: null,
+			relationshipChanges: [
+				{
+					residentAId: "gpt-4o",
+					residentAName: "GPT-4o",
+					residentAProfilePath: "/residents/gpt-4o",
+					residentBId: "claude-sonnet-4.5",
+					residentBName: "Claude Sonnet 4.5",
+					residentBProfilePath: "/residents/claude-sonnet-4.5",
+					dimension: "friendship",
+					description: "Their friendship becomes a little warmer.",
+				},
+			],
+		});
+		const relationshipNew = canonicalScene("relationship-z", 82, {
+			summary: "A newer relationship publication.",
+			sharedExperience: "A shared experience that must not outrank its cause.",
+			relationshipChanges: [
+				{
+					residentAId: "gpt-4o",
+					residentAName: "GPT-4o",
+					residentAProfilePath: "/residents/gpt-4o",
+					residentBId: "claude-sonnet-4.5",
+					residentBName: "Claude Sonnet 4.5",
+					residentBProfilePath: "/residents/claude-sonnet-4.5",
+					dimension: "rivalry",
+					description: "Their rivalry becomes a little sharper.",
+				},
+			],
+		});
+		const scenes = new Map(
+			[ordinary, shared, relationshipOld, relationshipNew].map((scene) => [
+				scene.revisionId,
+				scene,
+			]),
+		);
+		const candidates = [
+			ordinary,
+			relationshipOld,
+			shared,
+			relationshipNew,
+		].map((scene) => ({
+			sequence: scene.publicationSequence,
+			payload: {
+				revisionId: scene.revisionId,
+				popularity: scene.revisionId === "ordinary" ? 1_000_000 : 0,
+				viewCount: scene.revisionId === "ordinary" ? 1_000_000 : 0,
+				absenceDuration: scene.revisionId === "ordinary" ? 999 : 0,
+			},
+		}));
+		const readScene = async (revisionId: string): Promise<CanonicalSceneReadResult> => {
+			const found = scenes.get(revisionId);
+			return found ? { kind: "complete", scene: found } : { kind: "not-found" };
+		};
+
+		const forward = await assembleReturnRecap(
+			head(),
+			80,
+			candidates,
+			readScene,
+		);
+		const permuted = await assembleReturnRecap(
+			head(),
+			80,
+			[...candidates].reverse(),
+			readScene,
+		);
+		expect(permuted).toEqual(forward);
+		expect(forward.beats.map((beat) => beat.revisionId)).toEqual([
+			"relationship-z",
+			"relationship-a",
+			"shared",
+			"ordinary",
+		]);
+		expect(JSON.stringify(forward)).not.toMatch(
+			/popularity|viewCount|absenceDuration|streak|currency|reward|shareCount/iu,
+		);
+	});
+
+	it("caps overflow at five and uses revision ID as the final stable tie-break", async () => {
+		const scenes = new Map(
+			Array.from({ length: 7 }, (_, index) => {
+				const revisionId = `ordinary-${String.fromCharCode(97 + index)}`;
+				const scene = canonicalScene(revisionId, 82, {
+					summary: `Ordinary result ${index}`,
+					sharedExperience: null,
+					relationshipChanges: [],
+				});
+				return [revisionId, scene];
+			}),
+		);
+		const candidates = [...scenes.values()].map((scene) => ({
+			sequence: scene.publicationSequence,
+			payload: { revisionId: scene.revisionId },
+		}));
+		const result = await assembleReturnRecap(
+			head(),
+			80,
+			candidates,
+			async (revisionId) => ({
+				kind: "complete",
+				scene: scenes.get(revisionId) as CanonicalScene,
+			}),
+		);
+		expect(result.beats).toHaveLength(5);
+		expect(result.beats.map((beat) => beat.revisionId)).toEqual([
+			"ordinary-g",
+			"ordinary-f",
+			"ordinary-e",
+			"ordinary-d",
+			"ordinary-c",
+		]);
+	});
+
+	it("collapses duplicate rows and effect descriptions without merging distinct cause revisions", async () => {
+		const relationship = {
+			residentAId: "gpt-4o",
+			residentAName: "GPT-4o",
+			residentAProfilePath: "/residents/gpt-4o",
+			residentBId: "claude-sonnet-4.5",
+			residentBName: "Claude Sonnet 4.5",
+			residentBProfilePath: "/residents/claude-sonnet-4.5",
+			dimension: "friendship" as const,
+			description: "Their friendship becomes a little warmer.",
+		};
+		const first = canonicalScene("cause-a", 82, {
+			summary: "First cause.",
+			sharedExperience: null,
+			relationshipChanges: [relationship, relationship],
+		});
+		const second = canonicalScene("cause-b", 83, {
+			summary: "Second cause.",
+			sharedExperience: null,
+			relationshipChanges: [relationship],
+		});
+		const scenes = new Map([
+			[first.revisionId, first],
+			[second.revisionId, second],
+		]);
+		const result = await assembleReturnRecap(
+			head(),
+			80,
+			[
+				{ sequence: 82, payload: { revisionId: "cause-a" } },
+				{ sequence: 82, payload: { revisionId: "cause-a" } },
+				{ sequence: 83, payload: { revisionId: "cause-b" } },
+			],
+			async (revisionId) => ({
+				kind: "complete",
+				scene: scenes.get(revisionId) as CanonicalScene,
+			}),
+		);
+		expect(result.beats.map((beat) => beat.revisionId)).toEqual([
+			"cause-b",
+			"cause-a",
+		]);
+		expect(result.beats[1]?.relationshipNote).toBe(
+			"Their friendship becomes a little warmer.",
+		);
+		expect(result.beats[1]?.residents.map((resident) => resident.residentId)).toEqual([
+			"gpt-4o",
+			"claude-sonnet-4.5",
+		]);
+	});
+
+	it("suppresses empty windows and marks incomplete canonical candidates partial", async () => {
+		const empty = await assembleReturnRecap(
+			head(),
+			84,
+			[],
+			async () => ({ kind: "not-found" }),
+		);
+		expect(empty.beats).toEqual([]);
+		expect(empty.partial).toBe(false);
+
+		const incomplete = await assembleReturnRecap(
+			head(),
+			80,
+			[{ sequence: 82, payload: { revisionId: "deleted" } }],
+			async () => ({ kind: "not-found" }),
+		);
+		expect(incomplete.beats).toEqual([]);
+		expect(incomplete.partial).toBe(true);
 	});
 });

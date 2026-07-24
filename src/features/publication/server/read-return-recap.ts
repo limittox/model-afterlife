@@ -75,9 +75,13 @@ function beatFor(scene: CanonicalScene): ReturnRecapBeat | null {
 	const significance = significanceFor(scene);
 	const relationshipNote =
 		scene.outcome.relationshipChanges.length > 0
-			? scene.outcome.relationshipChanges
-					.map((change) => change.description)
-					.join(" ")
+			? [
+					...new Set(
+						scene.outcome.relationshipChanges.map(
+							(change) => change.description,
+						),
+					),
+				].join(" ")
 			: null;
 	const development =
 		relationshipNote ??

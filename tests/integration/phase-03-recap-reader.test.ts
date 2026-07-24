@@ -2,9 +2,13 @@ import { describe, expect, it } from "vitest";
 import type { CanonicalScene } from "../../src/features/publication/contracts/public-publication.ts";
 import {
 	assembleReturnRecap,
+	readReturnRecap,
 	ReturnRecapMarkerError,
 	type ReturnRecapHead,
 } from "../../src/features/publication/server/read-return-recap.ts";
+import { readCurrentSnapshot } from "../../src/features/world/server/read-current-snapshot.ts";
+import { CANONICAL_WORLD_ID } from "../../src/features/world/server/seed-data.ts";
+import { GET as recapRoute } from "../../src/app/api/recap/route.ts";
 import { quietState } from "../../src/features/world/fixtures/ui-states.ts";
 
 function head(): ReturnRecapHead {
@@ -101,5 +105,49 @@ describe("Phase 3 recap reader boundary", () => {
 		await expect(
 			assembleReturnRecap(head(), 85, [], async () => ({ kind: "not-found" })),
 		).rejects.toEqual(new ReturnRecapMarkerError("future-sequence"));
+	});
+
+	it("reads an empty current window from the canonical local projection", async () => {
+		const snapshot = await readCurrentSnapshot();
+		const result = await readReturnRecap({
+			worldId: CANONICAL_WORLD_ID,
+			afterSequence: snapshot.throughSequence,
+		});
+		expect(result).toMatchObject({
+			worldId: snapshot.worldId,
+			afterSequence: snapshot.throughSequence,
+			throughSequence: snapshot.throughSequence,
+			beats: [],
+			partial: false,
+		});
+		expect(result.currentSituation.homeTime).toBe(snapshot.homeTime);
+		await expect(
+			readReturnRecap({
+				worldId: CANONICAL_WORLD_ID,
+				afterSequence: snapshot.throughSequence + 1,
+			}),
+		).rejects.toEqual(new ReturnRecapMarkerError("future-sequence"));
+	});
+
+	it("rejects malformed API cursors before any canonical read", async () => {
+		for (const url of [
+			"http://localhost/api/recap",
+			`http://localhost/api/recap?worldId=${CANONICAL_WORLD_ID}&after=0`,
+			`http://localhost/api/recap?worldId=${CANONICAL_WORLD_ID}&after=-1`,
+			`http://localhost/api/recap?worldId=${CANONICAL_WORLD_ID}&after=1.5`,
+			"http://localhost/api/recap?worldId=not-a-world&after=1",
+		]) {
+			const response = await recapRoute(new Request(url));
+			expect(response.status).toBe(400);
+		}
+		const otherWorld = await recapRoute(
+			new Request(
+				"http://localhost/api/recap?worldId=00000000-0000-4000-8000-000000000002&after=1",
+			),
+		);
+		expect(otherWorld.status).toBe(409);
+		expect(await otherWorld.json()).toEqual({
+			error: "The local recap marker does not match the current home.",
+		});
 	});
 });
