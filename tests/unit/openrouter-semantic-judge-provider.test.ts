@@ -29,6 +29,7 @@ describe("strict OpenRouter semantic judge provider", () => {
 		const model = Symbol("semantic-judge-model");
 		const route = vi.fn(() => model);
 		const createRouter = vi.fn(() => route);
+		const onUsage = vi.fn();
 		const generateText = vi.fn(async () => ({
 			output: wireResult,
 			response: {
@@ -60,11 +61,14 @@ describe("strict OpenRouter semantic judge provider", () => {
 					},
 				},
 			},
+			providerMetadata: { openrouter: { usage: { cost: 0.00042 } } },
+			usage: { inputTokens: 40, outputTokens: 20 },
 		}));
 		const provider = new OpenRouterSemanticJudgeProvider({
 			apiKey: "test-key",
 			createRouter,
 			generateText,
+			onUsage,
 		});
 
 		const result = await provider.score({
@@ -107,6 +111,12 @@ describe("strict OpenRouter semantic judge provider", () => {
 			promptVersion: SEMANTIC_JUDGE_PROMPT_VERSION,
 		});
 		expect(JSON.stringify(result)).not.toContain("dialogue");
+		expect(onUsage).toHaveBeenCalledWith({
+			generationId: "gen-semantic-1",
+			inputTokens: 40,
+			outputTokens: 20,
+			cost: 0.00042,
+		});
 	});
 
 	it("fails closed when OpenRouter route evidence drifts", async () => {

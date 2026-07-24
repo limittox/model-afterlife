@@ -66,5 +66,5 @@ run(["typecheck"]);
 run(["build"]);
 
 if (live) {
-	run(["eval:phase-02:frozen", "--", "--live"]);
+	run(["eval:phase-02:live"]);
 }

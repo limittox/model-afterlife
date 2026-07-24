@@ -122,6 +122,16 @@ corepack pnpm verify:phase-02 -- --offline
 
 Live Phase 2 evaluation is a separate paid checkpoint. The human-approved artifact is now present, but a new explicit bounded authorization and call cap are still required. The current cumulative OpenRouter accounting is `71/71`; no additional live call is authorized. The live path therefore refuses to run rather than silently reusing credentials or increasing spend.
 
+The final live proof is one conditional 45-generation checkpoint: 30 paced admission samples, followed only on success by three four-turn reference scenes and three reject-only judge calls. Its exact cumulative ceiling is `116`. After explicit authorization, run:
+
+```powershell
+$env:MODEL_AFTERLIFE_LIVE_EVAL_AUTHORIZATION = "authorized"
+$env:MODEL_AFTERLIFE_LIVE_EVAL_CALL_CAP = "116"
+corepack pnpm eval:phase-02:live
+```
+
+The command writes sanitized call accounting after every generation and refuses to start when an earlier live ledger has not been reconciled.
+
 ## Full verification
 
 The Playwright project starts Docker services, applies reviewed migrations, seeds only when no canonical projection exists, and starts Next.js. It includes a real two-browser database convergence case plus controlled recovery and UI-state cases:

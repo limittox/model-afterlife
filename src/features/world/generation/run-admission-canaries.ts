@@ -138,6 +138,13 @@ export async function runAdmissionCanaries(
 		samples: number;
 		checkedAt?: string;
 		generationIntervalMs?: number;
+		onGenerationEvent?: (event: {
+			residentId: string;
+			ordinal: number;
+			callsConsumed: number;
+			status: "reserved" | "passed" | "failed";
+			code?: string;
+		}) => void | Promise<void>;
 	},
 	dependencies: AdmissionDependencies,
 ): Promise<AdmissionSummary> {
@@ -185,6 +192,12 @@ export async function runAdmissionCanaries(
 					await wait(generationIntervalMs);
 				}
 				callsConsumed += 1;
+				await options.onGenerationEvent?.({
+					residentId: profile.residentId,
+					ordinal,
+					callsConsumed,
+					status: "reserved",
+				});
 				const sample = await dependencies.generateSample(
 					profile,
 					ordinal,
@@ -193,11 +206,25 @@ export async function runAdmissionCanaries(
 				samples.push(
 					validateAdmissionSample({ profile, catalogEvidence, sample }),
 				);
+				await options.onGenerationEvent?.({
+					residentId: profile.residentId,
+					ordinal,
+					callsConsumed,
+					status: "passed",
+				});
 			} catch (error) {
+				const code = classifyAdmissionFailure(error);
+				await options.onGenerationEvent?.({
+					residentId: profile.residentId,
+					ordinal,
+					callsConsumed,
+					status: "failed",
+					code,
+				});
 				throw new ResidentAdmissionError({
 					residentId: profile.residentId,
 					approvedUpstream: profile.approvedUpstream,
-					code: classifyAdmissionFailure(error),
+					code,
 					callsConsumed,
 				});
 			}

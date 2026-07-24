@@ -22,6 +22,7 @@
 		"db:seed": "node --env-file-if-exists=.env --experimental-strip-types scripts/seed-world.ts",
 		"check:resident-admission": "node --env-file-if-exists=.env --experimental-strip-types scripts/check-resident-admission.ts",
 		"eval:phase-02:frozen": "node --experimental-strip-types scripts/run-phase-02-evals.ts",
+		"eval:phase-02:live": "node --env-file-if-exists=.env --experimental-strip-types scripts/run-phase-02-live.ts --live --samples=5 --reference-subset=3",
 		"privacy:phase-02": "node --experimental-strip-types scripts/scan-phase-02-privacy.ts",
 		"verify:phase-02": "node --experimental-strip-types scripts/verify-phase-02.ts",
 		"rebuild-world": "node --env-file-if-exists=.env --experimental-strip-types scripts/rebuild-world.ts",

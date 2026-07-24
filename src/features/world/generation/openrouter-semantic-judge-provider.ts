@@ -72,6 +72,8 @@ type RouterFactory = (
 type GenerateResult = {
 	output: unknown;
 	response: { id?: string; modelId: string; body?: unknown };
+	providerMetadata?: unknown;
+	usage?: { inputTokens?: number; outputTokens?: number };
 };
 
 type Generate = (options: Record<string, unknown>) => Promise<GenerateResult>;
@@ -79,11 +81,23 @@ type Generate = (options: Record<string, unknown>) => Promise<GenerateResult>;
 export class OpenRouterSemanticJudgeProvider implements SemanticJudgeProvider {
 	private readonly router: ReturnType<RouterFactory>;
 	private readonly generate: Generate;
+	private readonly onUsage?: (usage: {
+		generationId: string;
+		inputTokens: number;
+		outputTokens: number;
+		cost?: number;
+	}) => void;
 
 	constructor(options?: {
 		apiKey?: string;
 		createRouter?: RouterFactory;
 		generateText?: Generate;
+		onUsage?: (usage: {
+			generationId: string;
+			inputTokens: number;
+			outputTokens: number;
+			cost?: number;
+		}) => void;
 	}) {
 		const apiKey = options?.apiKey ?? process.env.OPENROUTER_API_KEY;
 		if (!apiKey) {
@@ -96,6 +110,7 @@ export class OpenRouterSemanticJudgeProvider implements SemanticJudgeProvider {
 			headers: { "X-OpenRouter-Metadata": "enabled" },
 		});
 		this.generate = options?.generateText ?? (generateText as unknown as Generate);
+		this.onUsage = options?.onUsage;
 	}
 
 	async score(
@@ -143,11 +158,32 @@ export class OpenRouterSemanticJudgeProvider implements SemanticJudgeProvider {
 		const responseBody = result.response.body as
 			| { openrouter_metadata?: unknown }
 			| undefined;
-		validateOpenRouterMetadata({
+		const evidence = validateOpenRouterMetadata({
 			profile: SEMANTIC_JUDGE_PROVIDER_PROFILE,
 			generationId: result.response.id,
 			responseModelId: result.response.modelId,
 			metadata: responseBody?.openrouter_metadata,
+		});
+		const openrouter =
+			result.providerMetadata &&
+			typeof result.providerMetadata === "object" &&
+			"openrouter" in result.providerMetadata
+				? (result.providerMetadata.openrouter as Record<string, unknown>)
+				: undefined;
+		const providerUsage =
+			openrouter?.usage && typeof openrouter.usage === "object"
+				? (openrouter.usage as Record<string, unknown>)
+				: undefined;
+		const cost =
+			typeof providerUsage?.cost === "number" &&
+			Number.isFinite(providerUsage.cost)
+				? providerUsage.cost
+				: undefined;
+		this.onUsage?.({
+			generationId: evidence.generationId,
+			inputTokens: result.usage?.inputTokens ?? 0,
+			outputTokens: result.usage?.outputTokens ?? 0,
+			...(cost === undefined ? {} : { cost }),
 		});
 		const wireResult = SemanticJudgeWireResultSchema.parse(result.output);
 		return SemanticJudgeResultSchema.parse({
