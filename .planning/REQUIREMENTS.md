@@ -159,10 +159,10 @@
 | WRLD-06 | Phase 2 | Complete |
 | WRLD-07 | Phase 2 | Complete |
 | WRLD-08 | Phase 1 | Complete |
-| RSID-01 | Phase 2 | Pending |
-| RSID-02 | Phase 2 | Pending |
-| RSID-03 | Phase 2 | Pending |
-| RSID-04 | Phase 2 | Pending |
+| RSID-01 | Phase 2 | Complete |
+| RSID-02 | Phase 2 | Complete |
+| RSID-03 | Phase 2 | Complete |
+| RSID-04 | Phase 2 | Complete |
 | RSID-05 | Phase 3 | Pending |
 | RSID-06 | Phase 3 | Pending |
 | RSID-07 | Phase 4 | Pending |
@@ -177,7 +177,7 @@
 | SCEN-03 | Phase 2 | Complete |
 | SCEN-04 | Phase 2 | Complete |
 | SCEN-05 | Phase 2 | Pending |
-| SCEN-06 | Phase 2 | Pending |
+| SCEN-06 | Phase 2 | Complete |
 | SCEN-07 | Phase 2 | Complete |
 | SCEN-08 | Phase 2 | Complete |
 | SCEN-09 | Phase 2 | Complete |
@@ -198,7 +198,7 @@
 | RTRN-06 | Phase 3 | Pending |
 | TRNS-01 | Phase 2 | Complete |
 | TRNS-02 | Phase 2 | Complete |
-| TRNS-03 | Phase 2 | Pending |
+| TRNS-03 | Phase 2 | Complete |
 | TRNS-04 | Phase 3 | Pending |
 | TRNS-05 | Phase 4 | Pending |
 | TRNS-06 | Phase 3 | Pending |

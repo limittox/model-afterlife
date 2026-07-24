@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 live admission passed; Task 4 remains; 71/71 consumed"
-last_updated: "2026-07-24T03:43:24.049Z"
+stopped_at: "Completed 02-02-PLAN.md; ready for 02-03; 71/71 consumed"
+last_updated: "2026-07-24T04:10:00.000Z"
 last_activity: 2026-07-24
-last_activity_desc: "Qwen3 passed its exact DeepInfra FP8 canary and all six residents passed the paced 30-sample admission matrix; cumulative generation accounting is 71/71 and no further provider call is authorized"
+last_activity_desc: "Completed Plan 02-02: all six exact residents are live-admitted, historically grounded, publicly named by role and routine, and rendered with distinct provider-neutral pixel variants"
 progress:
   total_phases: 2
   completed_phases: 1
   total_plans: 8
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -28,26 +28,26 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
-Plan: 2 of 4
-Status: Task 3 live admission complete; Task 4 public six-resident presentation remains
-Last activity: 2026-07-24 — Qwen3 passed its exact DeepInfra FP8 canary, then all six exact resident profiles passed five paced samples each with direct first-attempt routes, empty pipelines, valid schemas, and verified OpenRouter identity; accounting is 71/71
+Plan: 3 of 4
+Status: Plan 02-02 complete; ready to execute relationships and memory
+Last activity: 2026-07-24 — all six exact resident profiles passed strict admission and now appear through registry-owned public names, roles, routine cues, and six distinct provider-neutral pixel silhouettes; accounting is 71/71
 
-Progress: [█████████████░░░░░░░] 5/8 plans (63%)
+Progress: [███████████████░░░░░] 6/8 plans (75%)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 5
-- Average duration: 30 min
-- Total execution time: 2.5 hours
+- Total plans completed: 6
+- Average duration: not recalculated; Plan 02-02 spanned interactive provider checkpoints
+- Total execution time: 2.5 recorded hours plus multi-session Plan 02-02 work
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 | 4 | 111 min | 28 min |
-| 2 | 1 | 39 min | 39 min |
+| 2 | 2 | multi-session | n/a |
 
 **Recent Trend:**
 
@@ -64,6 +64,7 @@ Progress: [█████████████░░░░░░░] 5/8 pla
 | Phase 01 P03 | 34 min | 3 tasks | 27 files |
 | Phase 01 P04 | 35 min | 3 tasks | 23 files |
 | Phase 02 P01 | 39 min | 3 tasks | 57 files |
+| Phase 02 P02 | multi-session | 4 tasks | 44 files |
 
 ## Accumulated Context
 
@@ -84,6 +85,8 @@ Recent decisions affecting current work:
 - [Phase 02]: Resident and judge inference uses one strict OpenRouter transport with exact model/upstream profiles and verified direct first-attempt metadata.
 - [Phase 02]: Only openrouter_verified turns can publish; attempt two restarts from the immutable brief and failed candidates yield a persistent quiet disposition.
 - [Phase 02]: Public scenes require exact per-turn model labels and persistent staged-fiction and non-affiliation disclosure.
+- [Phase 02]: Public resident identity is joined from the immutable registry, and the snapshot boundary rejects anything other than the exact six-resident launch ensemble.
+- [Phase 02]: Each launch resident uses a stable, original, provider-neutral pixel silhouette and accessory treatment; provider logos and copied character designs are excluded.
 
 ### Pending Todos
 
@@ -126,5 +129,5 @@ Items acknowledged and carried forward from previous milestone close:
 ## Session Continuity
 
 Last session: 2026-07-22T15:39:15.673Z
-Stopped at: Completed 02-01-PLAN.md
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None
