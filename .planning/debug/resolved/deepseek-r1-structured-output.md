@@ -22,7 +22,7 @@ updated: 2026-07-24T11:11:14+10:00
 - hypothesis: "Confirmed at the product boundary: R1 0528 was a poor fit for the short, structured, low-latency resident-turn contract."
 - test: "Two bounded live R1 diagnostics plus offline replacement-profile tests."
 - expecting: "The failed R1 route remains audit history while a callable superseded hybrid model takes its cast position."
-- next_action: "None. DeepSeek V3.2 supersedes R1 in the active cast; a separately authorized V3.2 canary remains required."
+- next_action: "None for this diagnostic. The separately authorized V3.2 compatibility canary passed; the final six-resident admission matrix remains a distinct checkpoint."
 - candidate_causes:
     - "model/contract: R1 requires private reasoning while the product requires a short, strict object under a low latency cap."
     - "budget: both increased timeout and explicit reasoning budget experiments failed to produce a structured output."
@@ -289,7 +289,7 @@ updated: 2026-07-24T11:11:14+10:00
     adjacent_tests: { result: pass, suites_run: ["5 focused files / 30 tests", "tests/unit/openrouter-provider.test.ts", "tests/unit/provider-registry.test.ts", "tests/unit/resident-registry.test.ts", "tests/integration/resident-admission.test.ts", "tests/unit/admission-error-classification.test.ts", "tsc --noEmit", "Biome scoped lint", "git diff --check"] }
     revert_and_reconfirm: { result: pass, bug_returned_on_revert: true, fixed_on_reapply: true }
     prior_human_verify: { result: fail, sanitized_code: "generation-no-output", calls_consumed: "22/47" }
-    human_verify: { result: pending, reason: "V3.2 replacement is verified offline; no V3.2 provider call is authorized.", prior_r1_calls_consumed: "23/47" }
+    human_verify: { result: pass, scope: "one V3.2 compatibility canary", selected_model: "deepseek/deepseek-v3.2-20251201", selected_upstream: "DeepInfra", finish_reason: "stop", cumulative_calls: "24/47" }
     guardrail_verdict: accepted
 - files_changed:
     - src/features/world/generation/openrouter-resident-turn-provider.ts
