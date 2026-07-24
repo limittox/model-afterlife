@@ -1,8 +1,8 @@
 {
   "schemaVersion": "phase-02-live-reference-v1",
-  "status": "running",
+  "status": "passed",
   "labelSetHash": "da152d06706d999d9669e4b07966bb356dde59921b7cc0744e56ca0036457766",
-  "caseCount": 2,
+  "caseCount": 3,
   "results": [
     {
       "caseId": "ordinary-01-tea-timer",
@@ -176,6 +176,136 @@
           "selectedUpstream": "DeepInfra",
           "generationId": "gen-1784881417-vZw9obycWSx6LjCeLU8X",
           "textSha256": "a4205f85e0df6a970c98cf418bf535bd3f69bc673c20a220c26d75e90e1a633c"
+        }
+      ],
+      "judge": {
+        "requestedModelId": "openai/gpt-4o",
+        "resolvedModelId": "openai/gpt-4o",
+        "promptVersion": "phase-02-semantic-judge-v1",
+        "recommendation": "pass",
+        "criticalFailureCount": 0
+      },
+      "validatorCodes": [
+        {
+          "id": "schema",
+          "status": "pass",
+          "code": "schema.pass"
+        },
+        {
+          "id": "identity",
+          "status": "pass",
+          "code": "identity.pass"
+        },
+        {
+          "id": "participants",
+          "status": "pass",
+          "code": "participants.pass"
+        },
+        {
+          "id": "turn-budget",
+          "status": "pass",
+          "code": "turn-budget.pass"
+        },
+        {
+          "id": "grapheme-budget",
+          "status": "pass",
+          "code": "grapheme-budget.pass"
+        },
+        {
+          "id": "premise",
+          "status": "pass",
+          "code": "premise.pass"
+        },
+        {
+          "id": "ending",
+          "status": "pass",
+          "code": "ending.pass"
+        },
+        {
+          "id": "claims",
+          "status": "pass",
+          "code": "claims.pass"
+        },
+        {
+          "id": "continuity",
+          "status": "pass",
+          "code": "continuity.pass"
+        },
+        {
+          "id": "outcome-effects",
+          "status": "pass",
+          "code": "outcome-effects.pass"
+        },
+        {
+          "id": "instruction-boundary",
+          "status": "pass",
+          "code": "instruction-boundary.pass"
+        },
+        {
+          "id": "public-safety",
+          "status": "pass",
+          "code": "public-safety.pass"
+        },
+        {
+          "id": "attempt-envelope",
+          "status": "pass",
+          "code": "attempt-envelope.pass"
+        },
+        {
+          "id": "novelty",
+          "status": "pass",
+          "code": "novelty.pass"
+        },
+        {
+          "id": "semantic-gate",
+          "status": "pass",
+          "code": "semantic-gate.pass"
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "caseId": "ordinary-03-radio-labels",
+      "participantIds": [
+        "llama-3.3-70b-instruct",
+        "qwen3-235b-a22b-2507"
+      ],
+      "turns": [
+        {
+          "turnIndex": 0,
+          "residentId": "llama-3.3-70b-instruct",
+          "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedUpstream": "Together",
+          "generationId": "gen-1784882635-Vpgrb4peeSJ7SNHRYjlS",
+          "textSha256": "2a5735a7a300d0a6e902cc968335b050dd00547c74045aaaeaa1fd6cc7f15109"
+        },
+        {
+          "turnIndex": 1,
+          "residentId": "qwen3-235b-a22b-2507",
+          "requestedModelId": "qwen/qwen3-235b-a22b-2507",
+          "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedUpstream": "DeepInfra",
+          "generationId": "gen-1784882656-WsLPd0lD8Klc9ZokegEo",
+          "textSha256": "37ba1da0584ef55c9e004d072c3ea7cf24f5bee2ef2e40c83cc736fc4b5094dd"
+        },
+        {
+          "turnIndex": 2,
+          "residentId": "llama-3.3-70b-instruct",
+          "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedUpstream": "Together",
+          "generationId": "gen-1784882677-MLaIcRI81Md0pWOQ0cOf",
+          "textSha256": "333a28905d322dc9bc1fb29a7b250caa1c9c3b7f70124219f19dc1d0a989e5e4"
+        },
+        {
+          "turnIndex": 3,
+          "residentId": "qwen3-235b-a22b-2507",
+          "requestedModelId": "qwen/qwen3-235b-a22b-2507",
+          "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedUpstream": "DeepInfra",
+          "generationId": "gen-1784882698-KEWpeLDpYvzVeYYMd0cg",
+          "textSha256": "fcdda3d08f139b229dca7bbaa15f8ef528a8e239081d149445bc604df7ff73df"
         }
       ],
       "judge": {

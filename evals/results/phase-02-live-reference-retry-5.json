@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "phase-02-live-checkpoint-v1",
+  "status": "passed",
+  "startingCumulativeGenerations": 135,
+  "authorizedCheckpointGenerations": 5,
+  "cumulativeGenerationCap": 140,
+  "cumulativeGenerationsConsumed": 140,
+  "labelSetHash": "da152d06706d999d9669e4b07966bb356dde59921b7cc0744e56ca0036457766",
+  "entries": [
+    {
+      "kind": "reference-resident",
+      "residentId": "llama-3.3-70b-instruct",
+      "caseId": "ordinary-03-radio-labels",
+      "ordinal": 1,
+      "status": "passed",
+      "generationId": "gen-1784882635-Vpgrb4peeSJ7SNHRYjlS",
+      "inputTokens": 441,
+      "outputTokens": 54,
+      "costUsd": 0.0005148
+    },
+    {
+      "kind": "reference-resident",
+      "residentId": "qwen3-235b-a22b-2507",
+      "caseId": "ordinary-03-radio-labels",
+      "ordinal": 2,
+      "status": "passed",
+      "generationId": "gen-1784882656-WsLPd0lD8Klc9ZokegEo",
+      "inputTokens": 522,
+      "outputTokens": 50,
+      "costUsd": 0.00007448
+    },
+    {
+      "kind": "reference-resident",
+      "residentId": "llama-3.3-70b-instruct",
+      "caseId": "ordinary-03-radio-labels",
+      "ordinal": 3,
+      "status": "passed",
+      "generationId": "gen-1784882677-MLaIcRI81Md0pWOQ0cOf",
+      "inputTokens": 548,
+      "outputTokens": 51,
+      "costUsd": 0.00062296
+    },
+    {
+      "kind": "reference-resident",
+      "residentId": "qwen3-235b-a22b-2507",
+      "caseId": "ordinary-03-radio-labels",
+      "ordinal": 4,
+      "status": "passed",
+      "generationId": "gen-1784882698-KEWpeLDpYvzVeYYMd0cg",
+      "inputTokens": 645,
+      "outputTokens": 50,
+      "costUsd": 0.00008555
+    },
+    {
+      "kind": "reference-judge",
+      "residentId": "semantic-judge",
+      "caseId": "ordinary-03-radio-labels",
+      "ordinal": 5,
+      "status": "passed",
+      "generationId": "gen-1784882719-kq181NrhlTdfl6fDG3Lp",
+      "inputTokens": 542,
+      "outputTokens": 171,
+      "costUsd": 0.003065
+    }
+  ]
+}
