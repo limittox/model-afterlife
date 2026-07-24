@@ -98,7 +98,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: The conditional final live run passed all 30 admission generations and four reference resident turns, then stopped before judging on a deterministic scene rejection. Cumulative accounting is 105; a fresh reference-only 15-generation authorization with exact ceiling 120 is required.
+- [Phase 2]: The reference-only continuation passed three tea-timer turns and stopped fail-closed on the fourth resident generation. Cumulative accounting is 109/120; no judge or later reference call ran. A complete retry would require 15 new generations and exact cumulative ceiling 124.
 - [Phase 2]: Human semantic calibration is approved and enabled. The remaining reference proof must preserve the OpenRouter credential outside chat, git, public bundles, and traces.
 - [Phase 2]: Docker Desktop is stopped, so Plan 02-03's database-backed replay/rebuild check remains explicit verification debt.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
@@ -123,6 +123,7 @@ None yet.
 | 260724-ho4 | Replace Qwen 2.5 7B resident with Qwen3 235B A22B Instruct 2507 on DeepInfra FP8, update grounded identity and tests, no provider calls | 2026-07-24 | 6be74a9 | [260724-ho4-replace-qwen-2-5-7b-resident-with-qwen3-](./quick/260724-ho4-replace-qwen-2-5-7b-resident-with-qwen3-/) |
 | 260724-in8 | Run one authorized Qwen3 DeepInfra FP8 canary and, only on success, one paced 30-generation final matrix, stopping at cumulative ceiling 71 | 2026-07-24 | cd9d0c5 | [260724-in8-run-one-authorized-qwen3-deepinfra-fp8-a](./quick/260724-in8-run-one-authorized-qwen3-deepinfra-fp8-a/) |
 | 260724-m1x | Preserve the fail-closed live evidence, align the resident prompt with deterministic premise establishment, and add a guarded reference-only continuation without provider calls | 2026-07-24 | 0dc1cb3 | [260724-m1x-align-live-reference-prompts-with-determ](./quick/260724-m1x-align-live-reference-prompts-with-determ/) |
+| 260724-maw | Run the authorized reference-only 15-generation Phase 2 continuation with cumulative ceiling 120, preserve sanitized evidence, stop fail-closed, verify, commit, and push | 2026-07-24 | 4734371 | [260724-maw-run-the-authorized-reference-only-15-gen](./quick/260724-maw-run-the-authorized-reference-only-15-gen/) |
 
 ## Deferred Items
 
@@ -134,6 +135,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-24T06:02:00.000Z
-Stopped at: Prepared bounded Phase 2 live reference continuation; awaiting fresh 15-generation authorization at cumulative cap 120
+Last session: 2026-07-24T06:06:00.000Z
+Stopped at: Reference-only continuation stopped fail-closed at cumulative 109/120 on the fourth resident generation
 Resume file: None
