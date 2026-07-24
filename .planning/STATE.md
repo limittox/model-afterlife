@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 cooldown rerun again stopped on fourth-call HTTP 429; 32/58 consumed"
-last_updated: "2026-07-24T02:08:00.000Z"
+stopped_at: "02-02 Task 3 paced admission runner verified offline; final matrix not authorized; 32/58 consumed"
+last_updated: "2026-07-24T02:14:00.000Z"
 last_activity: 2026-07-24
-last_activity_desc: "After a ten-minute cooldown, the matrix again stopped on DeepSeek V3.2 provider-http-429 after four generations; 32/58 cumulative calls are consumed"
+last_activity_desc: "Live admission now spaces generation starts by 21 seconds with fake-sleeper regression coverage; no provider call was made and accounting remains 32/58"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Task 3 blocked by reproducible rapid-request rate limiting at generation four
-Last activity: 2026-07-24 — after a full ten-minute cooldown, all catalog checks and the first GPT-4o, Claude, and Gemini samples passed, then the fourth request again returned DeepSeek V3.2 `provider-http-429`; accounting is 32/58 with 26 unused and no retry occurred
+Status: Task 3 paced runner ready; final clean matrix requires separate authorization
+Last activity: 2026-07-24 — the standard live command now spaces all generation starts by at least 21 seconds, preserving breadth-first order, exact call accounting, zero retries, and first-failure behavior; focused tests, sequential integration verification, typecheck, and lint pass with no provider call
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: Two standard matrices, including one after a ten-minute cooldown, passed all catalog checks and their first three resident samples before the fourth rapid generation returned DeepSeek V3.2 `provider-http-429`. The standalone DeepSeek canary passed. This repeatable position indicates a request-rate boundary in the unpaced matrix. Accounting is 32/58 with 26 unused; no further provider call is authorized.
+- [Phase 2]: The repeated fourth-request HTTP 429 is addressed offline by pacing credentialed admission generation starts 21 seconds apart. The fake-sleeper regression proves 29 waits across 30 breadth-first calls without delaying the first or adding retries. Accounting remains 32/58. A fresh clean matrix would require a new cumulative ceiling of 62; no provider call is currently authorized.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
@@ -104,6 +104,7 @@ None yet.
 | 260724-gba | Run exactly one authorized DeepSeek V3.2 admission generation canary through DeepInfra FP4, preserve strict routing, and stop at 24 of 47 calls | 2026-07-24 | e695608 | [260724-gba-run-exactly-one-authorized-deepseek-v3-2](./quick/260724-gba-run-exactly-one-authorized-deepseek-v3-2/) |
 | 260724-gix | Run the authorized final six-resident OpenRouter admission matrix with 12 catalog checks and at most 30 generations, stopping fail-closed at a cumulative ceiling of 54 calls | 2026-07-24 | 46986a8 | [260724-gix-run-the-authorized-final-six-resident-op](./quick/260724-gix-run-the-authorized-final-six-resident-op/) |
 | 260724-glw | After provider cooldown rerun the authorized final six-resident OpenRouter admission matrix once, stopping fail-closed at cumulative generation ceiling 58 | 2026-07-24 | 0d5e4b1 | [260724-glw-after-provider-cooldown-rerun-the-author](./quick/260724-glw-after-provider-cooldown-rerun-the-author/) |
+| 260724-guf | Add deterministic inter-generation pacing to the live admission matrix after reproducible fourth-request HTTP 429s, verify offline, and make no provider calls | 2026-07-24 | 11d1523 | [260724-guf-add-deterministic-inter-generation-pacin](./quick/260724-guf-add-deterministic-inter-generation-pacin/) |
 
 ## Deferred Items
 
