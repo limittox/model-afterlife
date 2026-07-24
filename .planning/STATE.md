@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 03
 current_phase_name: return-loop-and-inclusive-presentation
 status: executing
-stopped_at: Completed 03-04-PLAN.md
-last_updated: "2026-07-24T18:22:02.624Z"
+stopped_at: Completed 03-05-PLAN.md
+last_updated: "2026-07-24T19:22:53.123Z"
 last_activity: 2026-07-25
-last_activity_desc: Completed Phase 03 Plan 04 deterministic return recap
+last_activity_desc: Completed Phase 03 Plan 05 inclusive observer presentation
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 15
-  completed_plans: 12
+  completed_plans: 13
 ---
 
 # Project State
@@ -28,17 +28,17 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 03 (return-loop-and-inclusive-presentation) — EXECUTING
-Plan: 5 of 7
+Plan: 6 of 7
 Status: Ready to execute
-Last activity: 2026-07-25 — Completed Phase 03 Plan 04 deterministic return recap
+Last activity: 2026-07-25 — Completed Phase 03 Plan 05 inclusive observer presentation
 
-Progress: [████████████████░░░░] 12/15 milestone plans complete (80%)
+Progress: [█████████████████░░░] 13/15 milestone plans complete (87%)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 12
+- Total plans completed: 13
 - Average duration: not recalculated; Plan 02-02 spanned interactive provider checkpoints
 - Total execution time: 3.3 recorded hours plus multi-session Plan 02-02 work
 
@@ -48,11 +48,12 @@ Progress: [████████████████░░░░] 12/15 m
 |-------|-------|-------|----------|
 | 1 | 4 | 111 min | 28 min |
 | 2 | 4 | multi-session | n/a |
+| 3 | 5 | multi-session | n/a |
 
 **Recent Trend:**
 
-- Last 4 plans: 39 min, multi-session, 25 min, multi-session
-- Trend: Phase 2 closed with bounded live checkpoints followed by one complete offline release gate
+- Last 4 plans: 18 min, 25 min, 24 min, multi-session
+- Trend: Phase 3 now has durable profiles, return recaps, and an inclusive semantic observer
 
 *Updated after each plan completion*
 **Per-Plan Metrics:**
@@ -71,6 +72,7 @@ Progress: [████████████████░░░░] 12/15 m
 | Phase 03 P02 | 18min | 2 tasks | 13 files |
 | Phase 03 P03 | 25min | 2 tasks | 15 files |
 | Phase 03 P04 | 24min | 2 tasks | 14 files |
+| Phase 03 P05 | multi-session | 2 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -112,6 +114,9 @@ Recent decisions affecting current work:
 - [Phase 03]: A valid local marker is exactly version, worldId, and throughSequence, and baselines wait for a valid observed current home.
 - [Phase 03]: Only Dismiss recap writes the frozen response boundary; every other action and live-world update leaves it unchanged.
 - [Phase 03]: Canonical relationship changes outrank accepted shared experiences, which outrank ordinary complete publications.
+- [Phase 03]: Semantic React content remains the complete observer experience while Phaser is an optional desktop enhancement.
+- [Phase 03]: Renderer messages validate stable projected identities and a closed bounded observer-only intent and control set at the bridge.
+- [Phase 03]: Polling focus tests prove hydration through an application-owned DOM transition before asserting optional-control removal preserves focus.
 
 ### Pending Todos
 
@@ -167,6 +172,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-24T18:22:02.608Z
-Stopped at: Completed 03-04-PLAN.md
+Last session: 2026-07-24T19:22:53.110Z
+Stopped at: Completed 03-05-PLAN.md
 Resume file: None

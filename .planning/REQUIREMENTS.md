@@ -83,9 +83,9 @@
 - [x] **ACCS-02**: Visitors can operate all essential viewing, profile, archive, recap, pause, and navigation controls with a keyboard and visible focus.
 - [x] **ACCS-03**: Text can scale and reflow without losing content, while contrast and non-color cues keep speakers, statuses, and controls understandable.
 - [ ] **ACCS-04**: The experience honors reduced-motion preferences and provides a mode that removes nonessential camera easing, panning, parallax, and animation.
-- [ ] **ACCS-05**: Automatically moving or updating presentation can be paused, stopped, hidden, or read manually without stopping canonical server time.
-- [ ] **ACCS-06**: Mobile visitors receive a touch-friendly scene-first view with the current scene, compact establishing view, residents, recap, archive, profiles, sharing, and jump-to-live controls.
-- [ ] **ACCS-07**: Mobile usability does not depend on shrinking the complete desktop map or requiring drag-only interaction.
+- [x] **ACCS-05**: Automatically moving or updating presentation can be paused, stopped, hidden, or read manually without stopping canonical server time.
+- [x] **ACCS-06**: Mobile visitors receive a touch-friendly scene-first view with the current scene, compact establishing view, residents, recap, archive, profiles, sharing, and jump-to-live controls.
+- [x] **ACCS-07**: Mobile usability does not depend on shrinking the complete desktop map or requiring drag-only interaction.
 
 ### Sharing and Discovery
 
@@ -206,9 +206,9 @@
 | ACCS-02 | Phase 3 | Complete |
 | ACCS-03 | Phase 3 | Complete |
 | ACCS-04 | Phase 3 | Pending |
-| ACCS-05 | Phase 3 | Pending |
-| ACCS-06 | Phase 3 | Pending |
-| ACCS-07 | Phase 3 | Pending |
+| ACCS-05 | Phase 3 | Complete |
+| ACCS-06 | Phase 3 | Complete |
+| ACCS-07 | Phase 3 | Complete |
 | SHAR-01 | Phase 3 | Complete |
 | SHAR-02 | Phase 3 | Pending |
 | SHAR-03 | Phase 3 | Pending |

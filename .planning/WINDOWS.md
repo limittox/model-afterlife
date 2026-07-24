@@ -2,9 +2,9 @@
 schema_version: 1
 open_count: 0
 waived_count: 0
-fixed_count: 11
-total_count: 11
-last_updated: 2026-07-24T18:22:45.698Z
+fixed_count: 13
+total_count: 13
+last_updated: 2026-07-24T19:24:17.050Z
 ---
 
 # Broken Windows Ledger
@@ -26,6 +26,8 @@ last_updated: 2026-07-24T18:22:45.698Z
 | 9 | 03 | deviation | src/features/return-loop/client/ReturnRecapController.tsx |  | Kept the frozen recap request alive while polling advanced | fixed |  | 2026-07-24T18:20:54.314Z | 2026-07-24T18:21:25.317Z |
 | 10 | 03 | deviation | src/app/globals.css |  | Added required responsive recap and navigation styles omitted from the plan file list | fixed |  | 2026-07-24T18:20:54.953Z | 2026-07-24T18:21:25.949Z |
 | 11 | 03 | deviation | .planning/STATE.md |  | Reconciled state-handler phase count, progress prose, activity, and Phase 03 decision attribution | fixed |  | 2026-07-24T18:22:44.801Z | 2026-07-24T18:22:45.698Z |
+| 12 | 03 | deviation | tests/e2e/phase-03-inclusive-observer.spec.ts | 220 | Polling focus regression now waits for an application-owned hydration transition before focusing the retained Pause action. | fixed |  | 2026-07-24T19:21:50.257Z | 2026-07-24T19:22:09.449Z |
+| 13 | 03 | deviation | .planning/STATE.md |  | Reconciled stale state-handler total phase count, Plan 05 activity, 13-of-15 progress prose, and recent trend. | fixed |  | 2026-07-24T19:24:13.084Z | 2026-07-24T19:24:17.050Z |
 
 ````json
 [
@@ -160,6 +162,30 @@ last_updated: 2026-07-24T18:22:45.698Z
     "reason": "",
     "recorded_at": "2026-07-24T18:22:44.801Z",
     "resolved_at": "2026-07-24T18:22:45.698Z"
+  },
+  {
+    "id": 12,
+    "kind": "deviation",
+    "phase": "03",
+    "file": "tests/e2e/phase-03-inclusive-observer.spec.ts",
+    "line": 220,
+    "description": "Polling focus regression now waits for an application-owned hydration transition before focusing the retained Pause action.",
+    "status": "fixed",
+    "reason": "",
+    "recorded_at": "2026-07-24T19:21:50.257Z",
+    "resolved_at": "2026-07-24T19:22:09.449Z"
+  },
+  {
+    "id": 13,
+    "kind": "deviation",
+    "phase": "03",
+    "file": ".planning/STATE.md",
+    "line": null,
+    "description": "Reconciled stale state-handler total phase count, Plan 05 activity, 13-of-15 progress prose, and recent trend.",
+    "status": "fixed",
+    "reason": "",
+    "recorded_at": "2026-07-24T19:24:13.084Z",
+    "resolved_at": "2026-07-24T19:24:17.050Z"
   }
 ]
 ````
