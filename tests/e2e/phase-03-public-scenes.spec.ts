@@ -1,5 +1,5 @@
-import { createElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
+import { execFileSync } from "node:child_process";
+import path from "node:path";
 import { eq, inArray } from "drizzle-orm";
 import { expect, test, type Page } from "@playwright/test";
 import { runBackfill } from "../../scripts/backfill-scene-claim-versions.ts";
@@ -14,7 +14,6 @@ import {
 	worldEvents,
 	worldProjection,
 } from "../../src/db/schema.ts";
-import { RecentSceneArchive } from "../../src/features/publication/components/RecentSceneArchive.tsx";
 import type {
 	RecentSceneArchiveEntry,
 	RecentSceneArchiveResult,
@@ -204,9 +203,29 @@ async function showArchiveState(
 	page: Page,
 	result: RecentSceneArchiveResult,
 ): Promise<void> {
-	const markup = renderToStaticMarkup(
-		createElement(RecentSceneArchive, { result }),
+	const executable = path.resolve(
+		"node_modules",
+		".bin",
+		process.platform === "win32" ? "tsx.CMD" : "tsx",
 	);
+	const env = { ...process.env, ARCHIVE_STATE: JSON.stringify(result) };
+	const markup =
+		process.platform === "win32"
+			? execFileSync(
+					"cmd.exe",
+					[
+						"/d",
+						"/s",
+						"/c",
+						`${executable} tests/fixtures/render-recent-scene-archive.tsx`,
+					],
+					{ cwd: process.cwd(), encoding: "utf8", env },
+				)
+			: execFileSync(
+					executable,
+					["tests/fixtures/render-recent-scene-archive.tsx"],
+					{ cwd: process.cwd(), encoding: "utf8", env },
+				);
 	await page.setContent(
 		`<style>body{max-width:360px;margin:0;overflow-wrap:anywhere}ol{padding:0}li{max-width:100%}</style>${markup}`,
 	);

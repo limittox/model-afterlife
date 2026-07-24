@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { RecentSceneArchive } from "@/features/publication/components/RecentSceneArchive";
-import { readRecentScenes } from "@/features/publication/server/read-recent-scenes";
+import {
+	readRecentScenes,
+	type RecentSceneArchiveResult,
+} from "@/features/publication/server/read-recent-scenes";
 
 export const dynamic = "force-dynamic";
 
 export default async function RecentScenesPage() {
-	let result;
+	let result: RecentSceneArchiveResult;
 	try {
 		result = await readRecentScenes();
 	} catch {
