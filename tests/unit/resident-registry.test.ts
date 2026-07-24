@@ -43,10 +43,10 @@ const EXPECTED_RESIDENTS = [
 		maxOutputTokens: 180,
 	},
 	{
-		id: "qwen-2.5-7b-instruct",
-		requestedModelId: "qwen/qwen-2.5-7b-instruct",
-		canonicalModelId: "qwen/qwen-2.5-7b-instruct",
-		approvedUpstream: "together",
+		id: "qwen3-235b-a22b-2507",
+		requestedModelId: "qwen/qwen3-235b-a22b-2507",
+		canonicalModelId: "qwen/qwen3-235b-a22b-07-25",
+		approvedUpstream: "deepinfra/fp8",
 		requiredQuantization: "fp8",
 		maxOutputTokens: 180,
 	},
@@ -94,7 +94,7 @@ describe("launch resident registry", () => {
 			expect.arrayContaining([
 				expect.objectContaining({ id: "deepseek-v3.2", requiredQuantization: "fp4" }),
 				expect.objectContaining({ id: "llama-3.3-70b-instruct", requiredQuantization: "fp8" }),
-				expect.objectContaining({ id: "qwen-2.5-7b-instruct", requiredQuantization: "fp8" }),
+				expect.objectContaining({ id: "qwen3-235b-a22b-2507", requiredQuantization: "fp8" }),
 			]),
 		);
 	});

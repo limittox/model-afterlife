@@ -8,7 +8,7 @@ const EXPECTED_RESIDENT_ORDER = [
 	"gemini-2.5-pro",
 	"deepseek-v3.2",
 	"llama-3.3-70b-instruct",
-	"qwen-2.5-7b-instruct",
+	"qwen3-235b-a22b-2507",
 ] as const;
 
 async function loadAdmissionRunner() {
@@ -114,6 +114,18 @@ describe("resident admission canaries", () => {
 			maxOutputTokens: 1024,
 			reasoning: { max_tokens: 128, exclude: true },
 		});
+		const qwenResident = result.residents.find(
+			(resident) => resident.residentId === "qwen3-235b-a22b-2507",
+		);
+		expect(qwenResident).toMatchObject({
+			requestedModelId: "qwen/qwen3-235b-a22b-2507",
+			canonicalModelId: "qwen/qwen3-235b-a22b-07-25",
+			approvedUpstream: "deepinfra/fp8",
+			selectedUpstreamName: "DeepInfra",
+			requiredQuantization: "fp8",
+			maxOutputTokens: 180,
+		});
+		expect(qwenResident?.reasoning).toBeUndefined();
 		expect(
 			result.residents
 				.filter(

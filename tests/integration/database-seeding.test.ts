@@ -90,8 +90,11 @@ describe("database seeding", () => {
 				"google/gemini-2.5-pro",
 				"meta-llama/llama-3.3-70b-instruct",
 				"openai/gpt-4o",
-				"qwen/qwen-2.5-7b-instruct",
+				"qwen/qwen3-235b-a22b-2507",
 			].sort(),
+		);
+		expect(after.modelRows.map((row) => row.exactModelId)).not.toContain(
+			"qwen/qwen-2.5-7b-instruct",
 		);
 		for (const row of [...after.bibleRows, ...after.claimRows]) {
 			const serialized = JSON.stringify(row.content);
