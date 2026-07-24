@@ -69,6 +69,42 @@ const revision = PublishedSceneRevisionSchema.parse({
 });
 const candidate = acceptedCandidateFixture(brief, revision);
 
+function verifiedResidentProvider() {
+	return {
+		generateTurn: async (input: {
+			turnIndex: number;
+			residentId: string;
+			requestedModelId: string;
+		}) => {
+			const profile = providerProfileFor(input.residentId);
+			return {
+				text:
+					input.turnIndex === 0
+						? `A committed request reaches a bounded attempt; frozen turn ${input.turnIndex + 1}.`
+						: `Frozen verified turn ${input.turnIndex + 1}.`,
+				providerResponseId: `gen-frozen-${input.turnIndex}`,
+				observedModelId: input.requestedModelId,
+				identityEvidence: "openrouter_verified" as const,
+				finishReason: "stop",
+				usage: { inputTokens: 4, outputTokens: 3 },
+				provenance: {
+					generationId: `gen-frozen-${input.turnIndex}`,
+					requestedModelId: profile.requestedModelId,
+					canonicalModelId: profile.canonicalModelId,
+					selectedModelId: profile.canonicalModelId,
+					selectedUpstream: profile.selectedUpstreamName,
+					strategy: "direct" as const,
+					routeAttempt: 1 as const,
+					pipeline: [] as [],
+					usage: { inputTokens: 4, outputTokens: 3 },
+					warningCodes: [],
+					filterStatus: "clear" as const,
+				},
+			};
+		},
+	};
+}
+
 describe("durable generation request runner", () => {
 	it("publishes an accepted first attempt once", async () => {
 		const runnerModule = await loadGenerationRunner();
@@ -211,39 +247,7 @@ describe("generation Trigger task", () => {
 		const persistAttempt = vi.fn(async (_input: unknown) => undefined);
 		const dependencies = taskModule?.createProductionGenerationDependencies({
 			loadBrief: async () => brief,
-			provider: {
-				generateTurn: async (input: {
-					turnIndex: number;
-					residentId: string;
-					requestedModelId: string;
-				}) => {
-					const profile = providerProfileFor(input.residentId);
-					return {
-						text:
-							input.turnIndex === 0
-								? `A committed request reaches a bounded attempt; frozen turn ${input.turnIndex + 1}.`
-								: `Frozen verified turn ${input.turnIndex + 1}.`,
-						providerResponseId: `gen-frozen-${input.turnIndex}`,
-						observedModelId: input.requestedModelId,
-						identityEvidence: "openrouter_verified" as const,
-						finishReason: "stop",
-						usage: { inputTokens: 4, outputTokens: 3 },
-						provenance: {
-							generationId: `gen-frozen-${input.turnIndex}`,
-							requestedModelId: profile.requestedModelId,
-							canonicalModelId: profile.canonicalModelId,
-							selectedModelId: profile.canonicalModelId,
-							selectedUpstream: profile.selectedUpstreamName,
-							strategy: "direct" as const,
-							routeAttempt: 1 as const,
-							pipeline: [] as [],
-							usage: { inputTokens: 4, outputTokens: 3 },
-							warningCodes: [],
-							filterStatus: "clear" as const,
-						},
-					};
-				},
-			},
+			provider: verifiedResidentProvider(),
 			persistAttempt,
 			semanticGateEvidence: approvedSemanticGateFixture(),
 			publish: async () => ({ revisionId: revision.revisionId }),
@@ -261,6 +265,110 @@ describe("generation Trigger task", () => {
 				disposition: "accepted",
 			},
 			result: { accepted: true, code: "accepted" },
+		});
+	});
+
+	it("runs the approved reject-only judge after deterministic validation", async () => {
+		const taskModule = await loadGenerationTask();
+
+		expect(taskModule, "generation Trigger module must exist").toBeDefined();
+		const persistAttempt = vi.fn(async (_input: unknown) => undefined);
+		const score = vi.fn(async () => approvedSemanticGateFixture().result);
+		const dependencies = taskModule?.createProductionGenerationDependencies({
+			loadBrief: async () => brief,
+			provider: verifiedResidentProvider(),
+			semanticJudgeProvider: { score },
+			persistAttempt,
+			publish: async () => ({ revisionId: revision.revisionId }),
+			resolveContinuity: async () => ({ mode: "quiet" }),
+		});
+
+		const result = await dependencies?.runAttempt({ brief, attemptOrdinal: 1 });
+
+		expect(score).toHaveBeenCalledOnce();
+		expect(score).toHaveBeenCalledWith(
+			expect.objectContaining({
+				briefId: brief.briefId,
+				participantIds: brief.participantIds,
+				premise: brief.premise,
+			}),
+		);
+		expect(result?.status).toBe("accepted");
+		expect(persistAttempt.mock.calls[0]?.[0]).toMatchObject({
+			result: { accepted: true, code: "accepted" },
+			validatorResults: expect.arrayContaining([
+				expect.objectContaining({
+					id: "semantic-gate",
+					status: "pass",
+					code: "semantic-gate.pass",
+				}),
+			]),
+		});
+	});
+
+	it("does not call the semantic judge when deterministic validation fails", async () => {
+		const taskModule = await loadGenerationTask();
+
+		expect(taskModule, "generation Trigger module must exist").toBeDefined();
+		const baseProvider = verifiedResidentProvider();
+		const score = vi.fn(async () => approvedSemanticGateFixture().result);
+		const persistAttempt = vi.fn(async (_input: unknown) => undefined);
+		const dependencies = taskModule?.createProductionGenerationDependencies({
+			loadBrief: async () => brief,
+			provider: {
+				generateTurn: async (input) => ({
+					...(await baseProvider.generateTurn(input)),
+					text: `An unrelated frozen reply ${input.turnIndex + 1}.`,
+				}),
+			},
+			semanticJudgeProvider: { score },
+			persistAttempt,
+			publish: async () => ({ revisionId: revision.revisionId }),
+			resolveContinuity: async () => ({ mode: "quiet" }),
+		});
+
+		const result = await dependencies?.runAttempt({ brief, attemptOrdinal: 1 });
+
+		expect(score).not.toHaveBeenCalled();
+		expect(result).toEqual({
+			status: "rejected",
+			disposition: "schema_rejected",
+		});
+	});
+
+	it("fails closed with private turns intact when semantic judging errors", async () => {
+		const taskModule = await loadGenerationTask();
+
+		expect(taskModule, "generation Trigger module must exist").toBeDefined();
+		const persistAttempt = vi.fn(async (_input: unknown) => undefined);
+		const dependencies = taskModule?.createProductionGenerationDependencies({
+			loadBrief: async () => brief,
+			provider: verifiedResidentProvider(),
+			semanticJudgeProvider: {
+				score: vi.fn(async () => {
+					throw new Error("judge route unavailable");
+				}),
+			},
+			persistAttempt,
+			publish: async () => ({ revisionId: revision.revisionId }),
+			resolveContinuity: async () => ({ mode: "quiet" }),
+		});
+
+		const result = await dependencies?.runAttempt({ brief, attemptOrdinal: 1 });
+
+		expect(result).toEqual({
+			status: "rejected",
+			disposition: "safety_rejected",
+		});
+		expect(persistAttempt.mock.calls[0]?.[0]).toMatchObject({
+			turns: expect.arrayContaining([
+				expect.objectContaining({ turnIndex: 0 }),
+				expect.objectContaining({ turnIndex: 3 }),
+			]),
+			result: {
+				accepted: false,
+				code: "semantic-gate.uncalibrated",
+			},
 		});
 	});
 

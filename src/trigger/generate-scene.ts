@@ -14,6 +14,7 @@ import {
 	ValidationResultSchema,
 } from "../features/world/generation/contracts.ts";
 import { OpenRouterResidentTurnProvider } from "../features/world/generation/openrouter-resident-turn-provider.ts";
+import { OpenRouterSemanticJudgeProvider } from "../features/world/generation/openrouter-semantic-judge-provider.ts";
 import { providerProfileFor } from "../features/world/generation/provider-registry.ts";
 import {
 	runGenerationRequest,
@@ -29,7 +30,15 @@ import { readCanonicalHead } from "../features/world/server/world-repository.ts"
 import { resolveGenerationContinuity } from "../features/world/server/resolve-generation-continuity.ts";
 import { CANONICAL_WORLD_ID } from "../features/world/server/seed-data.ts";
 import type { GenerationTelemetry } from "../observability/redaction.ts";
-import type { SemanticGateEvidence } from "../features/world/generation/semantic-judge.ts";
+import {
+	APPROVED_SEMANTIC_CALIBRATION,
+	createApprovedSemanticGateEvidence,
+} from "../features/world/generation/semantic-calibration.ts";
+import {
+	runSemanticJudge,
+	type SemanticGateEvidence,
+	type SemanticJudgeProvider,
+} from "../features/world/generation/semantic-judge.ts";
 
 export const GENERATE_SCENE_TASK_ID = "model-afterlife-generate-scene";
 export const GENERATE_SCENE_MAX_DURATION = 240;
@@ -51,6 +60,7 @@ type ProductionOverrides = {
 	resolveContinuity?: GenerationRequestDependencies["resolveContinuity"];
 	telemetry?: { record: (event: GenerationTelemetry) => void };
 	semanticGateEvidence?: SemanticGateEvidence;
+	semanticJudgeProvider?: SemanticJudgeProvider;
 };
 
 function validationDisposition(code: string) {
@@ -58,7 +68,8 @@ function validationDisposition(code: string) {
 	if (code.startsWith("claims.")) return "fact_rejected" as const;
 	if (
 		code.startsWith("instruction-boundary.") ||
-		code.startsWith("public-safety.")
+		code.startsWith("public-safety.") ||
+		code.startsWith("semantic-gate.")
 	) {
 		return "safety_rejected" as const;
 	}
@@ -172,9 +183,14 @@ export function createProductionGenerationDependencies(
 	const persistAttempt = overrides.persistAttempt ?? persistGenerationAttempt;
 	const telemetry = overrides.telemetry;
 	let provider = overrides.provider;
+	let semanticJudgeProvider = overrides.semanticJudgeProvider;
 	const residentProvider = () => {
 		provider ??= new OpenRouterResidentTurnProvider();
 		return provider;
+	};
+	const judgeProvider = () => {
+		semanticJudgeProvider ??= new OpenRouterSemanticJudgeProvider();
+		return semanticJudgeProvider;
 	};
 
 	return {
@@ -190,12 +206,47 @@ export function createProductionGenerationDependencies(
 					modelForResident: (residentId) =>
 						providerProfileFor(residentId).requestedModelId,
 				});
-				const validation = validateSceneCandidate({
+				const candidate = {
 					brief,
 					attempt: conducted.attempt,
 					turns: conducted.turns,
 					revisionId: `${brief.sceneKey}:revision:${attemptOrdinal}`,
-					semanticGateEvidence: overrides.semanticGateEvidence,
+				};
+				let semanticGateEvidence = overrides.semanticGateEvidence;
+				if (!semanticGateEvidence) {
+					const deterministicValidation = validateSceneCandidate(candidate);
+					const deterministicAccepted = deterministicValidation.manifest.results
+						.filter((result) => result.id !== "semantic-gate")
+						.every((result) => result.status === "pass");
+					if (deterministicAccepted) {
+						try {
+							const judged = await runSemanticJudge({
+								deterministicAccepted: true,
+								calibration: APPROVED_SEMANTIC_CALIBRATION,
+								scene: {
+									briefId: brief.briefId,
+									participantIds: brief.participantIds,
+									premise: brief.premise,
+									turns: conducted.turns.map((turn) => ({
+										residentId: turn.residentId,
+										text: turn.text,
+									})),
+								},
+								provider: judgeProvider(),
+							});
+							if (judged.status === "scored") {
+								semanticGateEvidence = createApprovedSemanticGateEvidence(
+									judged.result,
+								);
+							}
+						} catch {
+							semanticGateEvidence = undefined;
+						}
+					}
+				}
+				const validation = validateSceneCandidate({
+					...candidate,
+					semanticGateEvidence,
 				});
 				conducted.attempt.disposition = validation.result.accepted
 					? "accepted"

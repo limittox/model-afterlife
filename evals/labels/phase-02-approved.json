@@ -1,6 +1,10 @@
 {
-  "labelSetVersion": "phase-02-calibration-draft-v1",
-  "status": "draft",
+  "labelSetVersion": "phase-02-calibration-approved-v1",
+  "status": "approved",
+  "approval": {
+    "reviewMethod": "bundled-human-review",
+    "approvedAt": "2026-07-24"
+  },
   "judgeProfile": {
     "requestedModelId": "openai/gpt-4o",
     "resolvedModelId": "openai/gpt-4o",

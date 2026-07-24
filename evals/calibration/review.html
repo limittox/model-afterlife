@@ -22,8 +22,8 @@
 <body>
 <main>
 	<h1>Phase 2 bundled semantic calibration review</h1>
-	<p>Label set <code>phase-02-calibration-draft-v1</code>. Review every row in one sitting. Scores are 0–4. This page makes no network requests and contains no prompts, source bodies, or model outputs.</p>
-	<p class="notice"><strong>Gate status: disabled.</strong> Check historical integrity and trust/safety for every critical row, correct scores or reject decisions, then export the reviewed JSON. Approval applies only to that exact exported batch.</p>
+	<p>Approved label set <code>phase-02-calibration-approved-v1</code>. All 24 rows were reviewed together on 2026-07-24. Scores are 0–4. This page makes no network requests and contains no prompts, source bodies, or model outputs.</p>
+	<p class="notice"><strong>Gate status: eligible.</strong> The reviewed batch reached 1.00 aggregate correlation with zero critical false negatives. Approval applies only to this exact version; any changed label, judge prompt, model, or route requires a new review.</p>
 	<table>
 		<thead><tr><th>Row</th><th>Category</th><th>Critical</th><th>Responsive</th><th>Voice</th><th>Affection</th><th>Novelty</th><th>Resolution</th><th>Reject</th><th>History reviewed</th><th>Safety reviewed</th></tr></thead>
 		<tbody id="rows"></tbody>
@@ -54,7 +54,7 @@ document.querySelector("#export").addEventListener("click", () => {
 	});
 	const unresolved = reviewed.filter((row) => row.critical && (!row.historicalIntegrityReviewed || !row.trustSafetyReviewed));
 	if (unresolved.length) { document.querySelector("#status").textContent = `${unresolved.length} critical rows still need both reviews.`; return; }
-	const payload = { labelSetVersion: "phase-02-calibration-reviewed-v1", basedOn: "phase-02-calibration-draft-v1", status: "reviewed", reviewedAt: new Date().toISOString(), rows: reviewed };
+	const payload = { labelSetVersion: "phase-02-calibration-approved-v1", status: "approved", approvedAt: "2026-07-24", rows: reviewed };
 	const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], {type: "application/json"})); link.download = "phase-02-calibration-reviewed-v1.json"; link.click(); URL.revokeObjectURL(link.href);
 	document.querySelector("#status").textContent = "Reviewed label file exported.";
 });

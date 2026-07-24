@@ -6,6 +6,7 @@ import {
 	evaluateFrozenReferenceCase,
 	type FrozenReferenceResult,
 } from "../evals/providers/frozen-reference-provider.ts";
+import { APPROVED_SEMANTIC_CALIBRATION } from "../src/features/world/generation/semantic-calibration.ts";
 
 const referencePath = resolve("evals/datasets/phase-02-reference.jsonl");
 const resultPath = resolve("evals/results/phase-02-frozen.json");
@@ -47,9 +48,19 @@ function runFrozen(): void {
 }
 
 function refuseLive(): never {
-	if (!existsSync(resolve("evals/labels/phase-02-approved.json"))) {
+	const approvedPath = resolve("evals/labels/phase-02-approved.json");
+	if (!existsSync(approvedPath)) {
 		throw new Error(
 			"Live evaluation is blocked until the bundled human-reviewed label set is approved.",
+		);
+	}
+	const approvedSource = readFileSync(approvedPath, "utf8");
+	const approvedHash = createHash("sha256")
+		.update(approvedSource.replace(/\r\n/gu, "\n"))
+		.digest("hex");
+	if (approvedHash !== APPROVED_SEMANTIC_CALIBRATION.labelSetHash) {
+		throw new Error(
+			"Live evaluation is blocked because the approved label artifact no longer matches its reviewed SHA-256.",
 		);
 	}
 	if (process.env.MODEL_AFTERLIFE_LIVE_EVAL_AUTHORIZATION !== "authorized") {

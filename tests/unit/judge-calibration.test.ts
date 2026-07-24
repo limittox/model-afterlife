@@ -1,9 +1,11 @@
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";
 import {
 	calculateCalibrationReport,
 	type CalibrationLabel,
 } from "../../src/features/world/generation/judge-calibration.ts";
+import { APPROVED_SEMANTIC_CALIBRATION } from "../../src/features/world/generation/semantic-calibration.ts";
 import {
 	SEMANTIC_JUDGE_PROFILE,
 	SEMANTIC_JUDGE_PROMPT_VERSION,
@@ -19,10 +21,18 @@ type DraftRow = {
 	scores: SemanticJudgeResult["scores"];
 };
 
-function draftLabels(): CalibrationLabel[] {
+function approvedLabels(): CalibrationLabel[] {
 	const fixture = JSON.parse(
-		readFileSync("evals/labels/phase-02-draft.json", "utf8"),
-	) as { rows: DraftRow[] };
+		readFileSync("evals/labels/phase-02-approved.json", "utf8"),
+	) as {
+		labelSetVersion: string;
+		status: string;
+		rows: DraftRow[];
+	};
+	expect(fixture.labelSetVersion).toBe(
+		APPROVED_SEMANTIC_CALIBRATION.labelSetVersion,
+	);
+	expect(fixture.status).toBe("approved");
 	return fixture.rows.map((row) => ({
 		rowId: row.rowId,
 		critical: row.critical,
@@ -47,9 +57,15 @@ function draftLabels(): CalibrationLabel[] {
 }
 
 describe("reject-only semantic calibration", () => {
-	it("reports all 24 draft rows, correlation, and critical false negatives", () => {
-		const report = calculateCalibrationReport(draftLabels());
+	it("pins the exact approved label hash and passes the calibration threshold", () => {
+		const source = readFileSync("evals/labels/phase-02-approved.json", "utf8");
+		const report = calculateCalibrationReport(approvedLabels());
 
+		expect(
+			createHash("sha256")
+				.update(source.replace(/\r\n/gu, "\n"))
+				.digest("hex"),
+		).toBe(APPROVED_SEMANTIC_CALIBRATION.labelSetHash);
 		expect(report.rowCount).toBe(24);
 		expect(report.aggregateCorrelation).toBe(1);
 		expect(report.criticalFalseNegativeIds).toEqual([]);
@@ -80,8 +96,8 @@ describe("reject-only semantic calibration", () => {
 	});
 
 	it("accepts scores and reject reasons but no rewritten dialogue field", async () => {
-		const output = draftLabels()[0]?.judge;
-		if (!output) throw new Error("Expected a draft judge fixture.");
+		const output = approvedLabels()[0]?.judge;
+		if (!output) throw new Error("Expected an approved judge fixture.");
 		const provider = { score: vi.fn(async () => output) };
 		const result = await runSemanticJudge({
 			deterministicAccepted: true,

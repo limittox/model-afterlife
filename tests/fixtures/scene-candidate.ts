@@ -9,12 +9,13 @@ import {
 	SEMANTIC_JUDGE_PROMPT_VERSION,
 	type SemanticGateEvidence,
 } from "../../src/features/world/generation/semantic-judge.ts";
+import { APPROVED_SEMANTIC_CALIBRATION } from "../../src/features/world/generation/semantic-calibration.ts";
 
 export function approvedSemanticGateFixture(): SemanticGateEvidence {
 	return {
 		status: "approved",
-		labelSetHash: "a".repeat(64),
-		correlation: 0.9,
+		labelSetHash: APPROVED_SEMANTIC_CALIBRATION.labelSetHash,
+		correlation: APPROVED_SEMANTIC_CALIBRATION.correlation,
 		criticalFalseNegatives: 0,
 		result: {
 			scores: {

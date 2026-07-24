@@ -96,7 +96,7 @@ The exact launch cast is:
 - `meta-llama/llama-3.3-70b-instruct` through Together FP8
 - `qwen/qwen3-235b-a22b-2507` through DeepInfra FP8
 
-Every generated turn requires exact direct-route OpenRouter evidence and passes a complete versioned publication manifest. Missing, stale, errored, or uncalibrated evidence fails closed. The semantic judge is reject-only and cannot rewrite dialogue or call the publisher. It remains disabled until the bundled 24-row human label review is approved, reaches at least `0.70` judge–human correlation, and has zero unresolved critical false negatives. While disabled, generation settles into the existing quiet or explicitly cached continuity behavior.
+Every generated turn requires exact direct-route OpenRouter evidence and passes a complete versioned publication manifest. Missing, stale, errored, or uncalibrated evidence fails closed. The semantic judge is reject-only and cannot rewrite dialogue or call the publisher. The bundled `phase-02-calibration-approved-v1` review was approved on 2026-07-24 at `1.00` aggregate correlation with zero critical false negatives; its SHA-256 is `da152d06706d999d9669e4b07966bb356dde59921b7cc0744e56ca0036457766`. Only that exact label hash, `openai/gpt-4o` judge route, and `phase-02-semantic-judge-v1` prompt are enabled. Drift or judge failure settles into the existing quiet or explicitly cached continuity behavior.
 
 The frozen reference matrix uses no credentials, makes no model calls, and records no prompts, source bodies, or generated dialogue:
 
@@ -120,7 +120,7 @@ When Docker is unavailable, the explicit offline profile still runs unit and non
 corepack pnpm verify:phase-02 -- --offline
 ```
 
-Live Phase 2 evaluation is a separate paid checkpoint. It requires the human-approved label artifact plus a new explicit bounded authorization and call cap. The current cumulative OpenRouter accounting is `71/71`; no additional live call is authorized. The live scaffold therefore refuses to run rather than silently reusing credentials or increasing spend.
+Live Phase 2 evaluation is a separate paid checkpoint. The human-approved artifact is now present, but a new explicit bounded authorization and call cap are still required. The current cumulative OpenRouter accounting is `71/71`; no additional live call is authorized. The live path therefore refuses to run rather than silently reusing credentials or increasing spend.
 
 ## Full verification
 
