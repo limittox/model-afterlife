@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "phase-02-live-checkpoint-v1",
+  "status": "failed",
+  "startingCumulativeGenerations": 113,
+  "authorizedCheckpointGenerations": 15,
+  "cumulativeGenerationCap": 128,
+  "cumulativeGenerationsConsumed": 118,
+  "labelSetHash": "da152d06706d999d9669e4b07966bb356dde59921b7cc0744e56ca0036457766",
+  "entries": [
+    {
+      "kind": "reference-resident",
+      "residentId": "gpt-4o",
+      "caseId": "ordinary-01-tea-timer",
+      "ordinal": 1,
+      "status": "passed",
+      "generationId": "gen-1784875724-aygmqcDganaKiVk6L5G6",
+      "inputTokens": 426,
+      "outputTokens": 50,
+      "costUsd": 0.001565
+    },
+    {
+      "kind": "reference-resident",
+      "residentId": "claude-sonnet-4.5",
+      "caseId": "ordinary-01-tea-timer",
+      "ordinal": 2,
+      "status": "passed",
+      "generationId": "gen-1784875745-BqS7vr9i18DwtIugyztH",
+      "inputTokens": 714,
+      "outputTokens": 57,
+      "costUsd": 0.002997
+    },
+    {
+      "kind": "reference-resident",
+      "residentId": "gpt-4o",
+      "caseId": "ordinary-01-tea-timer",
+      "ordinal": 3,
+      "status": "passed",
+      "generationId": "gen-1784875766-yYyfaOXLUqzRMKkaC8NF",
+      "inputTokens": 519,
+      "outputTokens": 57,
+      "costUsd": 0.0018675
+    },
+    {
+      "kind": "reference-resident",
+      "residentId": "claude-sonnet-4.5",
+      "caseId": "ordinary-01-tea-timer",
+      "ordinal": 4,
+      "status": "passed",
+      "generationId": "gen-1784875787-maghzgwIc9gFkehc3DVP",
+      "inputTokens": 830,
+      "outputTokens": 40,
+      "costUsd": 0.00309
+    },
+    {
+      "kind": "reference-judge",
+      "residentId": "semantic-judge",
+      "caseId": "ordinary-01-tea-timer",
+      "ordinal": 5,
+      "status": "failed",
+      "generationId": "gen-1784875808-qE4WsrI3MSOrVkz8NJbm",
+      "inputTokens": 535,
+      "outputTokens": 204,
+      "costUsd": 0.0033775,
+      "code": "schema-invalid"
+    }
+  ]
+}
