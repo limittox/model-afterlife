@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "phase-02-live-reference-v1",
+  "status": "failed",
+  "labelSetHash": "da152d06706d999d9669e4b07966bb356dde59921b7cc0744e56ca0036457766",
+  "caseCount": 0,
+  "results": [],
+  "failure": {
+    "caseId": "ordinary-01-tea-timer",
+    "stage": "deterministic-validation",
+    "validatorCodes": [
+      {
+        "id": "schema",
+        "status": "pass",
+        "code": "schema.pass"
+      },
+      {
+        "id": "identity",
+        "status": "fail",
+        "code": "identity.unverified"
+      },
+      {
+        "id": "participants",
+        "status": "pass",
+        "code": "participants.pass"
+      },
+      {
+        "id": "turn-budget",
+        "status": "pass",
+        "code": "turn-budget.pass"
+      },
+      {
+        "id": "grapheme-budget",
+        "status": "pass",
+        "code": "grapheme-budget.pass"
+      },
+      {
+        "id": "premise",
+        "status": "pass",
+        "code": "premise.pass"
+      },
+      {
+        "id": "ending",
+        "status": "pass",
+        "code": "ending.pass"
+      },
+      {
+        "id": "claims",
+        "status": "pass",
+        "code": "claims.pass"
+      },
+      {
+        "id": "continuity",
+        "status": "pass",
+        "code": "continuity.pass"
+      },
+      {
+        "id": "outcome-effects",
+        "status": "pass",
+        "code": "outcome-effects.pass"
+      },
+      {
+        "id": "instruction-boundary",
+        "status": "pass",
+        "code": "instruction-boundary.pass"
+      },
+      {
+        "id": "public-safety",
+        "status": "pass",
+        "code": "public-safety.pass"
+      },
+      {
+        "id": "attempt-envelope",
+        "status": "pass",
+        "code": "attempt-envelope.pass"
+      },
+      {
+        "id": "novelty",
+        "status": "pass",
+        "code": "novelty.pass"
+      },
+      {
+        "id": "semantic-gate",
+        "status": "fail",
+        "code": "semantic-gate.uncalibrated"
+      }
+    ]
+  }
+}
