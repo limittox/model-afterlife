@@ -120,17 +120,17 @@ When Docker is unavailable, the explicit offline profile still runs unit and non
 corepack pnpm verify:phase-02 -- --offline
 ```
 
-Live Phase 2 evaluation is a separate paid checkpoint. The human-approved artifact is now present, but a new explicit bounded authorization and call cap are still required. The current cumulative OpenRouter accounting is `71/71`; no additional live call is authorized. The live path therefore refuses to run rather than silently reusing credentials or increasing spend.
+Live Phase 2 evaluation is a separate paid checkpoint. The first conditional 45-generation run completed all 30 paced admission samples and the first four resident turns with exact route and schema evidence. It then stopped before its first judge call because the first reference scene failed deterministic validation. That runner did not preserve the individual validator code, so the precise rejection is intentionally not claimed. The failed ledger is preserved at `evals/results/phase-02-live-checkpoint.json`, and cumulative OpenRouter accounting is `105/116`.
 
-The final live proof is one conditional 45-generation checkpoint: 30 paced admission samples, followed only on success by three four-turn reference scenes and three reject-only judge calls. Its exact cumulative ceiling is `116`. After explicit authorization, run:
+The successful admission matrix is not rerun. A reference-only continuation replays all three four-turn scenes and their three reject-only judge calls for an exact 15-generation checkpoint. It verifies the reviewed failed ledger before starting, records sanitized validator codes on local rejection, and has a new exact cumulative ceiling of `120`. No continuation call is authorized by the previous checkpoint. After a fresh explicit authorization, run:
 
 ```powershell
 $env:MODEL_AFTERLIFE_LIVE_EVAL_AUTHORIZATION = "authorized"
-$env:MODEL_AFTERLIFE_LIVE_EVAL_CALL_CAP = "116"
-corepack pnpm eval:phase-02:live
+$env:MODEL_AFTERLIFE_LIVE_EVAL_CALL_CAP = "120"
+corepack pnpm eval:phase-02:live:continue
 ```
 
-The command writes sanitized call accounting after every generation and refuses to start when an earlier live ledger has not been reconciled.
+The command writes a separate continuation ledger after every generation and refuses to start if the original `105`-generation state has drifted or a continuation ledger already exists. Prompts and response text are never persisted.
 
 ## Full verification
 

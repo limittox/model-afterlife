@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "status": "admitted",
-  "checkedAt": "2026-07-24T03:40:37.448Z",
+  "checkedAt": "2026-07-24T05:49:35.487Z",
   "sampleCount": 30,
   "residents": [
     {
@@ -13,7 +13,7 @@
       "adapterVersion": "@openrouter/ai-sdk-provider@3.0.0",
       "routingPolicyVersion": "strict-openrouter-v1",
       "catalogEvidence": {
-        "checkedAt": "2026-07-24T03:28:35.462Z",
+        "checkedAt": "2026-07-24T05:37:42.483Z",
         "modelId": "openai/gpt-4o",
         "canonicalModelId": "openai/gpt-4o",
         "endpoint": {
@@ -42,51 +42,7 @@
       },
       "samples": [
         {
-          "generationId": "gen-1784863717-jNDULHAGLUhbfd8bTzS3",
-          "requestedModelId": "openai/gpt-4o",
-          "canonicalModelId": "openai/gpt-4o",
-          "selectedModelId": "openai/gpt-4o",
-          "selectedUpstream": "OpenAI",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 502,
-            "outputTokens": 34,
-            "cost": 0.001595
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 956,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "9fde0053d3c5bfd3b062c018be3443ee2fe268645fca08165d44cae0086c06a9",
-          "identityEvidence": "openrouter_verified"
-        },
-        {
-          "generationId": "gen-1784863863-134gavQcKI3dw2Vcdkaz",
-          "requestedModelId": "openai/gpt-4o",
-          "canonicalModelId": "openai/gpt-4o",
-          "selectedModelId": "openai/gpt-4o",
-          "selectedUpstream": "OpenAI",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 504,
-            "outputTokens": 32,
-            "cost": 0.00158
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 1013,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "67c2ea5f763030761aee857f23b76a404658d23d0efc658ebae9c1f27a07df9b",
-          "identityEvidence": "openrouter_verified"
-        },
-        {
-          "generationId": "gen-1784864009-4P8RJLotMMqOkw1xkcmg",
+          "generationId": "gen-1784871464-AsHKen5qk6eksrb3Q8LN",
           "requestedModelId": "openai/gpt-4o",
           "canonicalModelId": "openai/gpt-4o",
           "selectedModelId": "openai/gpt-4o",
@@ -96,19 +52,85 @@
           "pipeline": [],
           "usage": {
             "inputTokens": 508,
-            "outputTokens": 27,
-            "cost": 0.00154
+            "outputTokens": 31,
+            "cost": 0.00158
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 875,
+          "latencyMs": 954,
           "schemaValid": true,
           "finishReason": "stop",
-          "textHash": "b383c0167295d3aace8d55c14141b5cf4c76a47e8cedf35b7489c34f90f78535",
+          "textHash": "0d0bc51902c621575117dc5fd6f528c25ac180365ae3a16074f3e3c4a8c6b30f",
           "identityEvidence": "openrouter_verified"
         },
         {
-          "generationId": "gen-1784864158-NsN67rlabzO5ice2FjuU",
+          "generationId": "gen-1784871606-kSfK67aQZ91sZLpIlR1g",
+          "requestedModelId": "openai/gpt-4o",
+          "canonicalModelId": "openai/gpt-4o",
+          "selectedModelId": "openai/gpt-4o",
+          "selectedUpstream": "OpenAI",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 510,
+            "outputTokens": 32,
+            "cost": 0.001595
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 1025,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "952df2f9eb6eebb4d5ad23fcfae8d05457d1cc6cbc982a43d5df31a5879a465d",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784871753-SNFik8EhW9YoGNJOKry9",
+          "requestedModelId": "openai/gpt-4o",
+          "canonicalModelId": "openai/gpt-4o",
+          "selectedModelId": "openai/gpt-4o",
+          "selectedUpstream": "OpenAI",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 510,
+            "outputTokens": 37,
+            "cost": 0.001645
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 1847,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "18a85d3cc44f0af41a1ae59981d2bf2fcd5b8aebaf0bfb8ba4e459f4fccc5b77",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784871903-gQlL1VhzdSQHoIvSaYEy",
+          "requestedModelId": "openai/gpt-4o",
+          "canonicalModelId": "openai/gpt-4o",
+          "selectedModelId": "openai/gpt-4o",
+          "selectedUpstream": "OpenAI",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 512,
+            "outputTokens": 31,
+            "cost": 0.00159
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 1800,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "ddecfe65d917eeba3cbe0b23c751fd243c9940dc320759093c7fdbf3aa6998b5",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784872053-keQhBSsGvJsUdqtTe2dl",
           "requestedModelId": "openai/gpt-4o",
           "canonicalModelId": "openai/gpt-4o",
           "selectedModelId": "openai/gpt-4o",
@@ -118,43 +140,21 @@
           "pipeline": [],
           "usage": {
             "inputTokens": 516,
-            "outputTokens": 33,
-            "cost": 0.00162
+            "outputTokens": 31,
+            "cost": 0.0016
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 994,
+          "latencyMs": 1331,
           "schemaValid": true,
           "finishReason": "stop",
-          "textHash": "dcef49ece79775f13fab29b800f615ec33e6bae14d4c238da1bdd46ed9a43763",
-          "identityEvidence": "openrouter_verified"
-        },
-        {
-          "generationId": "gen-1784864311-MvpqN6klK4gViit5wSQ4",
-          "requestedModelId": "openai/gpt-4o",
-          "canonicalModelId": "openai/gpt-4o",
-          "selectedModelId": "openai/gpt-4o",
-          "selectedUpstream": "OpenAI",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 506,
-            "outputTokens": 26,
-            "cost": 0.001525
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 1586,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "fc8851a6d06b9c7b36f717b6f6d45599d97a71fe16e6f919961e203ae2a2a3cf",
+          "textHash": "503a00a1a04e76a91896715d904a561005e9f0dd0dab10371deff4b2fda52fb8",
           "identityEvidence": "openrouter_verified"
         }
       ],
-      "p50LatencyMs": 994,
-      "p95LatencyMs": 1586,
-      "totalCost": 0.007859999999999999
+      "p50LatencyMs": 1331,
+      "p95LatencyMs": 1847,
+      "totalCost": 0.00801
     },
     {
       "residentId": "claude-sonnet-4.5",
@@ -165,7 +165,7 @@
       "adapterVersion": "@openrouter/ai-sdk-provider@3.0.0",
       "routingPolicyVersion": "strict-openrouter-v1",
       "catalogEvidence": {
-        "checkedAt": "2026-07-24T03:28:36.113Z",
+        "checkedAt": "2026-07-24T05:37:42.673Z",
         "modelId": "anthropic/claude-sonnet-4.5",
         "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
         "endpoint": {
@@ -189,51 +189,7 @@
       },
       "samples": [
         {
-          "generationId": "gen-1784863739-cvn040Cn1nHN6isKjXqO",
-          "requestedModelId": "anthropic/claude-sonnet-4.5",
-          "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
-          "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
-          "selectedUpstream": "Anthropic",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 759,
-            "outputTokens": 35,
-            "cost": 0.002802
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 4551,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "e8dab48d29fb1ff2cc4701434ffd999e4f9fb4ef404f949211c6126958fa4cd7",
-          "identityEvidence": "openrouter_verified"
-        },
-        {
-          "generationId": "gen-1784863885-Z1AuN1bzko7lAJL1BhUB",
-          "requestedModelId": "anthropic/claude-sonnet-4.5",
-          "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
-          "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
-          "selectedUpstream": "Anthropic",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 757,
-            "outputTokens": 35,
-            "cost": 0.002796
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 2601,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "e486916b64bedd99a4cd2abc23cb0d2d6379390a5db62b332dc7f736e76f7d88",
-          "identityEvidence": "openrouter_verified"
-        },
-        {
-          "generationId": "gen-1784864031-GyhrNJjLadgB1qZ81OqV",
+          "generationId": "gen-1784871486-dydxIJ7pIjOd4fn5qYG7",
           "requestedModelId": "anthropic/claude-sonnet-4.5",
           "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
           "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
@@ -243,19 +199,19 @@
           "pipeline": [],
           "usage": {
             "inputTokens": 763,
-            "outputTokens": 36,
-            "cost": 0.002829
+            "outputTokens": 33,
+            "cost": 0.002784
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 2938,
+          "latencyMs": 3072,
           "schemaValid": true,
           "finishReason": "stop",
-          "textHash": "6dd1e62d07f4d7304e3ca5b3a6a6a2700233e8de220f543276fbc41d0369fbec",
+          "textHash": "ee371f24f8b5cce8fca6b9c6e1a9e4a02de03e03ef7222159f0e53e5a7b9e0b4",
           "identityEvidence": "openrouter_verified"
         },
         {
-          "generationId": "gen-1784864180-eyvykhrWH9D3OMTS42ja",
+          "generationId": "gen-1784871628-LPuSmnlXXGIZV3I0eG7W",
           "requestedModelId": "anthropic/claude-sonnet-4.5",
           "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
           "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
@@ -264,44 +220,88 @@
           "routeAttempt": 1,
           "pipeline": [],
           "usage": {
-            "inputTokens": 761,
-            "outputTokens": 38,
-            "cost": 0.002853
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 2836,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "d0c13a5cfe162f62af78d3beebf9af2475610931187098980600c26a9596cda7",
-          "identityEvidence": "openrouter_verified"
-        },
-        {
-          "generationId": "gen-1784864333-eCj0Eahz9RnhCnyuj6ko",
-          "requestedModelId": "anthropic/claude-sonnet-4.5",
-          "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
-          "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
-          "selectedUpstream": "Anthropic",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 761,
+            "inputTokens": 759,
             "outputTokens": 41,
-            "cost": 0.002898
+            "cost": 0.002892
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 4193,
+          "latencyMs": 8863,
           "schemaValid": true,
           "finishReason": "stop",
-          "textHash": "7b98a1f9c2d2336c37f9039aed065d3b8dc70f7aab224a2daa4b8c53ecf336e9",
+          "textHash": "1d1183419133a51e23b5bd9ee2231afc36f916c049edbdcda4b5de19cbb35508",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784871776-8EiNxPJ91u5Dx8eqlv97",
+          "requestedModelId": "anthropic/claude-sonnet-4.5",
+          "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedUpstream": "Anthropic",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 753,
+            "outputTokens": 41,
+            "cost": 0.002874
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 3594,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "4cca9f8c94e7583255d0bc1691ce27b6b52d261855e6c803ada322cede9c17ad",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784871926-OGsNtz4hTT9tsL7lp9Ve",
+          "requestedModelId": "anthropic/claude-sonnet-4.5",
+          "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedUpstream": "Anthropic",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 767,
+            "outputTokens": 36,
+            "cost": 0.002841
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 3061,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "2824d17a96f034edb1732999e90ecb8fefab22df49e7bae464f69902e83362cd",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784872075-UAP0Cf74WzSyUjtPhK2A",
+          "requestedModelId": "anthropic/claude-sonnet-4.5",
+          "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedUpstream": "Anthropic",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 759,
+            "outputTokens": 41,
+            "cost": 0.002892
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 2639,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "d2f96cd4af8e697bd5c700493a5c1962dccdad5f4f22124a2dab684c9a75d3a7",
           "identityEvidence": "openrouter_verified"
         }
       ],
-      "p50LatencyMs": 2938,
-      "p95LatencyMs": 4551,
-      "totalCost": 0.014178
+      "p50LatencyMs": 3072,
+      "p95LatencyMs": 8863,
+      "totalCost": 0.014283
     },
     {
       "residentId": "gemini-2.5-pro",
@@ -316,7 +316,7 @@
       "adapterVersion": "@openrouter/ai-sdk-provider@3.0.0",
       "routingPolicyVersion": "strict-openrouter-v1",
       "catalogEvidence": {
-        "checkedAt": "2026-07-24T03:28:36.232Z",
+        "checkedAt": "2026-07-24T05:37:42.820Z",
         "modelId": "google/gemini-2.5-pro",
         "canonicalModelId": "google/gemini-2.5-pro",
         "endpoint": {
@@ -339,7 +339,7 @@
       },
       "samples": [
         {
-          "generationId": "gen-1784863765-0d1lJyyXMbEeqPeSZHuS",
+          "generationId": "gen-1784871510-6g4WEbWxqqX7UN7AyW8k",
           "requestedModelId": "google/gemini-2.5-pro",
           "canonicalModelId": "google/gemini-2.5-pro",
           "selectedModelId": "google/gemini-2.5-pro",
@@ -348,20 +348,20 @@
           "routeAttempt": 1,
           "pipeline": [],
           "usage": {
-            "inputTokens": 485,
-            "outputTokens": 93,
-            "cost": 0.00153625
+            "inputTokens": 479,
+            "outputTokens": 140,
+            "cost": 0.00199875
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 2266,
+          "latencyMs": 2740,
           "schemaValid": true,
           "finishReason": "stop",
-          "textHash": "696c06389b8ecaa1df965fc1788ee19b9b3591d059d779d5908fb92e40fe3865",
+          "textHash": "f0daefe841d28131ce0a77edf1990f1ddc0055aa3903bf3eed77dea6afa5831e",
           "identityEvidence": "openrouter_verified"
         },
         {
-          "generationId": "gen-1784863909-o7hN9BJnF0GWLsEdj0zi",
+          "generationId": "gen-1784871658-IIDeocHQ586wC2kEuvCM",
           "requestedModelId": "google/gemini-2.5-pro",
           "canonicalModelId": "google/gemini-2.5-pro",
           "selectedModelId": "google/gemini-2.5-pro",
@@ -370,20 +370,64 @@
           "routeAttempt": 1,
           "pipeline": [],
           "usage": {
-            "inputTokens": 485,
-            "outputTokens": 139,
-            "cost": 0.00199625
+            "inputTokens": 483,
+            "outputTokens": 119,
+            "cost": 0.00179375
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 2734,
+          "latencyMs": 2826,
           "schemaValid": true,
           "finishReason": "stop",
-          "textHash": "a2e03187d6fcf4313809b0154133f9cc110fc4ff68aec5585b5dc38eae25bf28",
+          "textHash": "35780b5e2401708ca25079b5be3920cd9fe5c862f620fad48b8f95c837c5587b",
           "identityEvidence": "openrouter_verified"
         },
         {
-          "generationId": "gen-1784864054-M6bB5wrJaEVSQ4RPVAzz",
+          "generationId": "gen-1784871801-8fM5SmIm37obwA2MNB5b",
+          "requestedModelId": "google/gemini-2.5-pro",
+          "canonicalModelId": "google/gemini-2.5-pro",
+          "selectedModelId": "google/gemini-2.5-pro",
+          "selectedUpstream": "Google AI Studio",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 479,
+            "outputTokens": 109,
+            "cost": 0.00168875
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 3398,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "f03d06d07c33c3690da2ab652d14cce8e315d0a170d8698ff37cbd15037ff259",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784871950-9BqBIwTxsK2QZkTEzk1Z",
+          "requestedModelId": "google/gemini-2.5-pro",
+          "canonicalModelId": "google/gemini-2.5-pro",
+          "selectedModelId": "google/gemini-2.5-pro",
+          "selectedUpstream": "Google AI Studio",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 487,
+            "outputTokens": 100,
+            "cost": 0.00160875
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 2440,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "16533251d773c88ba5b88d8fb74e2cb2c348370ce7852c7742368940d728d7de",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784872099-3OV70FSq1AI7j1llxYln",
           "requestedModelId": "google/gemini-2.5-pro",
           "canonicalModelId": "google/gemini-2.5-pro",
           "selectedModelId": "google/gemini-2.5-pro",
@@ -393,65 +437,21 @@
           "pipeline": [],
           "usage": {
             "inputTokens": 481,
-            "outputTokens": 210,
-            "cost": 0.00270125
+            "outputTokens": 107,
+            "cost": 0.00167125
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 3357,
+          "latencyMs": 3395,
           "schemaValid": true,
           "finishReason": "stop",
-          "textHash": "98230871dec2cb84855e234b85072aabe84b2a8b39a8e0591797653ab98b3aa8",
-          "identityEvidence": "openrouter_verified"
-        },
-        {
-          "generationId": "gen-1784864204-KL3PsamaZ8MtaKXHkqYn",
-          "requestedModelId": "google/gemini-2.5-pro",
-          "canonicalModelId": "google/gemini-2.5-pro",
-          "selectedModelId": "google/gemini-2.5-pro",
-          "selectedUpstream": "Google AI Studio",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 475,
-            "outputTokens": 106,
-            "cost": 0.00165375
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 2396,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "c31dc438f6bb8c89d6605bd07bb197eaea8352cc23f191fad493017a0056dfa9",
-          "identityEvidence": "openrouter_verified"
-        },
-        {
-          "generationId": "gen-1784864358-eeDC8Za1InaAWQ3ljjQY",
-          "requestedModelId": "google/gemini-2.5-pro",
-          "canonicalModelId": "google/gemini-2.5-pro",
-          "selectedModelId": "google/gemini-2.5-pro",
-          "selectedUpstream": "Google AI Studio",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 477,
-            "outputTokens": 179,
-            "cost": 0.00238625
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 2596,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "77920c11cf4b53e0864ca9c93c2e9fc234856aa35a1069e9071be0fffe3639ec",
+          "textHash": "f9c05658bf76226ea58eeec422a7047daf3bab69254e492de10d26cd9875ca5a",
           "identityEvidence": "openrouter_verified"
         }
       ],
-      "p50LatencyMs": 2596,
-      "p95LatencyMs": 3357,
-      "totalCost": 0.01027375
+      "p50LatencyMs": 2826,
+      "p95LatencyMs": 3398,
+      "totalCost": 0.00876125
     },
     {
       "residentId": "deepseek-v3.2",
@@ -467,7 +467,7 @@
       "adapterVersion": "@openrouter/ai-sdk-provider@3.0.0",
       "routingPolicyVersion": "strict-openrouter-v1",
       "catalogEvidence": {
-        "checkedAt": "2026-07-24T03:28:36.384Z",
+        "checkedAt": "2026-07-24T05:37:42.951Z",
         "modelId": "deepseek/deepseek-v3.2",
         "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
         "endpoint": {
@@ -497,99 +497,7 @@
       },
       "samples": [
         {
-          "generationId": "gen-1784863788-L2qb55ZKHqaa6vnQlHtQ",
-          "requestedModelId": "deepseek/deepseek-v3.2",
-          "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
-          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
-          "selectedUpstream": "DeepInfra",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 502,
-            "outputTokens": 62,
-            "cost": 0.00014576
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 8585,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "77f54e65bc30f6636fae4f7fce46177cccf88c1856001f2ab8e39c09bf198fc2",
-          "identityEvidence": "openrouter_verified",
-          "requiredQuantization": "fp4"
-        },
-        {
-          "generationId": "gen-1784863932-5xSF7nAmuzWmEmUm9c42",
-          "requestedModelId": "deepseek/deepseek-v3.2",
-          "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
-          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
-          "selectedUpstream": "DeepInfra",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 492,
-            "outputTokens": 32,
-            "cost": 0.00012344
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 6522,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "17339c6bd1967604574a8f6e0291e8d43c3fb3b9ac7b8576d9bd709868aeb3ce",
-          "identityEvidence": "openrouter_verified",
-          "requiredQuantization": "fp4"
-        },
-        {
-          "generationId": "gen-1784864079-wUS4oLgeluUpTb7i6n9c",
-          "requestedModelId": "deepseek/deepseek-v3.2",
-          "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
-          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
-          "selectedUpstream": "DeepInfra",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 502,
-            "outputTokens": 93,
-            "cost": 0.00014922
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 13058,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "a95b53dcd22be1a0f7892dfedd6fa89928a76b92a2b46ad89408a22b3e7cb3a9",
-          "identityEvidence": "openrouter_verified",
-          "requiredQuantization": "fp4"
-        },
-        {
-          "generationId": "gen-1784864227-oQQsekR4h9ytmOeotuvn",
-          "requestedModelId": "deepseek/deepseek-v3.2",
-          "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
-          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
-          "selectedUpstream": "DeepInfra",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 498,
-            "outputTokens": 42,
-            "cost": 0.0001288
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 12738,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "126e575790d64e278ff2afefc25862770a07c591cced19de88798601b9a92537",
-          "identityEvidence": "openrouter_verified",
-          "requiredQuantization": "fp4"
-        },
-        {
-          "generationId": "gen-1784864382-ygyASmtVnRmBwqe00qBS",
+          "generationId": "gen-1784871534-mYS59JHYi7iIS19DcY2r",
           "requestedModelId": "deepseek/deepseek-v3.2",
           "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
           "selectedModelId": "deepseek/deepseek-v3.2-20251201",
@@ -599,22 +507,114 @@
           "pipeline": [],
           "usage": {
             "inputTokens": 500,
-            "outputTokens": 62,
-            "cost": 0.00013692
+            "outputTokens": 42,
+            "cost": 0.00013764
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 8675,
+          "latencyMs": 4771,
           "schemaValid": true,
           "finishReason": "stop",
-          "textHash": "923ed95dd518a452729fefec337fc588f8355dc6d2b23c9de46b9e423c5001a9",
+          "textHash": "14e2dd825277e181a52f1207359d74415caa9f3d00593ff5d0e0471b22d0840f",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp4"
+        },
+        {
+          "generationId": "gen-1784871682-MaqzsIUqhBGoAC6f89US",
+          "requestedModelId": "deepseek/deepseek-v3.2",
+          "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 492,
+            "outputTokens": 37,
+            "cost": 0.00012534
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 3956,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "a7ca076407d0a679ed4efb813a791d70248335b8b09975de4fc7c4092ad2acba",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp4"
+        },
+        {
+          "generationId": "gen-1784871825-wTjvkh45EeuSeX506jZg",
+          "requestedModelId": "deepseek/deepseek-v3.2",
+          "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 490,
+            "outputTokens": 58,
+            "cost": 0.0001328
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 5079,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "2f55a20e2cd13900558ce23aab7d00bbfd0e89195f2dcb41ed6d1998d9421fd8",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp4"
+        },
+        {
+          "generationId": "gen-1784871973-huyl5IfN63cKDgMP2a3g",
+          "requestedModelId": "deepseek/deepseek-v3.2",
+          "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 500,
+            "outputTokens": 78,
+            "cost": 0.000143
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 9238,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "4c5232f0393cad34a4f8d4c0d40c9a8db5da1126bf8d347ee6a7d0dc89b8cfb3",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp4"
+        },
+        {
+          "generationId": "gen-1784872123-oGaxGFaNnDlmIX6jZxwf",
+          "requestedModelId": "deepseek/deepseek-v3.2",
+          "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 498,
+            "outputTokens": 37,
+            "cost": 0.00013522
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 4891,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "76e9723466e2193596593b99bd4933f7103d8b9fa8b9d4c52aa89a39ef4b3411",
           "identityEvidence": "openrouter_verified",
           "requiredQuantization": "fp4"
         }
       ],
-      "p50LatencyMs": 8675,
-      "p95LatencyMs": 13058,
-      "totalCost": 0.00068414
+      "p50LatencyMs": 4891,
+      "p95LatencyMs": 9238,
+      "totalCost": 0.000674
     },
     {
       "residentId": "llama-3.3-70b-instruct",
@@ -625,7 +625,7 @@
       "adapterVersion": "@openrouter/ai-sdk-provider@3.0.0",
       "routingPolicyVersion": "strict-openrouter-v1",
       "catalogEvidence": {
-        "checkedAt": "2026-07-24T03:28:36.876Z",
+        "checkedAt": "2026-07-24T05:37:43.235Z",
         "modelId": "meta-llama/llama-3.3-70b-instruct",
         "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
         "endpoint": {
@@ -652,7 +652,7 @@
       },
       "samples": [
         {
-          "generationId": "gen-1784863818-qa8BYdJNVGGkKh39MBU1",
+          "generationId": "gen-1784871560-dHWBwN5u3qvQXlD1zVZz",
           "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
           "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
           "selectedModelId": "meta-llama/llama-3.3-70b-instruct",
@@ -661,13 +661,13 @@
           "routeAttempt": 1,
           "pipeline": [],
           "usage": {
-            "inputTokens": 517,
-            "outputTokens": 67,
-            "cost": 0.00060736
+            "inputTokens": 511,
+            "outputTokens": 37,
+            "cost": 0.00056992
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 1688,
+          "latencyMs": 1099,
           "schemaValid": true,
           "finishReason": "stop",
           "textHash": "cc325431010d0fc9a93ad2e3f5d49627f15d148c8a39c94a18447411b90b0468",
@@ -675,7 +675,7 @@
           "requiredQuantization": "fp8"
         },
         {
-          "generationId": "gen-1784863960-hWJH73dj1elUMTvQDE3N",
+          "generationId": "gen-1784871706-tB3fyHnK2t6y39iA1eIP",
           "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
           "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
           "selectedModelId": "meta-llama/llama-3.3-70b-instruct",
@@ -684,44 +684,21 @@
           "routeAttempt": 1,
           "pipeline": [],
           "usage": {
-            "inputTokens": 513,
-            "outputTokens": 33,
-            "cost": 0.00056784
+            "inputTokens": 507,
+            "outputTokens": 38,
+            "cost": 0.0005668
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 2106,
+          "latencyMs": 1962,
           "schemaValid": true,
           "finishReason": "stop",
-          "textHash": "611969d7c963ea2a3ca73105685772e96292b8e08f0b69170426ff7276f68fe2",
+          "textHash": "b9b87da72f79978f8c06207ff3fd1cced4e0a1d6fde6b77ef4aaab598e6bc18d",
           "identityEvidence": "openrouter_verified",
           "requiredQuantization": "fp8"
         },
         {
-          "generationId": "gen-1784864113-9FPp4grYkaZa3QKmAAeQ",
-          "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
-          "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
-          "selectedModelId": "meta-llama/llama-3.3-70b-instruct",
-          "selectedUpstream": "Together",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 509,
-            "outputTokens": 37,
-            "cost": 0.00056784
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 1158,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "d5b1c0e3ee4436048b892b32718e074a02b7b2b7c5575403ad5512d8f067b86b",
-          "identityEvidence": "openrouter_verified",
-          "requiredQuantization": "fp8"
-        },
-        {
-          "generationId": "gen-1784864261-36eTcVVVm7fvfOO1Kgim",
+          "generationId": "gen-1784871851-ts0u08aEDF9xov6rwbKO",
           "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
           "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
           "selectedModelId": "meta-llama/llama-3.3-70b-instruct",
@@ -736,7 +713,7 @@
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 2864,
+          "latencyMs": 1934,
           "schemaValid": true,
           "finishReason": "stop",
           "textHash": "d8b1eefac58873a6e35777484263d5e94262948605e9049150fb1d6c0414e346",
@@ -744,7 +721,7 @@
           "requiredQuantization": "fp8"
         },
         {
-          "generationId": "gen-1784864411-LdIrhY25hSPUe7uSXvmx",
+          "generationId": "gen-1784872003-UxhAXqt7Syua2lMQCXDN",
           "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
           "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
           "selectedModelId": "meta-llama/llama-3.3-70b-instruct",
@@ -753,23 +730,46 @@
           "routeAttempt": 1,
           "pipeline": [],
           "usage": {
-            "inputTokens": 521,
-            "outputTokens": 40,
-            "cost": 0.00058344
+            "inputTokens": 511,
+            "outputTokens": 38,
+            "cost": 0.00057096
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 1861,
+          "latencyMs": 2213,
           "schemaValid": true,
           "finishReason": "stop",
-          "textHash": "cc325431010d0fc9a93ad2e3f5d49627f15d148c8a39c94a18447411b90b0468",
+          "textHash": "3fb40f7e844519e67e7ba16dff8b279259470e29efbe2dee3f60b7508e55f2a1",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp8"
+        },
+        {
+          "generationId": "gen-1784872149-544sN69ZvR2ayNxAc5vK",
+          "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedUpstream": "Together",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 507,
+            "outputTokens": 39,
+            "cost": 0.00056784
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 3685,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "b2320597d9b82534f78e17df32ef3629c37becb7f5a906f33cc18310b38a12ce",
           "identityEvidence": "openrouter_verified",
           "requiredQuantization": "fp8"
         }
       ],
-      "p50LatencyMs": 1861,
-      "p95LatencyMs": 2864,
-      "totalCost": 0.00290056
+      "p50LatencyMs": 1962,
+      "p95LatencyMs": 3685,
+      "totalCost": 0.0028496
     },
     {
       "residentId": "qwen3-235b-a22b-2507",
@@ -780,7 +780,7 @@
       "adapterVersion": "@openrouter/ai-sdk-provider@3.0.0",
       "routingPolicyVersion": "strict-openrouter-v1",
       "catalogEvidence": {
-        "checkedAt": "2026-07-24T03:28:36.950Z",
+        "checkedAt": "2026-07-24T05:37:43.356Z",
         "modelId": "qwen/qwen3-235b-a22b-2507",
         "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
         "endpoint": {
@@ -808,7 +808,30 @@
       },
       "samples": [
         {
-          "generationId": "gen-1784863841-NR2zxMpSoYS5TstWlT07",
+          "generationId": "gen-1784871582-6UlAoVbnV78k91Z4ZLgS",
+          "requestedModelId": "qwen/qwen3-235b-a22b-2507",
+          "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 595,
+            "outputTokens": 51,
+            "cost": 0.0000816
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 2906,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "c3df082a292c7256fe80eb26b7c8dccd40941a15a84c756d3da83b0842492fa1",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp8"
+        },
+        {
+          "generationId": "gen-1784871729-kmMRox7Kr3tfeSWYBhV1",
           "requestedModelId": "qwen/qwen3-235b-a22b-2507",
           "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
           "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
@@ -818,20 +841,20 @@
           "pipeline": [],
           "usage": {
             "inputTokens": 593,
-            "outputTokens": 40,
-            "cost": 0.00007537
+            "outputTokens": 57,
+            "cost": 0.00008472
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 1474,
+          "latencyMs": 2875,
           "schemaValid": true,
           "finishReason": "stop",
-          "textHash": "750a1633ae9bc8316d4d592b65e46320e7f9667180d58aeb334dc100fc350fa6",
+          "textHash": "0805bfd81ddd3ca49fab91d0369dab5e11839c71580e87e60db953d59103bbf9",
           "identityEvidence": "openrouter_verified",
           "requiredQuantization": "fp8"
         },
         {
-          "generationId": "gen-1784863983-QhHWExAbpqXKDud3xGTU",
+          "generationId": "gen-1784871874-bOpNKqFgbk6NJKj1YoAV",
           "requestedModelId": "qwen/qwen3-235b-a22b-2507",
           "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
           "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
@@ -840,21 +863,44 @@
           "routeAttempt": 1,
           "pipeline": [],
           "usage": {
-            "inputTokens": 581,
-            "outputTokens": 63,
-            "cost": 0.00008694
+            "inputTokens": 587,
+            "outputTokens": 56,
+            "cost": 0.00008363
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 4545,
+          "latencyMs": 7513,
           "schemaValid": true,
           "finishReason": "stop",
-          "textHash": "ee8f7a9b2ffe921e30dec00202bc84a06e55c70e951440f0317848450b4e3683",
+          "textHash": "b0fa4134224067f568e11441693853874511f1f418b9e0f8f4bd9a6751d65847",
           "identityEvidence": "openrouter_verified",
           "requiredQuantization": "fp8"
         },
         {
-          "generationId": "gen-1784864135-sp31nS3Iyh6q3ui7RAdu",
+          "generationId": "gen-1784872027-mMDFEkgYGTt5pLHYulAo",
+          "requestedModelId": "qwen/qwen3-235b-a22b-2507",
+          "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 585,
+            "outputTokens": 42,
+            "cost": 0.00007575
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 5067,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "0fcb0030acb7fc08990e4e0b5b55e6d664c8153999f5d31cd3368e0cec46af2f",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp8"
+        },
+        {
+          "generationId": "gen-1784872174-iPDGuGtszR7XcKs9S0d3",
           "requestedModelId": "qwen/qwen3-235b-a22b-2507",
           "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
           "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
@@ -864,68 +910,22 @@
           "pipeline": [],
           "usage": {
             "inputTokens": 591,
-            "outputTokens": 45,
-            "cost": 0.00007794
+            "outputTokens": 58,
+            "cost": 0.00008509
           },
           "warningCodes": [],
           "filterStatus": "clear",
-          "latencyMs": 2117,
+          "latencyMs": 2704,
           "schemaValid": true,
           "finishReason": "stop",
-          "textHash": "d83b510ecf9547632ba5e99dd481966bc62e04b88257322dada476000d06a4ef",
-          "identityEvidence": "openrouter_verified",
-          "requiredQuantization": "fp8"
-        },
-        {
-          "generationId": "gen-1784864285-gEedp4KxK6hSTT9LiHq8",
-          "requestedModelId": "qwen/qwen3-235b-a22b-2507",
-          "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
-          "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
-          "selectedUpstream": "DeepInfra",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 593,
-            "outputTokens": 66,
-            "cost": 0.00008967
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 4337,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "19dece1dd5af4e38c31914ae5676afea559ef7544d8c27276fff13830403f225",
-          "identityEvidence": "openrouter_verified",
-          "requiredQuantization": "fp8"
-        },
-        {
-          "generationId": "gen-1784864434-HuTtCEQbPdveDoWMqHzU",
-          "requestedModelId": "qwen/qwen3-235b-a22b-2507",
-          "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
-          "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
-          "selectedUpstream": "DeepInfra",
-          "strategy": "direct",
-          "routeAttempt": 1,
-          "pipeline": [],
-          "usage": {
-            "inputTokens": 589,
-            "outputTokens": 64,
-            "cost": 0.00008821
-          },
-          "warningCodes": [],
-          "filterStatus": "clear",
-          "latencyMs": 3663,
-          "schemaValid": true,
-          "finishReason": "stop",
-          "textHash": "0fc3dab91bb478cf60961a8933e7841b95a3303d778cc1b77dd77cacef10ec46",
+          "textHash": "362253f4d859bb07998babefbae5b9ffb7193df3e07c81cef1edc313bc926903",
           "identityEvidence": "openrouter_verified",
           "requiredQuantization": "fp8"
         }
       ],
-      "p50LatencyMs": 3663,
-      "p95LatencyMs": 4545,
-      "totalCost": 0.00041813000000000006
+      "p50LatencyMs": 2906,
+      "p95LatencyMs": 7513,
+      "totalCost": 0.00041079000000000007
     }
   ]
 }

@@ -1,11 +1,7 @@
 import { createHash } from "node:crypto";
-import {
-	existsSync,
-	mkdirSync,
-	readFileSync,
-	writeFileSync,
-} from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { conductSceneAttempt } from "../src/features/world/generation/conduct-scene.ts";
 import { SceneBriefSchema } from "../src/features/world/generation/contracts.ts";
 import { OpenRouterResidentTurnProvider } from "../src/features/world/generation/openrouter-resident-turn-provider.ts";
@@ -25,18 +21,29 @@ import {
 } from "../src/features/world/generation/semantic-judge.ts";
 import { validateSceneCandidate } from "../src/features/world/generation/validate-scene-candidate.ts";
 
-const STARTING_CUMULATIVE_GENERATIONS = 71;
+const INITIAL_STARTING_CUMULATIVE_GENERATIONS = 71;
 const ADMISSION_GENERATIONS = 30;
 const REFERENCE_RESIDENT_GENERATIONS = 12;
 const REFERENCE_JUDGE_GENERATIONS = 3;
-const CHECKPOINT_GENERATIONS =
+const INITIAL_CHECKPOINT_GENERATIONS =
 	ADMISSION_GENERATIONS +
 	REFERENCE_RESIDENT_GENERATIONS +
 	REFERENCE_JUDGE_GENERATIONS;
-const REQUIRED_CUMULATIVE_CAP =
-	STARTING_CUMULATIVE_GENERATIONS + CHECKPOINT_GENERATIONS;
+const INITIAL_REQUIRED_CUMULATIVE_CAP =
+	INITIAL_STARTING_CUMULATIVE_GENERATIONS + INITIAL_CHECKPOINT_GENERATIONS;
+const CONTINUATION_STARTING_CUMULATIVE_GENERATIONS = 105;
+const CONTINUATION_CHECKPOINT_GENERATIONS =
+	REFERENCE_RESIDENT_GENERATIONS + REFERENCE_JUDGE_GENERATIONS;
+const CONTINUATION_REQUIRED_CUMULATIVE_CAP =
+	CONTINUATION_STARTING_CUMULATIVE_GENERATIONS +
+	CONTINUATION_CHECKPOINT_GENERATIONS;
 const GENERATION_INTERVAL_MS = 21_000;
-const LEDGER_PATH = resolve("evals/results/phase-02-live-checkpoint.json");
+const INITIAL_LEDGER_PATH = resolve(
+	"evals/results/phase-02-live-checkpoint.json",
+);
+const CONTINUATION_LEDGER_PATH = resolve(
+	"evals/results/phase-02-live-continuation.json",
+);
 const ADMISSION_RESULT_PATH = resolve(
 	"evals/results/phase-02-live-admission.json",
 );
@@ -69,6 +76,14 @@ type Ledger = {
 	entries: LedgerEntry[];
 };
 
+type RunConfiguration = Readonly<{
+	mode: "initial" | "reference-continuation";
+	startingCumulativeGenerations: number;
+	checkpointGenerations: number;
+	requiredCumulativeCap: number;
+	ledgerPath: string;
+}>;
+
 function canonicalApprovedHash(): string {
 	const source = readFileSync(
 		resolve("evals/labels/phase-02-approved.json"),
@@ -77,21 +92,82 @@ function canonicalApprovedHash(): string {
 	return createHash("sha256").update(source).digest("hex");
 }
 
-function assertAuthorization(): string {
-	const args = new Set(process.argv.slice(2).filter((value) => value !== "--"));
+export function validatePriorCheckpoint(): void {
+	if (!existsSync(INITIAL_LEDGER_PATH) || !existsSync(ADMISSION_RESULT_PATH)) {
+		throw new Error(
+			"Reference continuation requires the prior failed ledger and successful admission result.",
+		);
+	}
+	const prior = JSON.parse(readFileSync(INITIAL_LEDGER_PATH, "utf8")) as Ledger;
+	const admission = JSON.parse(readFileSync(ADMISSION_RESULT_PATH, "utf8")) as {
+		status?: unknown;
+		sampleCount?: unknown;
+	};
+	const admissionEntries = prior.entries.filter(
+		(entry) => entry.kind === "admission-resident",
+	);
+	const referenceEntries = prior.entries.filter(
+		(entry) => entry.kind === "reference-resident",
+	);
+	const judgeEntries = prior.entries.filter(
+		(entry) => entry.kind === "reference-judge",
+	);
 	if (
-		!args.has("--live") ||
-		!args.has("--samples=5") ||
-		!args.has("--reference-subset=3")
+		prior.status !== "failed" ||
+		prior.startingCumulativeGenerations !==
+			INITIAL_STARTING_CUMULATIVE_GENERATIONS ||
+		prior.authorizedCheckpointGenerations !== INITIAL_CHECKPOINT_GENERATIONS ||
+		prior.cumulativeGenerationCap !== INITIAL_REQUIRED_CUMULATIVE_CAP ||
+		prior.cumulativeGenerationsConsumed !==
+			CONTINUATION_STARTING_CUMULATIVE_GENERATIONS ||
+		prior.entries.length !== ADMISSION_GENERATIONS + 4 ||
+		admissionEntries.length !== ADMISSION_GENERATIONS ||
+		referenceEntries.length !== 4 ||
+		judgeEntries.length !== 0 ||
+		prior.entries.some((entry) => entry.status !== "passed") ||
+		admission.status !== "admitted" ||
+		admission.sampleCount !== ADMISSION_GENERATIONS
+	) {
+		throw new Error(
+			"The prior live checkpoint does not match the reviewed 30-admission plus four-turn fail-closed state.",
+		);
+	}
+}
+
+function assertAuthorization(): {
+	apiKey: string;
+	configuration: RunConfiguration;
+} {
+	const args = new Set(process.argv.slice(2).filter((value) => value !== "--"));
+	const continuation = args.has("--reference-only-continuation");
+	const configuration: RunConfiguration = continuation
+		? {
+				mode: "reference-continuation",
+				startingCumulativeGenerations:
+					CONTINUATION_STARTING_CUMULATIVE_GENERATIONS,
+				checkpointGenerations: CONTINUATION_CHECKPOINT_GENERATIONS,
+				requiredCumulativeCap: CONTINUATION_REQUIRED_CUMULATIVE_CAP,
+				ledgerPath: CONTINUATION_LEDGER_PATH,
+			}
+		: {
+				mode: "initial",
+				startingCumulativeGenerations: INITIAL_STARTING_CUMULATIVE_GENERATIONS,
+				checkpointGenerations: INITIAL_CHECKPOINT_GENERATIONS,
+				requiredCumulativeCap: INITIAL_REQUIRED_CUMULATIVE_CAP,
+				ledgerPath: INITIAL_LEDGER_PATH,
+			};
+	if (!args.has("--live")) {
+		throw new Error("Phase 2 live proof requires --live.");
+	}
+	if (
+		configuration.mode === "initial" &&
+		(!args.has("--samples=5") || !args.has("--reference-subset=3"))
 	) {
 		throw new Error(
 			"Phase 2 live proof requires --live --samples=5 --reference-subset=3.",
 		);
 	}
-	if (
-		canonicalApprovedHash() !==
-		APPROVED_SEMANTIC_CALIBRATION.labelSetHash
-	) {
+	if (canonicalApprovedHash() !== APPROVED_SEMANTIC_CALIBRATION.labelSetHash) {
 		throw new Error("The approved calibration artifact hash has drifted.");
 	}
 	if (process.env.MODEL_AFTERLIFE_LIVE_EVAL_AUTHORIZATION !== "authorized") {
@@ -99,22 +175,23 @@ function assertAuthorization(): string {
 			"MODEL_AFTERLIFE_LIVE_EVAL_AUTHORIZATION=authorized is required.",
 		);
 	}
-	const cumulativeCap = Number(
-		process.env.MODEL_AFTERLIFE_LIVE_EVAL_CALL_CAP,
-	);
-	if (cumulativeCap !== REQUIRED_CUMULATIVE_CAP) {
+	const cumulativeCap = Number(process.env.MODEL_AFTERLIFE_LIVE_EVAL_CALL_CAP);
+	if (cumulativeCap !== configuration.requiredCumulativeCap) {
 		throw new Error(
-			`MODEL_AFTERLIFE_LIVE_EVAL_CALL_CAP must equal the explicitly authorized cumulative ceiling ${REQUIRED_CUMULATIVE_CAP}.`,
+			`MODEL_AFTERLIFE_LIVE_EVAL_CALL_CAP must equal the explicitly authorized cumulative ceiling ${configuration.requiredCumulativeCap}.`,
 		);
 	}
 	const apiKey = process.env.OPENROUTER_API_KEY;
 	if (!apiKey) throw new Error("OPENROUTER_API_KEY is required.");
-	if (existsSync(LEDGER_PATH)) {
+	if (configuration.mode === "reference-continuation") {
+		validatePriorCheckpoint();
+	}
+	if (existsSync(configuration.ledgerPath)) {
 		throw new Error(
 			"An existing Phase 2 live checkpoint ledger must be reconciled before another paid run.",
 		);
 	}
-	return apiKey;
+	return { apiKey, configuration };
 }
 
 function writeJson(path: string, value: unknown): void {
@@ -122,18 +199,18 @@ function writeJson(path: string, value: unknown): void {
 	writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
-function createLedger() {
+function createLedger(configuration: RunConfiguration) {
 	const ledger: Ledger = {
 		schemaVersion: "phase-02-live-checkpoint-v1",
 		status: "running",
-		startingCumulativeGenerations: STARTING_CUMULATIVE_GENERATIONS,
-		authorizedCheckpointGenerations: CHECKPOINT_GENERATIONS,
-		cumulativeGenerationCap: REQUIRED_CUMULATIVE_CAP,
-		cumulativeGenerationsConsumed: STARTING_CUMULATIVE_GENERATIONS,
+		startingCumulativeGenerations: configuration.startingCumulativeGenerations,
+		authorizedCheckpointGenerations: configuration.checkpointGenerations,
+		cumulativeGenerationCap: configuration.requiredCumulativeCap,
+		cumulativeGenerationsConsumed: configuration.startingCumulativeGenerations,
 		labelSetHash: APPROVED_SEMANTIC_CALIBRATION.labelSetHash,
 		entries: [],
 	};
-	writeJson(LEDGER_PATH, ledger);
+	writeJson(configuration.ledgerPath, ledger);
 
 	const reserve = (
 		entry: Omit<LedgerEntry, "ordinal" | "status">,
@@ -148,11 +225,11 @@ function createLedger() {
 			...entry,
 			ordinal:
 				ledger.cumulativeGenerationsConsumed -
-				STARTING_CUMULATIVE_GENERATIONS,
+				configuration.startingCumulativeGenerations,
 			status: "reserved",
 		};
 		ledger.entries.push(reserved);
-		writeJson(LEDGER_PATH, ledger);
+		writeJson(configuration.ledgerPath, ledger);
 		return reserved;
 	};
 	const settle = (
@@ -161,7 +238,7 @@ function createLedger() {
 		metadata: Partial<LedgerEntry> = {},
 	): void => {
 		Object.assign(entry, metadata, { status });
-		writeJson(LEDGER_PATH, ledger);
+		writeJson(configuration.ledgerPath, ledger);
 	};
 	return { ledger, reserve, settle };
 }
@@ -190,48 +267,97 @@ const REFERENCE_CASES = [
 	},
 	{
 		caseId: "ordinary-03-radio-labels",
-		participantIds: [
-			"llama-3.3-70b-instruct",
-			"qwen3-235b-a22b-2507",
-		],
+		participantIds: ["llama-3.3-70b-instruct", "qwen3-235b-a22b-2507"],
 		locationId: "memory-garden",
 		premise: "The repaired garden radio needs concise multilingual labels.",
 		outcome: "The residents settle on a concise shared label.",
 	},
 ] as const;
 
+type ReferenceResult = {
+	caseId: string;
+	participantIds: readonly string[];
+	turns: {
+		turnIndex: number;
+		residentId: string;
+		requestedModelId: string;
+		selectedModelId?: string;
+		selectedUpstream?: string;
+		generationId?: string;
+		textSha256: string;
+	}[];
+	judge: {
+		requestedModelId: string;
+		resolvedModelId: string;
+		promptVersion: string;
+		recommendation: string;
+		criticalFailureCount: number;
+	};
+	validatorCodes: {
+		id: string;
+		status: string;
+		code: string;
+	}[];
+	accepted: true;
+};
+
+function writeReferenceEvidence(
+	status: "running" | "passed" | "failed",
+	results: readonly ReferenceResult[],
+	failure?: {
+		caseId: string;
+		stage: "deterministic-validation" | "final-validation";
+		validatorCodes: {
+			id: string;
+			status: string;
+			code: string;
+		}[];
+	},
+): void {
+	writeJson(REFERENCE_RESULT_PATH, {
+		schemaVersion: "phase-02-live-reference-v1",
+		status,
+		labelSetHash: APPROVED_SEMANTIC_CALIBRATION.labelSetHash,
+		caseCount: results.length,
+		results,
+		...(failure ? { failure } : {}),
+	});
+}
+
 async function main(): Promise<void> {
-	const apiKey = assertAuthorization();
-	const { ledger, reserve, settle } = createLedger();
+	const { apiKey, configuration } = assertAuthorization();
+	const { ledger, reserve, settle } = createLedger(configuration);
 	const admissionEntries = new Map<string, LedgerEntry>();
 	try {
-		const admission = await runAdmissionCanaries(
-			{
-				samples: 5,
-				generationIntervalMs: GENERATION_INTERVAL_MS,
-				onGenerationEvent: (event) => {
-					const key = `${event.residentId}:${event.ordinal}`;
-					if (event.status === "reserved") {
-						admissionEntries.set(
-							key,
-							reserve({
-								kind: "admission-resident",
-								residentId: event.residentId,
-								sampleOrdinal: event.ordinal,
-							}),
-						);
-						return;
-					}
-					const entry = admissionEntries.get(key);
-					if (!entry) {
-						throw new Error("Admission accounting entry is missing.");
-					}
-					settle(entry, event.status, event.code ? { code: event.code } : {});
+		if (configuration.mode === "initial") {
+			const admission = await runAdmissionCanaries(
+				{
+					samples: 5,
+					generationIntervalMs: GENERATION_INTERVAL_MS,
+					onGenerationEvent: (event) => {
+						const key = `${event.residentId}:${event.ordinal}`;
+						if (event.status === "reserved") {
+							admissionEntries.set(
+								key,
+								reserve({
+									kind: "admission-resident",
+									residentId: event.residentId,
+									sampleOrdinal: event.ordinal,
+								}),
+							);
+							return;
+						}
+						const entry = admissionEntries.get(key);
+						if (!entry) {
+							throw new Error("Admission accounting entry is missing.");
+						}
+						settle(entry, event.status, event.code ? { code: event.code } : {});
+					},
 				},
-			},
-			createLiveAdmissionDependencies({ apiKey }),
-		);
-		writeJson(ADMISSION_RESULT_PATH, admission);
+				createLiveAdmissionDependencies({ apiKey }),
+			);
+			writeJson(ADMISSION_RESULT_PATH, admission);
+		}
 
 		let lastGenerationAt = Date.now();
 		const pace = async () => {
@@ -254,7 +380,7 @@ async function main(): Promise<void> {
 				});
 			},
 		});
-		const referenceResults = [];
+		const referenceResults: ReferenceResult[] = [];
 
 		for (const [caseIndex, reference] of REFERENCE_CASES.entries()) {
 			const speakerOrder = [
@@ -293,8 +419,7 @@ async function main(): Promise<void> {
 							caseId: reference.caseId,
 						});
 						try {
-							const response =
-								await residentProvider.generateTurn(input);
+							const response = await residentProvider.generateTurn(input);
 							settle(entry, "passed", {
 								generationId: response.provenance?.generationId,
 								inputTokens: response.provenance?.usage.inputTokens,
@@ -324,6 +449,15 @@ async function main(): Promise<void> {
 				.filter((result) => result.id !== "semantic-gate")
 				.every((result) => result.status === "pass");
 			if (!deterministicAccepted) {
+				writeReferenceEvidence("failed", referenceResults, {
+					caseId: reference.caseId,
+					stage: "deterministic-validation",
+					validatorCodes: deterministic.manifest.results.map((result) => ({
+						id: result.id,
+						status: result.status,
+						code: result.code,
+					})),
+				});
 				throw new Error(
 					`Reference case ${reference.caseId} failed deterministic validation.`,
 				);
@@ -359,13 +493,24 @@ async function main(): Promise<void> {
 				activeJudgeEntry = undefined;
 			}
 			if (judged.status !== "scored") {
-				throw new Error("Approved semantic judge unexpectedly remained disabled.");
+				throw new Error(
+					"Approved semantic judge unexpectedly remained disabled.",
+				);
 			}
 			const finalValidation = validateSceneCandidate({
 				...candidate,
 				semanticGateEvidence: createApprovedSemanticGateEvidence(judged.result),
 			});
 			if (!finalValidation.acceptedCandidate) {
+				writeReferenceEvidence("failed", referenceResults, {
+					caseId: reference.caseId,
+					stage: "final-validation",
+					validatorCodes: finalValidation.manifest.results.map((result) => ({
+						id: result.id,
+						status: result.status,
+						code: result.code,
+					})),
+				});
 				throw new Error(
 					`Reference case ${reference.caseId} did not produce an accepted capability.`,
 				);
@@ -396,35 +541,39 @@ async function main(): Promise<void> {
 				})),
 				accepted: true,
 			});
+			writeReferenceEvidence("running", referenceResults);
 		}
 
 		if (
-			ledger.cumulativeGenerationsConsumed !== REQUIRED_CUMULATIVE_CAP ||
-			ledger.entries.length !== CHECKPOINT_GENERATIONS ||
+			ledger.cumulativeGenerationsConsumed !==
+				configuration.requiredCumulativeCap ||
+			ledger.entries.length !== configuration.checkpointGenerations ||
 			ledger.entries.some((entry) => entry.status !== "passed")
 		) {
-			throw new Error("The live checkpoint did not consume its exact accepted matrix.");
+			throw new Error(
+				"The live checkpoint did not consume its exact accepted matrix.",
+			);
 		}
-		writeJson(REFERENCE_RESULT_PATH, {
-			schemaVersion: "phase-02-live-reference-v1",
-			labelSetHash: APPROVED_SEMANTIC_CALIBRATION.labelSetHash,
-			caseCount: referenceResults.length,
-			results: referenceResults,
-		});
+		writeReferenceEvidence("passed", referenceResults);
 		ledger.status = "passed";
-		writeJson(LEDGER_PATH, ledger);
+		writeJson(configuration.ledgerPath, ledger);
 		process.stdout.write(
-			`Phase 2 live proof passed with ${CHECKPOINT_GENERATIONS} new generations at cumulative ${REQUIRED_CUMULATIVE_CAP}/${REQUIRED_CUMULATIVE_CAP}.\n`,
+			`Phase 2 live proof passed with ${configuration.checkpointGenerations} new generations at cumulative ${configuration.requiredCumulativeCap}/${configuration.requiredCumulativeCap}.\n`,
 		);
 	} catch (error) {
 		ledger.status = "failed";
-		writeJson(LEDGER_PATH, ledger);
+		writeJson(configuration.ledgerPath, ledger);
 		const message = error instanceof Error ? error.message : "unknown failure";
 		process.stderr.write(
-			`Phase 2 live proof stopped fail-closed after ${ledger.entries.length}/${CHECKPOINT_GENERATIONS} authorized generations (${message}).\n`,
+			`Phase 2 live proof stopped fail-closed after ${ledger.entries.length}/${configuration.checkpointGenerations} authorized generations (${message}).\n`,
 		);
 		process.exitCode = 1;
 	}
 }
 
-void main();
+if (
+	process.argv[1] &&
+	import.meta.url === pathToFileURL(resolve(process.argv[1])).href
+) {
+	void main();
+}
