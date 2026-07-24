@@ -4,16 +4,16 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 03
 current_phase_name: return-loop-and-inclusive-presentation
-status: ready_to_execute
-stopped_at: Phase 3 plans verified
-last_updated: "2026-07-24T16:21:54.377Z"
+status: executing
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-07-24T16:53:29.074Z"
 last_activity: 2026-07-25
-last_activity_desc: "Phase 3 planned: 7 plans in 7 waves; plan verification passed"
+last_activity_desc: Phase 03 execution started
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 15
-  completed_plans: 8
+  completed_plans: 9
 ---
 
 # Project State
@@ -27,12 +27,12 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 ## Current Position
 
-Phase: 03 (return-loop-and-inclusive-presentation) — READY TO EXECUTE
-Plan: 0 of 7 Phase 3 plans complete
-Status: Ready to execute
-Last activity: 2026-07-25 — Phase 3 planned: 7 plans in 7 waves; plan verification passed
+Phase: 03 (return-loop-and-inclusive-presentation) — EXECUTING
+Plan: 2 of 7
+Status: In progress
+Last activity: 2026-07-25 — Phase 03 execution started
 
-Progress: [███████████░░░░░░░░░] 8/15 milestone plans complete (53%)
+Progress: [████████████░░░░░░░░] 9/15 milestone plans complete (60%)
 
 ## Performance Metrics
 
@@ -67,6 +67,7 @@ Progress: [███████████░░░░░░░░░] 8/15 mi
 | Phase 02 P02 | multi-session | 4 tasks | 44 files |
 | Phase 02 P03 | 25 min | 3 tasks | 33 files |
 | Phase 02 P04 | multi-session | 4 tasks | multi-commit |
+| Phase 03 P01 | 23min | 1 tasks | 15 files |
 
 ## Accumulated Context
 
@@ -94,6 +95,9 @@ Recent decisions affecting current work:
 - [Phase 02]: Cached scenes preserve original revision and model provenance and never republish or reapply relationship or memory effects.
 - [Phase 02]: A versioned grounded-ensemble initialization epoch upgrades the pre-release four-resident journal while replay begins at the latest initialization and preserves earlier events for audit.
 - [Phase 02]: Frozen verification remains credential-free; any future paid provider evidence requires a new explicit bounded authorization.
+- [Phase 03]: D-16 remains one-way: immutable published revision IDs are the only durable public scene identity.
+- [Phase 03]: Every approved stable claim ID resolves to exactly one approved immutable version under historical-claims-v1, or the publication transaction fails.
+- [Phase 03]: Canonical public reads return complete, known-unavailable, or not-found and never substitute current claims or expose partial scenes.
 
 ### Pending Todos
 
@@ -149,6 +153,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-24T14:20:56.317Z
-Stopped at: Phase 3 UI-SPEC approved
-Resume file: .planning/phases/03-return-loop-and-inclusive-presentation/03-UI-SPEC.md
+Last session: 2026-07-24T16:53:19.355Z
+Stopped at: Completed 03-01-PLAN.md
+Resume file: None
