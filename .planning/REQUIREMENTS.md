@@ -11,7 +11,7 @@
 - [x] **WRLD-02**: The home advances schedules, resident locations, event eligibility, and relationship state while no visitor is watching.
 - [x] **WRLD-03**: A returning or reconnecting visitor receives the current canonical state without replaying missed animations or creating divergent state.
 - [x] **WRLD-04**: The home contains one compact, immediately readable environment with distinct functional areas and meaningful quiet routines.
-- [ ] **WRLD-05**: The simulation enforces event cooldowns, scene budgets, and cast rotation so activity remains varied without becoming constant.
+- [x] **WRLD-05**: The simulation enforces event cooldowns, scene budgets, and cast rotation so activity remains varied without becoming constant.
 - [x] **WRLD-06**: A failed or delayed dialogue-generation attempt leaves canonical world state healthy and produces an understandable quiet or curated fallback beat.
 - [x] **WRLD-07**: Reprocessing a world tick, event, or publication job cannot duplicate a canonical event, scene, or relationship change.
 - [x] **WRLD-08**: Operators can replay canonical events to reproduce world state and rebuild public projections deterministically.
@@ -29,11 +29,11 @@
 
 ### Relationships and Memory
 
-- [ ] **RELS-01**: Residents maintain persistent, typed friendship, rivalry, familiarity, and recent-shared-experience state across scenes.
-- [ ] **RELS-02**: A scene can change only explicitly permitted relationship dimensions and records the event that caused each change.
-- [ ] **RELS-03**: Future event eligibility and dialogue context can reference bounded, relevant prior outcomes without supplying an unbounded transcript history to the model.
+- [x] **RELS-01**: Residents maintain persistent, typed friendship, rivalry, familiarity, and recent-shared-experience state across scenes.
+- [x] **RELS-02**: A scene can change only explicitly permitted relationship dimensions and records the event that caused each change.
+- [x] **RELS-03**: Future event eligibility and dialogue context can reference bounded, relevant prior outcomes without supplying an unbounded transcript history to the model.
 - [ ] **RELS-04**: Visitors can recognize relationship changes through later behavior, profiles, archived scenes, or recaps.
-- [ ] **RELS-05**: The system prevents one popular resident or pairing from starving the rest of the six-resident ensemble of meaningful scenes.
+- [x] **RELS-05**: The system prevents one popular resident or pairing from starving the rest of the six-resident ensemble of meaningful scenes.
 
 ### Scene Planning and Generation
 
@@ -155,7 +155,7 @@
 | WRLD-02 | Phase 1 | Complete |
 | WRLD-03 | Phase 1 | Complete |
 | WRLD-04 | Phase 1 | Complete |
-| WRLD-05 | Phase 2 | Pending |
+| WRLD-05 | Phase 2 | Complete |
 | WRLD-06 | Phase 2 | Complete |
 | WRLD-07 | Phase 2 | Complete |
 | WRLD-08 | Phase 1 | Complete |
@@ -167,11 +167,11 @@
 | RSID-06 | Phase 3 | Pending |
 | RSID-07 | Phase 4 | Pending |
 | RSID-08 | Phase 3 | Pending |
-| RELS-01 | Phase 2 | Pending |
-| RELS-02 | Phase 2 | Pending |
-| RELS-03 | Phase 2 | Pending |
+| RELS-01 | Phase 2 | Complete |
+| RELS-02 | Phase 2 | Complete |
+| RELS-03 | Phase 2 | Complete |
 | RELS-04 | Phase 3 | Pending |
-| RELS-05 | Phase 2 | Pending |
+| RELS-05 | Phase 2 | Complete |
 | SCEN-01 | Phase 2 | Complete |
 | SCEN-02 | Phase 2 | Complete |
 | SCEN-03 | Phase 2 | Complete |

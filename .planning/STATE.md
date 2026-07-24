@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "Completed 02-02-PLAN.md; ready for 02-03; 71/71 consumed"
-last_updated: "2026-07-24T04:10:00.000Z"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-07-24T04:28:30.171Z"
 last_activity: 2026-07-24
-last_activity_desc: "Completed Plan 02-02: all six exact residents are live-admitted, historically grounded, publicly named by role and routine, and rendered with distinct provider-neutral pixel variants"
+last_activity_desc: "Completed Plan 02-03: replayable typed relationships, bounded memories, deterministic ensemble rotation, and honest cached or quiet continuity"
 progress:
   total_phases: 2
   completed_phases: 1
   total_plans: 8
-  completed_plans: 6
+  completed_plans: 7
 ---
 
 # Project State
@@ -28,31 +28,31 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
-Plan: 3 of 4
-Status: Plan 02-02 complete; ready to execute relationships and memory
-Last activity: 2026-07-24 — all six exact resident profiles passed strict admission and now appear through registry-owned public names, roles, routine cues, and six distinct provider-neutral pixel silhouettes; accounting is 71/71
+Plan: 4 of 4
+Status: Plan 02-03 complete; ready to execute publication gates and human calibration
+Last activity: 2026-07-24 — replayable typed relationships, bounded memories, deterministic ensemble rotation, and honest cached or quiet continuity
 
-Progress: [███████████████░░░░░] 6/8 plans (75%)
+Progress: [██████████████████░░] 7/8 plans (88%)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: not recalculated; Plan 02-02 spanned interactive provider checkpoints
-- Total execution time: 2.5 recorded hours plus multi-session Plan 02-02 work
+- Total execution time: 2.9 recorded hours plus multi-session Plan 02-02 work
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 | 4 | 111 min | 28 min |
-| 2 | 2 | multi-session | n/a |
+| 2 | 3 | multi-session | n/a |
 
 **Recent Trend:**
 
-- Last 4 plans: 22 min, 34 min, 35 min, 39 min
-- Trend: Increased as the work moved from the shared-home foundation into the production generation tracer
+- Last 4 plans: 35 min, 39 min, multi-session, 25 min
+- Trend: Plan 02-03 returned to focused offline implementation after the provider-gated admission work
 
 *Updated after each plan completion*
 **Per-Plan Metrics:**
@@ -65,6 +65,7 @@ Progress: [███████████████░░░░░] 6/8 pla
 | Phase 01 P04 | 35 min | 3 tasks | 23 files |
 | Phase 02 P01 | 39 min | 3 tasks | 57 files |
 | Phase 02 P02 | multi-session | 4 tasks | 44 files |
+| Phase 02 P03 | 25 min | 3 tasks | 33 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,9 @@ Recent decisions affecting current work:
 - [Phase 02]: Public scenes require exact per-turn model labels and persistent staged-fiction and non-affiliation disclosure.
 - [Phase 02]: Public resident identity is joined from the immutable registry, and the snapshot boundary rejects anything other than the exact six-resident launch ensemble.
 - [Phase 02]: Each launch resident uses a stable, original, provider-neutral pixel silhouette and accessory treatment; provider logos and copied character designs are excluded.
+- [Phase 02]: Relationships and memories are canonical event-sourced application state; resident-model output cannot directly mutate either.
+- [Phase 02]: Scene selection is pure and observer-independent, using only canonical state, approved briefs, logical time, and stable seeds.
+- [Phase 02]: Cached scenes preserve original revision and model provenance and never republish or reapply relationship or memory effects.
 
 ### Pending Todos
 
@@ -96,6 +100,7 @@ None yet.
 
 - [Phase 2]: Live strict-route admission now passes for all six exact residents. The 31-call checkpoint is fully consumed at 71/71 cumulative, and no further provider call is authorized.
 - [Phase 2]: One bundled human calibration review remains before publication-gate completion; the OpenRouter credential must stay out of chat, git, public bundles, and traces.
+- [Phase 2]: Docker Desktop is stopped, so Plan 02-03's database-backed replay/rebuild check remains explicit verification debt.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
 
@@ -128,6 +133,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T15:39:15.673Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-07-24T04:28:30.157Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None
