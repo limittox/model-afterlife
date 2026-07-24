@@ -142,6 +142,47 @@ export type CompleteWorldScene = {
 	turns: WorldDialogueTurn[];
 };
 
+export type ApprovedSceneBrief = {
+	briefId: string;
+	version: string;
+	participantIds: string[];
+	speakerOrder: string[];
+	locationId: WorldRoomId;
+	premise: string;
+	allowedFactIds: string[];
+	tone: string;
+	turnBudget: number;
+	permittedOutcome: string;
+	permittedRelationshipEffects: {
+		residentAId: string;
+		residentBId: string;
+		dimension: RelationshipDimension;
+	}[];
+	override?: {
+		id: string;
+		version: string;
+		startsAtTick: number;
+		endsAtTick: number;
+		bypass: "pair-cooldown" | "pair-share";
+	};
+};
+
+export type PublishedSceneRecord = {
+	revisionId: string;
+	sceneKey: string;
+	briefId: string;
+	participantIds: string[];
+	publishedAtTick: number;
+};
+
+export type PendingSceneRequest = {
+	sceneKey: string;
+	briefId: string;
+	participantIds: string[];
+	requestedAtTick: number;
+	expectedWorldHead: number;
+};
+
 export type QuietWorldStatus = {
 	reason: "between-scenes" | "scene-unavailable";
 	locationId: WorldRoomId;
@@ -158,6 +199,8 @@ export type WorldState = {
 	relationships: WorldRelationship[];
 	memories: SharedExperienceMemory[];
 	appliedRelationshipEffectKeys: string[];
+	sceneHistory: PublishedSceneRecord[];
+	pendingSceneRequest: PendingSceneRequest | null;
 	scene: CompleteWorldScene | null;
 	quiet: QuietWorldStatus | null;
 };
@@ -199,13 +242,19 @@ export type SceneGenerationRequestedEvent = WorldEventBase<
 	"scene_generation_requested",
 	{
 		sceneKey: string;
+		brief: ApprovedSceneBrief;
 		expectedWorldHead: number;
 	}
 >;
 
 export type ScenePublishedEvent = WorldEventBase<
 	"scene_published",
-	{ scene: CompleteWorldScene; revisionId: string }
+	{
+		scene: CompleteWorldScene;
+		revisionId: string;
+		sceneKey: string;
+		briefId: string;
+	}
 >;
 
 export type SceneCompletedEvent = WorldEventBase<

@@ -66,7 +66,7 @@ export async function publishSceneRevision(worldId: string, revision: PublishedS
 			}
 			const scene: CompleteWorldScene = { id: revision.revisionId, premise: "A validated fictional model-API scene.", locationId: "common-room", participantIds: [...new Set(revision.turns.map((turn) => turn.residentId))], startedAtTick: head.state.logicalTick, durationTicks: 1, presentationDurationMs: 12_000, turns: revision.turns.map((turn) => ({ id: `${revision.revisionId}:${turn.turnIndex}`, speakerId: turn.residentId, exactModelId: turn.requestedModelId, text: turn.text })) };
 			const events: WorldEvent[] = [
-				{ schemaVersion: 1, sequence: head.state.throughSequence + 1, occurrenceKey: `scene-published:${revision.sceneKey}`, logicalTick: head.state.logicalTick, type: "scene_published", payload: { scene, revisionId: revision.revisionId } },
+				{ schemaVersion: 1, sequence: head.state.throughSequence + 1, occurrenceKey: `scene-published:${revision.sceneKey}`, logicalTick: head.state.logicalTick, type: "scene_published", payload: { scene, revisionId: revision.revisionId, sceneKey: revision.sceneKey, briefId: brief.briefId } },
 				...acceptedEffects.map((effect, index): WorldEvent => ({
 					schemaVersion: 1,
 					sequence: head.state.throughSequence + 2 + index,

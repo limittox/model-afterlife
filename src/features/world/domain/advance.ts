@@ -1,10 +1,12 @@
 import { reduceWorldEvent } from "./events.ts";
+import { selectEligibleSceneBrief } from "./scene-eligibility.ts";
 import type {
 	WorldEvent,
 	WorldResident,
 	WorldRoomId,
 	WorldState,
 } from "./types.ts";
+import { APPROVED_SCENE_BRIEFS } from "../fixtures/scene-briefs.ts";
 
 const ROOM_ORDER: WorldRoomId[] = [
 	"common-room",
@@ -100,18 +102,32 @@ function eventsForTick(
 	const sceneWillBeComplete =
 		state.scene !== null &&
 		tick >= state.scene.startedAtTick + state.scene.durationTicks;
-	if ((state.scene === null || sceneWillBeComplete) && tick % 10 === 3) {
-		const expectedWorldHead = state.throughSequence + events.length;
+	if (state.scene === null && !sceneWillBeComplete) {
+		const eligibility = selectEligibleSceneBrief({
+			state,
+			briefs: APPROVED_SCENE_BRIEFS,
+			logicalTick: tick,
+			seed,
+		});
+		if (eligibility.kind === "selected") {
+			const expectedWorldHead = state.throughSequence + events.length + 1;
+			const sceneKey = `${state.worldId}:tick:${tick}:brief:${eligibility.brief.briefId}`;
 		events.push({
 			schemaVersion: 1,
-			occurrenceKey: eventKey(state, tick, "scene:generation:requested"),
+				occurrenceKey: eventKey(
+					state,
+					tick,
+					`scene:${eligibility.brief.briefId}:generation:requested`,
+				),
 			logicalTick: tick,
 			type: "scene_generation_requested",
 			payload: {
-				sceneKey: `${state.worldId}:${expectedWorldHead}:scene`,
+					sceneKey,
+					brief: structuredClone(eligibility.brief),
 				expectedWorldHead,
 			},
 		});
+		}
 	}
 
 	return events;

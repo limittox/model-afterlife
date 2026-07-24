@@ -146,6 +146,8 @@ export function createProvisionalWorld(): WorldState {
 		relationships: createInitialRelationships(),
 		memories: [],
 		appliedRelationshipEffectKeys: [],
+		sceneHistory: [],
+		pendingSceneRequest: null,
 		scene: null,
 		quiet: {
 			reason: "between-scenes",

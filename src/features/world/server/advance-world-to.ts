@@ -1,10 +1,11 @@
 import { eq, sql } from "drizzle-orm";
 import { createWorldDatabase } from "../../../db/client.ts";
-import { worldEvents, worldProjection, worlds } from "../../../db/schema.ts";
+import { sceneBriefs, worldEvents, worldProjection, worlds } from "../../../db/schema.ts";
 import { advance } from "../domain/advance.ts";
 import { replayWorldEvents } from "../domain/replay.ts";
 import type { WorldEvent } from "../domain/types.ts";
 import { PROVISIONAL_WORLD_SEED } from "../fixtures/provisional-world.ts";
+import { materializeSceneBrief } from "../fixtures/scene-briefs.ts";
 import { toPublicWorldSnapshot } from "./to-public-snapshot.ts";
 
 export type AdvanceWorldResult = {
@@ -17,6 +18,7 @@ export type AdvanceWorldResult = {
 
 export type CommittedGenerationRequest = {
 	sceneKey: string;
+	briefId?: string;
 	expectedWorldHead: number;
 	occurrenceKey: string;
 };
@@ -76,6 +78,22 @@ export async function advanceWorldTo(
 				};
 				const proposedState = replayWorldEvents(state, [event]);
 				const publicSnapshot = toPublicWorldSnapshot(proposedState);
+				if (event.type === "scene_generation_requested") {
+					const brief = materializeSceneBrief({
+						template: event.payload.brief,
+						sceneKey: event.payload.sceneKey,
+						expectedWorldHead: event.payload.expectedWorldHead,
+					});
+					await transaction
+						.insert(sceneBriefs)
+						.values({
+							sceneKey: brief.sceneKey,
+							worldId,
+							expectedWorldHead: brief.expectedWorldHead,
+							brief,
+						})
+						.onConflictDoNothing();
+				}
 				const inserted = await transaction
 					.insert(worldEvents)
 					.values({
@@ -99,6 +117,7 @@ export async function advanceWorldTo(
 					if (event.type === "scene_generation_requested") {
 						generationRequests.push({
 							sceneKey: event.payload.sceneKey,
+							briefId: event.payload.brief.briefId,
 							expectedWorldHead: event.payload.expectedWorldHead,
 							occurrenceKey: event.occurrenceKey,
 						});

@@ -27,6 +27,7 @@ export const AcceptedRelationshipEffectSchema = strictObject({
 
 export const SceneBriefSchema = strictObject({
 	schemaVersion: z.literal(GENERATION_SCHEMA_VERSION),
+	briefId: nonBlank.default("legacy-tracer"),
 	sceneKey: nonBlank,
 	expectedWorldHead: z.number().int().positive(),
 	participantIds: z.array(nonBlank).min(2).max(3).refine((ids) => new Set(ids).size === ids.length),

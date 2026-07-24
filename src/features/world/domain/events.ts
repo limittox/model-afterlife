@@ -27,6 +27,16 @@ export function reduceWorldEvent(
 		appliedRelationshipEffectKeys: [
 			...current.appliedRelationshipEffectKeys,
 		],
+		sceneHistory: current.sceneHistory.map((record) => ({
+			...record,
+			participantIds: [...record.participantIds],
+		})),
+		pendingSceneRequest: current.pendingSceneRequest
+			? {
+					...current.pendingSceneRequest,
+					participantIds: [...current.pendingSceneRequest.participantIds],
+				}
+			: null,
 		scene: current.scene
 			? {
 					...current.scene,
@@ -60,6 +70,18 @@ export function reduceWorldEvent(
 				appliedRelationshipEffectKeys: [
 					...event.payload.state.appliedRelationshipEffectKeys,
 				],
+				sceneHistory: event.payload.state.sceneHistory.map((record) => ({
+					...record,
+					participantIds: [...record.participantIds],
+				})),
+				pendingSceneRequest: event.payload.state.pendingSceneRequest
+					? {
+							...event.payload.state.pendingSceneRequest,
+							participantIds: [
+								...event.payload.state.pendingSceneRequest.participantIds,
+							],
+						}
+					: null,
 				scene: event.payload.state.scene
 					? {
 							...event.payload.state.scene,
@@ -118,10 +140,28 @@ export function reduceWorldEvent(
 				participantIds: [...event.payload.scene.participantIds],
 				turns: event.payload.scene.turns.map((turn) => ({ ...turn })),
 			};
+			state.sceneHistory = [
+				...state.sceneHistory,
+				{
+					revisionId: event.payload.revisionId,
+					sceneKey: event.payload.sceneKey,
+					briefId: event.payload.briefId,
+					participantIds: [...event.payload.scene.participantIds].sort(),
+					publishedAtTick: event.logicalTick,
+				},
+			].slice(-60);
+			state.pendingSceneRequest = null;
 			state.quiet = null;
 			break;
 		}
 		case "scene_generation_requested": {
+			state.pendingSceneRequest = {
+				sceneKey: event.payload.sceneKey,
+				briefId: event.payload.brief.briefId,
+				participantIds: [...event.payload.brief.participantIds].sort(),
+				requestedAtTick: event.logicalTick,
+				expectedWorldHead: event.payload.expectedWorldHead,
+			};
 			break;
 		}
 		case "scene_completed": {
