@@ -160,6 +160,26 @@ export const ResidentProfileReadResultSchema = z.discriminatedUnion("kind", [
 	}),
 ]);
 
+export const PublicResidentDirectoryEntrySchema = strictObject({
+	residentId: PublicResidentIdSchema,
+	displayOrder: z.number().int().min(1).max(6),
+	displayName: nonBlank,
+	role: nonBlank,
+	significance: nonBlank,
+	portraitVariantId: nonBlank.nullable(),
+	exactModelIds: z.array(nonBlank).min(1).max(2),
+	profilePath: z.string().startsWith("/residents/"),
+});
+
+export const ResidentDirectoryResultSchema = z.discriminatedUnion("kind", [
+	strictObject({
+		kind: z.literal("ready"),
+		residents: z.array(PublicResidentDirectoryEntrySchema).length(6),
+	}),
+	strictObject({ kind: z.literal("loading") }),
+	strictObject({ kind: z.literal("error") }),
+]);
+
 export const CanonicalSceneCastMemberSchema = strictObject({
 	residentId: nonBlank,
 	displayName: nonBlank,
@@ -396,4 +416,10 @@ export type PublicResidentBehavior = z.infer<
 >;
 export type PublicResidentProfile = z.infer<
 	typeof PublicResidentProfileSchema
+>;
+export type PublicResidentDirectoryEntry = z.infer<
+	typeof PublicResidentDirectoryEntrySchema
+>;
+export type ResidentDirectoryResult = z.infer<
+	typeof ResidentDirectoryResultSchema
 >;

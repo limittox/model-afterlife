@@ -1,6 +1,10 @@
 import Link from "next/link";
 import type { PublicHistoricalClaim } from "../../publication/server/read-resident-profile.ts";
 import type { ResidentProfileReadResult } from "../../publication/server/read-resident-profile.ts";
+import {
+	NON_AFFILIATION_DISCLOSURE,
+	STAGED_FICTION_DISCLOSURE,
+} from "../../world/components/TransparencyNotice.tsx";
 import { BehaviorDisclosure } from "./BehaviorDisclosure.tsx";
 import { RelationshipSummary } from "./RelationshipSummary.tsx";
 
@@ -35,6 +39,11 @@ function ProfileRecovery({
 				<Link href="/residents">Residents</Link> ·{" "}
 				<Link href="/">Live home</Link>
 			</p>
+			<section aria-labelledby="profile-recovery-disclosure">
+				<h2 id="profile-recovery-disclosure">About this profile</h2>
+				<p>{STAGED_FICTION_DISCLOSURE}</p>
+				<p>{NON_AFFILIATION_DISCLOSURE}</p>
+			</section>
 		</main>
 	);
 }
@@ -61,8 +70,20 @@ function ClaimEvidence({ claim }: { claim: PublicHistoricalClaim }) {
 export function ResidentProfile({ result }: { result: ResidentProfileState }) {
 	if (result.kind === "loading") {
 		return (
-			<main>
+			<main
+				style={{
+					width: "min(1120px, calc(100% - 32px))",
+					margin: "0 auto",
+					padding: "32px 0",
+					overflowWrap: "anywhere",
+				}}
+			>
 				<p role="status">Opening resident profile…</p>
+				<section aria-labelledby="profile-loading-disclosure">
+					<h2 id="profile-loading-disclosure">About this profile</h2>
+					<p>{STAGED_FICTION_DISCLOSURE}</p>
+					<p>{NON_AFFILIATION_DISCLOSURE}</p>
+				</section>
 			</main>
 		);
 	}

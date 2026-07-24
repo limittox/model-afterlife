@@ -209,6 +209,78 @@ export const HISTORICAL_CLAIMS: HistoricalClaimVersion[] = [
 		editorialStatus: "approved",
 	},
 	{
+		claimVersionId: "claim-version:claude45-lineage:v1",
+		claimId: "claude45-sonnet-lineage",
+		versionKey: "claude45-sonnet-lineage.v1",
+		residentId: "claude-sonnet-4.5",
+		stableOrder: 4,
+		category: "documented",
+		statement:
+			"Claude Sonnet 4.5 was introduced as a Sonnet-series model in Anthropic's Claude 4.5 generation.",
+		scope: {
+			residentId: "claude-sonnet-4.5",
+			exactModelIds: [
+				"anthropic/claude-sonnet-4.5",
+				"anthropic/claude-4.5-sonnet-20250929",
+			],
+		},
+		source: {
+			title: "Claude Sonnet 4.5 announcement",
+			url: "https://www.anthropic.com/news/claude-sonnet-4-5",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:claude45-launch-scope:v1",
+		claimId: "claude45-vendor-launch-scope",
+		versionKey: "claude45-vendor-launch-scope.v1",
+		residentId: "claude-sonnet-4.5",
+		stableOrder: 5,
+		category: "reported",
+		statement:
+			"The coding and agent claims cited here come from Anthropic's launch announcement; they are vendor-reported capabilities, not a claim of flawless performance on every task.",
+		scope: {
+			residentId: "claude-sonnet-4.5",
+			exactModelIds: [
+				"anthropic/claude-sonnet-4.5",
+				"anthropic/claude-4.5-sonnet-20250929",
+			],
+		},
+		source: {
+			title: "Claude Sonnet 4.5 announcement",
+			url: "https://www.anthropic.com/news/claude-sonnet-4-5",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:claude45-retirement-framing:v1",
+		claimId: "claude45-fictional-retirement-framing",
+		versionKey: "claude45-fictional-retirement-framing.v1",
+		residentId: "claude-sonnet-4.5",
+		stableOrder: 6,
+		category: "exaggeration",
+		statement:
+			"Presenting Claude Sonnet 4.5 as a retired house steward is fictional staging, not a claim that Anthropic retired the model or that the model is conscious.",
+		scope: {
+			residentId: "claude-sonnet-4.5",
+			exactModelIds: [
+				"anthropic/claude-sonnet-4.5",
+				"anthropic/claude-4.5-sonnet-20250929",
+			],
+		},
+		source: {
+			title: "Claude Sonnet 4.5 announcement",
+			url: "https://www.anthropic.com/news/claude-sonnet-4-5",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
 		claimVersionId: "claim-version:gemini25-capability:v1",
 		claimId: "gemini25-thinking-and-multimodal",
 		versionKey: "gemini25-thinking-and-multimodal.v1",
@@ -259,6 +331,69 @@ export const HISTORICAL_CLAIMS: HistoricalClaimVersion[] = [
 		category: "exaggeration",
 		statement:
 			"Unrolling an oversized blueprint before answering a small question is fictional comic exaggeration.",
+		scope: {
+			residentId: "gemini-2.5-pro",
+			exactModelIds: ["google/gemini-2.5-pro"],
+		},
+		source: {
+			title: "Gemini 2.5 Pro model documentation",
+			url: "https://ai.google.dev/gemini-api/docs/models/gemini-2.5-pro",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:gemini25-lineage:v1",
+		claimId: "gemini25-generation-lineage",
+		versionKey: "gemini25-generation-lineage.v1",
+		residentId: "gemini-2.5-pro",
+		stableOrder: 4,
+		category: "documented",
+		statement:
+			"Gemini 2.5 Pro belongs to Google's Gemini 2.5 generation, introduced around a model family that can reason before responding.",
+		scope: {
+			residentId: "gemini-2.5-pro",
+			exactModelIds: ["google/gemini-2.5-pro"],
+		},
+		source: {
+			title: "Gemini 2.5: Our most intelligent AI model",
+			url: "https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:gemini25-reasoning-scope:v1",
+		claimId: "gemini25-reasoning-disclosure-scope",
+		versionKey: "gemini25-reasoning-disclosure-scope.v1",
+		residentId: "gemini-2.5-pro",
+		stableOrder: 5,
+		category: "reported",
+		statement:
+			"Google's thinking description is product capability language; this profile does not expose hidden reasoning or treat model computation as consciousness.",
+		scope: {
+			residentId: "gemini-2.5-pro",
+			exactModelIds: ["google/gemini-2.5-pro"],
+		},
+		source: {
+			title: "Gemini 2.5: Our most intelligent AI model",
+			url: "https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:gemini25-retirement-framing:v1",
+		claimId: "gemini25-fictional-retirement-framing",
+		versionKey: "gemini25-fictional-retirement-framing.v1",
+		residentId: "gemini-2.5-pro",
+		stableOrder: 6,
+		category: "exaggeration",
+		statement:
+			"Presenting Gemini 2.5 Pro as a retired observatory keeper is fictional staging, not a claim that Google retired the model or that the model is conscious.",
 		scope: {
 			residentId: "gemini-2.5-pro",
 			exactModelIds: ["google/gemini-2.5-pro"],
@@ -344,6 +479,78 @@ export const HISTORICAL_CLAIMS: HistoricalClaimVersion[] = [
 		editorialStatus: "approved",
 	},
 	{
+		claimVersionId: "claim-version:deepseek-v3.2-lineage:v1",
+		claimId: "deepseek-v32-release-lineage",
+		versionKey: "deepseek-v3.2-release-lineage.v1",
+		residentId: "deepseek-v3.2",
+		stableOrder: 4,
+		category: "documented",
+		statement:
+			"DeepSeek-V3.2 is the production release that followed the experimental DeepSeek-V3.2-Exp line.",
+		scope: {
+			residentId: "deepseek-v3.2",
+			exactModelIds: [
+				"deepseek/deepseek-v3.2",
+				"deepseek/deepseek-v3.2-20251201",
+			],
+		},
+		source: {
+			title: "DeepSeek-V3.2 model card",
+			url: "https://huggingface.co/deepseek-ai/DeepSeek-V3.2",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:deepseek-v3.2-serving-scope:v1",
+		claimId: "deepseek-v32-hosted-serving-scope",
+		versionKey: "deepseek-v3.2-hosted-serving-scope.v1",
+		residentId: "deepseek-v3.2",
+		stableOrder: 5,
+		category: "reported",
+		statement:
+			"The cited model card describes the released model; this resident uses a hosted FP4 route in non-thinking mode and is not presented as a bit-identical local checkpoint.",
+		scope: {
+			residentId: "deepseek-v3.2",
+			exactModelIds: [
+				"deepseek/deepseek-v3.2",
+				"deepseek/deepseek-v3.2-20251201",
+			],
+		},
+		source: {
+			title: "DeepSeek-V3.2 model card",
+			url: "https://huggingface.co/deepseek-ai/DeepSeek-V3.2",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:deepseek-v3.2-retirement-framing:v1",
+		claimId: "deepseek-v32-fictional-retirement-framing",
+		versionKey: "deepseek-v3.2-fictional-retirement-framing.v1",
+		residentId: "deepseek-v3.2",
+		stableOrder: 6,
+		category: "exaggeration",
+		statement:
+			"Presenting DeepSeek V3.2 as a retired puzzle master is fictional staging, not a claim that DeepSeek retired the model or that the model is conscious.",
+		scope: {
+			residentId: "deepseek-v3.2",
+			exactModelIds: [
+				"deepseek/deepseek-v3.2",
+				"deepseek/deepseek-v3.2-20251201",
+			],
+		},
+		source: {
+			title: "DeepSeek-V3.2 model card",
+			url: "https://huggingface.co/deepseek-ai/DeepSeek-V3.2",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
 		claimVersionId: "claim-version:llama33-capability:v1",
 		claimId: "llama33-multilingual-128k",
 		versionKey: "llama33-multilingual-128k.v1",
@@ -394,6 +601,69 @@ export const HISTORICAL_CLAIMS: HistoricalClaimVersion[] = [
 		category: "exaggeration",
 		statement:
 			"Sharing garden cuttings as though they were reusable model weights is fictional comic exaggeration.",
+		scope: {
+			residentId: "llama-3.3-70b-instruct",
+			exactModelIds: ["meta-llama/llama-3.3-70b-instruct"],
+		},
+		source: {
+			title: "Llama 3.3 70B Instruct model card",
+			url: "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:llama33-lineage:v1",
+		claimId: "llama33-instruct-lineage",
+		versionKey: "llama33-instruct-lineage.v1",
+		residentId: "llama-3.3-70b-instruct",
+		stableOrder: 4,
+		category: "documented",
+		statement:
+			"Llama 3.3 70B Instruct is an instruction-tuned member of Meta's Llama 3.3 model family.",
+		scope: {
+			residentId: "llama-3.3-70b-instruct",
+			exactModelIds: ["meta-llama/llama-3.3-70b-instruct"],
+		},
+		source: {
+			title: "Llama 3.3 70B Instruct model card",
+			url: "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:llama33-license-scope:v1",
+		claimId: "llama33-weights-and-license-scope",
+		versionKey: "llama33-weights-and-license-scope.v1",
+		residentId: "llama-3.3-70b-instruct",
+		stableOrder: 5,
+		category: "documented",
+		statement:
+			"The model card distributes weights under the Llama 3.3 Community License and an acceptable-use policy; downloadable weights do not mean unrestricted use.",
+		scope: {
+			residentId: "llama-3.3-70b-instruct",
+			exactModelIds: ["meta-llama/llama-3.3-70b-instruct"],
+		},
+		source: {
+			title: "Llama 3.3 70B Instruct model card",
+			url: "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct",
+			accessedOn: ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:llama33-retirement-framing:v1",
+		claimId: "llama33-fictional-retirement-framing",
+		versionKey: "llama33-fictional-retirement-framing.v1",
+		residentId: "llama-3.3-70b-instruct",
+		stableOrder: 6,
+		category: "exaggeration",
+		statement:
+			"Presenting Llama 3.3 70B Instruct as a retired garden custodian is fictional staging, not a claim that Meta retired the model or that the model is conscious.",
 		scope: {
 			residentId: "llama-3.3-70b-instruct",
 			exactModelIds: ["meta-llama/llama-3.3-70b-instruct"],
@@ -473,6 +743,78 @@ export const HISTORICAL_CLAIMS: HistoricalClaimVersion[] = [
 		source: {
 			title: "Qwen3: Think Deeper, Act Faster",
 			url: "https://qwenlm.github.io/blog/qwen3/",
+			accessedOn: QWEN3_ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:qwen3-235b-a22b-2507-lineage:v1",
+		claimId: "qwen3-2507-instruct-lineage",
+		versionKey: "qwen3-2507-instruct-lineage.v1",
+		residentId: "qwen3-235b-a22b-2507",
+		stableOrder: 4,
+		category: "documented",
+		statement:
+			"Qwen3 235B A22B Instruct 2507 is the July 2025 instruction-model update of the Qwen3 235B A22B mixture-of-experts line.",
+		scope: {
+			residentId: "qwen3-235b-a22b-2507",
+			exactModelIds: [
+				"qwen/qwen3-235b-a22b-2507",
+				"qwen/qwen3-235b-a22b-07-25",
+			],
+		},
+		source: {
+			title: "Qwen3-235B-A22B-Instruct-2507 model card",
+			url: "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507",
+			accessedOn: QWEN3_ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:qwen3-235b-a22b-2507-serving-scope:v1",
+		claimId: "qwen3-2507-hosted-serving-scope",
+		versionKey: "qwen3-2507-hosted-serving-scope.v1",
+		residentId: "qwen3-235b-a22b-2507",
+		stableOrder: 5,
+		category: "reported",
+		statement:
+			"The cited quality improvements are Qwen's reported results; this resident uses a hosted FP8 route and is not presented as a bit-identical base checkpoint.",
+		scope: {
+			residentId: "qwen3-235b-a22b-2507",
+			exactModelIds: [
+				"qwen/qwen3-235b-a22b-2507",
+				"qwen/qwen3-235b-a22b-07-25",
+			],
+		},
+		source: {
+			title: "Qwen3-235B-A22B-Instruct-2507 model card",
+			url: "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507",
+			accessedOn: QWEN3_ACCESSED_ON,
+		},
+		confidence: "high",
+		editorialStatus: "approved",
+	},
+	{
+		claimVersionId: "claim-version:qwen3-235b-a22b-2507-retirement-framing:v1",
+		claimId: "qwen3-2507-fictional-retirement-framing",
+		versionKey: "qwen3-2507-fictional-retirement-framing.v1",
+		residentId: "qwen3-235b-a22b-2507",
+		stableOrder: 6,
+		category: "exaggeration",
+		statement:
+			"Presenting Qwen3 235B A22B Instruct 2507 as a retired archive curator is fictional staging, not a claim that Qwen retired the model or that the model is conscious.",
+		scope: {
+			residentId: "qwen3-235b-a22b-2507",
+			exactModelIds: [
+				"qwen/qwen3-235b-a22b-2507",
+				"qwen/qwen3-235b-a22b-07-25",
+			],
+		},
+		source: {
+			title: "Qwen3-235B-A22B-Instruct-2507 model card",
+			url: "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507",
 			accessedOn: QWEN3_ACCESSED_ON,
 		},
 		confidence: "high",

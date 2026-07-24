@@ -1,6 +1,9 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { RecentSceneArchive } from "../../src/features/publication/components/RecentSceneArchive.tsx";
+import { ScenePermalink } from "../../src/features/publication/components/ScenePermalink.tsx";
+import { BehaviorDisclosure } from "../../src/features/residents/components/BehaviorDisclosure.tsx";
 import { ResidentProfile } from "../../src/features/residents/components/ResidentProfile.tsx";
 import { RESIDENT_PROFILES } from "../../src/features/residents/fixtures/resident-profiles.ts";
 import type { CanonicalScene } from "../../src/features/publication/contracts/public-publication.ts";
@@ -9,6 +12,15 @@ import {
 	assembleResidentProfile,
 } from "../../src/features/publication/server/read-resident-profile.ts";
 import { HISTORICAL_CLAIMS } from "../../src/features/world/fixtures/historical-claims.ts";
+
+function objectKeys(value: unknown): string[] {
+	if (!value || typeof value !== "object") return [];
+	if (Array.isArray(value)) return value.flatMap(objectKeys);
+	return Object.entries(value).flatMap(([key, child]) => [
+		key,
+		...objectKeys(child),
+	]);
+}
 
 function canonicalScene(description: string): CanonicalScene {
 	return {
@@ -111,9 +123,62 @@ describe("Phase 3 resident profile tracer", () => {
 				expect(claim.source.accessedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/u);
 			}
 		}
-		expect(JSON.stringify(result)).not.toMatch(
-			/prompt|providerResponse|hiddenReasoning|usage|cost|rawRelationship|score|delta|meter|rank|progress/u,
+		expect(objectKeys(result)).not.toEqual(
+			expect.arrayContaining([
+				"prompt",
+				"providerResponse",
+				"hiddenReasoning",
+				"usage",
+				"cost",
+				"rawRelationship",
+				"score",
+				"delta",
+				"meter",
+				"rank",
+				"progress",
+			]),
 		);
+	});
+
+	it("publishes all six profiles with complete disclosures and no private fields", () => {
+		for (const residentId of [
+			"gpt-4o",
+			"claude-sonnet-4.5",
+			"gemini-2.5-pro",
+			"deepseek-v3.2",
+			"llama-3.3-70b-instruct",
+			"qwen3-235b-a22b-2507",
+		]) {
+			const result = assembleResidentProfile({ residentId });
+			expect(result.kind).toBe("complete");
+			if (result.kind !== "complete") continue;
+			const markup = renderToStaticMarkup(
+				createElement(ResidentProfile, { result }),
+			);
+			expect((markup.match(/<details/gmu) ?? [])).toHaveLength(1);
+			for (const heading of [
+				"The joke",
+				"Historical inspiration",
+				"Fictional exaggeration",
+				"Uncertainty and scope",
+				"Sources",
+			]) {
+				expect(markup).toContain(`<h3>${heading}</h3>`);
+			}
+			expect(objectKeys(result)).not.toEqual(expect.arrayContaining([
+				"providerResponse",
+				"hiddenReasoning",
+				"calibration",
+				"usage",
+				"cost",
+				"rawRelationship",
+				"relationshipScore",
+				"delta",
+				"meter",
+				"rank",
+				"progress",
+			]));
+		}
 	});
 
 	it("fails closed for cross-scoped, unreviewed, missing, or incomplete evidence", () => {
@@ -188,6 +253,87 @@ describe("Phase 3 resident profile tracer", () => {
 				}),
 			),
 		).toContain("Resident profile not found");
+	});
+
+	it("keeps loading, error, partial, and existing scene/archive profile links honest", () => {
+		const result = assembleResidentProfile({ residentId: "gpt-4o" });
+		if (result.kind !== "complete") throw new Error("GPT-4o profile missing.");
+		const behavior = result.profile.behaviors[0];
+		if (!behavior) throw new Error("GPT-4o behavior missing.");
+		expect(
+			renderToStaticMarkup(
+				createElement(BehaviorDisclosure, { state: "loading" }),
+			),
+		).toContain("Opening behavior notes");
+		expect(
+			renderToStaticMarkup(
+				createElement(BehaviorDisclosure, { state: "error" }),
+			),
+		).toContain("Behavior notes are unavailable");
+		expect(
+			renderToStaticMarkup(
+				createElement(BehaviorDisclosure, {
+					behavior,
+					state: "partial",
+				}),
+			),
+		).toContain("Some supporting sources are unavailable");
+
+		for (const profileState of [
+			{ kind: "loading" as const },
+			{ kind: "error" as const },
+			{
+				kind: "known-unavailable" as const,
+				residentId: "gpt-4o",
+				reason: "profile-evidence-incomplete" as const,
+			},
+		]) {
+			const stateMarkup = renderToStaticMarkup(
+				createElement(ResidentProfile, { result: profileState }),
+			);
+			expect(stateMarkup).toContain("staged");
+			expect(stateMarkup).toContain("not affiliated");
+		}
+
+		const scene = canonicalScene("Their friendship grew.");
+		const sceneMarkup = renderToStaticMarkup(
+			createElement(ScenePermalink, {
+				result: { kind: "complete", scene },
+			}),
+		);
+		expect(sceneMarkup).toContain('href="/residents/gpt-4o"');
+		const archiveMarkup = renderToStaticMarkup(
+			createElement(RecentSceneArchive, {
+				result: {
+					kind: "ready",
+					partial: false,
+					scenes: [
+						{
+							revisionId: scene.revisionId,
+							canonicalHref: scene.canonicalPath,
+							publicationSequence: scene.publicationSequence,
+							title: scene.premise,
+							residents: scene.cast.map((resident) => ({
+								residentId: resident.residentId,
+								displayName: resident.displayName,
+								profilePath: resident.profilePath,
+							})),
+							location: scene.location.name,
+							homeDay: scene.home.homeDay,
+							homeTime: scene.home.homeTime,
+							dayPeriod: scene.home.dayPeriod,
+							premise: scene.premise,
+							transcriptDestination: scene.canonicalPath,
+							outcome: scene.outcome.summary,
+							relationshipChanges: ["Their friendship grew."],
+							explanationLinks: ["/residents/gpt-4o"],
+						},
+					],
+				},
+			}),
+		);
+		expect(archiveMarkup).toContain('href="/residents/gpt-4o"');
+		expect(archiveMarkup).toContain("Behind this behavior");
 	});
 
 	it("uses only the newest complete nonzero cause-backed relationship scene", async () => {

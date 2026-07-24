@@ -25,11 +25,14 @@ import {
 	canonicalScenePath,
 	PublicHistoricalClaimSchema,
 	PublicRelationshipSummarySchema,
+	PublicResidentDirectoryEntrySchema,
 	PublicResidentIdSchema,
 	PublicResidentProfileSchema,
+	ResidentDirectoryResultSchema,
 	ResidentProfileReadResultSchema,
 	residentProfilePath,
 	type CanonicalSceneReadResult,
+	type ResidentDirectoryResult,
 } from "../contracts/public-publication.ts";
 import { readCanonicalScene } from "./read-canonical-scene.ts";
 import {
@@ -267,6 +270,62 @@ export function assembleResidentProfile(input: {
 				profile: profile.data,
 			})
 		: unavailable(parsedResidentId.data);
+}
+
+export function assembleResidentDirectory(input: {
+	definitions?: readonly ResidentProfileDefinition[];
+	residents?: readonly LaunchResident[];
+	claims?: readonly HistoricalClaimVersion[];
+} = {}): ResidentDirectoryResult {
+	const definitions = input.definitions ?? RESIDENT_PROFILES;
+	const residents = input.residents ?? LAUNCH_RESIDENTS;
+	const claims = input.claims ?? HISTORICAL_CLAIMS;
+	if (
+		definitions.length !== 6 ||
+		residents.length !== 6 ||
+		new Set(definitions.map((definition) => definition.residentId)).size !== 6 ||
+		new Set(residents.map((resident) => resident.id)).size !== 6
+	) {
+		return ResidentDirectoryResultSchema.parse({ kind: "error" });
+	}
+	const entries = [...residents]
+		.sort((left, right) => left.displayOrder - right.displayOrder)
+		.map((resident, index) => {
+			if (resident.displayOrder !== index + 1) return null;
+			const result = assembleResidentProfile({
+				residentId: resident.id,
+				definitions,
+				residents,
+				claims,
+			});
+			if (result.kind !== "complete") return null;
+			const significance = result.profile.sections.find(
+				(section) => section.id === "real-world-significance",
+			)?.claims[0]?.statement;
+			if (!significance) return null;
+			const entry = PublicResidentDirectoryEntrySchema.safeParse({
+				residentId: result.profile.residentId,
+				displayOrder: result.profile.displayOrder,
+				displayName: result.profile.displayName,
+				role: result.profile.role,
+				significance,
+				portraitVariantId: result.profile.portraitVariantId,
+				exactModelIds: result.profile.exactModelIds,
+				profilePath: result.profile.profilePath,
+			});
+			return entry.success ? entry.data : null;
+		});
+	if (entries.some((entry) => entry === null)) {
+		return ResidentDirectoryResultSchema.parse({ kind: "error" });
+	}
+	return ResidentDirectoryResultSchema.parse({
+		kind: "ready",
+		residents: entries.filter((entry) => entry !== null),
+	});
+}
+
+export function readResidentDirectory(): ResidentDirectoryResult {
+	return assembleResidentDirectory();
 }
 
 export async function assembleLatestRelationshipSummary(
