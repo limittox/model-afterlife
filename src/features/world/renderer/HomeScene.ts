@@ -1,8 +1,6 @@
 import Phaser from "phaser";
 import { CameraController, type CameraViewState } from "./CameraController.ts";
-import { createSpeechBubble } from "./SpeechBubbleLayer.ts";
 import type { RendererBridge } from "./renderer-bridge.ts";
-import { RESIDENT_VISUAL_STYLES } from "./renderer-types.ts";
 import type {
 	PresentationTokens,
 	RendererControl,
@@ -10,6 +8,8 @@ import type {
 	RenderRoom,
 	RenderWorldState,
 } from "./renderer-types.ts";
+import { RESIDENT_VISUAL_STYLES } from "./renderer-types.ts";
+import { createSpeechBubble } from "./SpeechBubbleLayer.ts";
 import { HOME_HEIGHT, HOME_WIDTH } from "./world-layout.ts";
 
 type ResidentVisual = {
@@ -98,6 +98,14 @@ export class HomeScene extends Phaser.Scene {
 		this.game.canvas.dataset.bubbleText = bubble?.lines.join(" ") ?? "";
 		this.game.canvas.dataset.idleMotion = state.reducedMotion ? "held" : "7fps";
 		this.game.canvas.dataset.speakerMarker = "static";
+		this.game.canvas.dataset.reducedMotion = String(state.reducedMotion);
+		this.game.canvas.dataset.roomIds = state.rooms
+			.map((room) => room.id)
+			.join("|");
+		this.game.canvas.dataset.residentIds = state.residents
+			.map((resident) => resident.id)
+			.join("|");
+		this.game.canvas.dataset.sceneId = state.scene?.id ?? "quiet";
 		this.children.removeAll(true);
 		this.residentVisuals = [];
 		this.residentBodies.clear();
@@ -266,7 +274,7 @@ export class HomeScene extends Phaser.Scene {
 		}
 
 		const target = this.add
-			.zone(0, -2, 32, 44)
+			.zone(0, -2, 44, 44)
 			.setInteractive({ useHandCursor: true });
 		target.on(Phaser.Input.Events.POINTER_DOWN, () => {
 			this.bridge.emit({

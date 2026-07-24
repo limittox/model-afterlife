@@ -140,6 +140,21 @@ h3 {
 	border: 0;
 }
 
+.skip-link {
+	position: absolute;
+	z-index: 20;
+	top: var(--space-sm);
+	left: var(--space-sm);
+	padding: var(--space-sm) var(--space-md);
+	background: var(--color-dominant);
+	color: var(--color-text);
+	transform: translateY(-180%);
+}
+
+.skip-link:focus {
+	transform: translateY(0);
+}
+
 .observer-shell {
 	display: grid;
 	grid-template-rows: auto auto minmax(0, 1fr) auto;
@@ -381,6 +396,15 @@ h3 {
 
 .pixel-world-empty {
 	place-content: center;
+	text-align: center;
+}
+
+.pixel-world-disabled {
+	position: static;
+	display: grid;
+	min-height: 280px;
+	place-content: center;
+	padding: var(--space-lg);
 	text-align: center;
 }
 
@@ -748,6 +772,28 @@ h3 {
 	border-top: 1px solid var(--color-border);
 	background: var(--color-dominant);
 	padding: var(--space-lg);
+}
+
+.observer-shell[data-renderer-enabled="false"] .observer-stage {
+	display: block;
+	overflow-y: auto;
+}
+
+.observer-shell[data-renderer-enabled="false"] .world-column {
+	display: none;
+}
+
+.observer-shell[data-renderer-enabled="false"] .connection-banner,
+.observer-shell[data-renderer-enabled="false"] .observer-control-dock {
+	position: static;
+	width: calc(100% - var(--space-xl));
+	max-width: none;
+	margin: var(--space-sm) auto;
+	transform: none;
+}
+
+.observer-shell[data-renderer-enabled="false"] .compact-home-view {
+	display: block;
 }
 
 .compact-home-snapshot {

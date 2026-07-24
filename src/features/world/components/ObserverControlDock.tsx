@@ -1,13 +1,9 @@
 import { ShareSceneActions } from "../../publication/client/ShareSceneActions.tsx";
-import type {
-	ConnectionState,
-	PresentationMode,
-} from "../client/presentation-types.ts";
+import type { PresentationMode } from "../client/presentation-types.ts";
 import { ResidentFocusChip } from "./ResidentFocusChip.tsx";
 
 export function ObserverControlDock({
 	hasSnapshot,
-	connection,
 	mode,
 	followedResidentName,
 	zoom,
@@ -22,7 +18,6 @@ export function ObserverControlDock({
 	onUnfollow,
 }: {
 	hasSnapshot: boolean;
-	connection: ConnectionState;
 	mode: PresentationMode;
 	followedResidentName: string | null;
 	zoom: number;
@@ -36,7 +31,6 @@ export function ObserverControlDock({
 	onJumpLive: () => void;
 	onUnfollow: () => void;
 }) {
-	const sceneControlsDisabled = !hasSnapshot || connection !== "connected";
 	const cameraControlsDisabled = !hasSnapshot;
 	const disabledReason = !hasSnapshot
 		? "Controls are unavailable until the home opens."
@@ -121,9 +115,9 @@ export function ObserverControlDock({
 				<button
 					type="button"
 					onClick={mode === "paused" ? onResume : onPause}
-					disabled={sceneControlsDisabled}
+					disabled={!hasSnapshot}
 					aria-describedby={
-						sceneControlsDisabled ? "control-disabled-reason" : undefined
+						!hasSnapshot ? "control-disabled-reason" : undefined
 					}
 				>
 					{mode === "paused" ? "Resume presentation" : "Pause presentation"}

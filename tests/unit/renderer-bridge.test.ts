@@ -6,18 +6,20 @@ import {
 	quietState,
 	sceneUnavailableState,
 } from "../../src/features/world/fixtures/ui-states.ts";
+import { CameraController } from "../../src/features/world/renderer/CameraController.ts";
+import { calculateIntegerDisplayScale } from "../../src/features/world/renderer/integer-display-scale.ts";
 import {
-	RendererBridge,
+	isRendererControl,
+	isRendererIntent,
 	projectSnapshotToRenderState,
+	RendererBridge,
 } from "../../src/features/world/renderer/renderer-bridge.ts";
+import { disposeWorldGame } from "../../src/features/world/renderer/renderer-lifecycle.ts";
+import { RESIDENT_VISUAL_STYLES } from "../../src/features/world/renderer/renderer-types.ts";
 import {
 	createSpeechBubble,
 	MAX_BUBBLE_LINES,
 } from "../../src/features/world/renderer/SpeechBubbleLayer.ts";
-import { disposeWorldGame } from "../../src/features/world/renderer/renderer-lifecycle.ts";
-import { calculateIntegerDisplayScale } from "../../src/features/world/renderer/integer-display-scale.ts";
-import { CameraController } from "../../src/features/world/renderer/CameraController.ts";
-import { RESIDENT_VISUAL_STYLES } from "../../src/features/world/renderer/renderer-types.ts";
 
 describe("renderer bridge", () => {
 	it("projects canonical snapshots to stable room, resident, and speaker identities", () => {
@@ -52,6 +54,15 @@ describe("renderer bridge", () => {
 			"resident:qwen3-235b-a22b-2507",
 		]);
 		expect(first.scene?.activeTurn?.speakerRenderId).toBe("resident:gpt-4o");
+		expect(first.scene?.id).toBe(snapshot.scene?.id);
+		expect(first.rooms.map((room) => room.id)).toContain(
+			first.scene?.locationId,
+		);
+		expect(
+			first.scene?.participantIds.every((participantId) =>
+				first.residents.some((resident) => resident.id === participantId),
+			),
+		).toBe(true);
 		expect(new Set(first.residents.map((resident) => resident.role)).size).toBe(
 			6,
 		);
@@ -125,6 +136,95 @@ describe("renderer bridge", () => {
 			"resetView",
 		]);
 		expect(bridge.getState()).toEqual(initial);
+	});
+
+	it("rejects spoofed, unknown, coordinate-derived, and unbounded intents", () => {
+		const snapshot = activeSceneState.snapshot;
+		expect(snapshot).not.toBeNull();
+		if (!snapshot) return;
+		const initial = projectSnapshotToRenderState(snapshot, {
+			mode: "live",
+			reducedMotion: false,
+		});
+		const handler = vi.fn();
+		const bridge = new RendererBridge(initial, handler);
+
+		expect(
+			bridge.emit({
+				type: "residentSelected",
+				residentId: initial.residents[0]?.id,
+				residentName: "Spoofed resident",
+			}),
+		).toBe(false);
+		expect(
+			bridge.emit({
+				type: "residentSelected",
+				residentId: "136:144",
+				residentName: initial.residents[0]?.name,
+			}),
+		).toBe(false);
+		expect(
+			bridge.emit({
+				type: "cameraSettled",
+				x: Number.POSITIVE_INFINITY,
+				y: 128,
+				zoom: 2,
+				reason: "automatic",
+			}),
+		).toBe(false);
+		expect(
+			bridge.emit({
+				type: "residentSelected",
+				residentId: initial.residents[0]?.id,
+				residentName: initial.residents[0]?.name,
+			}),
+		).toBe(true);
+		expect(handler).toHaveBeenCalledTimes(1);
+	});
+
+	it("validates controls as a closed bounded observer-only set", () => {
+		expect(isRendererControl({ type: "zoomBy", delta: 1 })).toBe(true);
+		expect(isRendererControl({ type: "panBy", dx: 16, dy: -16 })).toBe(true);
+		expect(isRendererControl({ type: "resetView" })).toBe(true);
+		expect(isRendererControl({ type: "zoomBy", delta: 2 })).toBe(false);
+		expect(isRendererControl({ type: "panBy", dx: 17, dy: 0 })).toBe(false);
+		expect(isRendererControl({ type: "residentCommand", prompt: "move" })).toBe(
+			false,
+		);
+	});
+
+	it("accepts only stable IDs from the projected state at the renderer boundary", () => {
+		const snapshot = activeSceneState.snapshot;
+		expect(snapshot).not.toBeNull();
+		if (!snapshot) return;
+		const state = projectSnapshotToRenderState(snapshot, {
+			mode: "live",
+			reducedMotion: false,
+		});
+		const resident = state.residents[0];
+		expect(resident).toBeDefined();
+		expect(
+			isRendererIntent(
+				{
+					type: "residentSelected",
+					residentId: resident?.id,
+					residentName: resident?.name,
+				},
+				state,
+			),
+		).toBe(true);
+		expect(
+			isRendererIntent(
+				{
+					type: "cameraSettled",
+					x: 176,
+					y: 128,
+					zoom: 1,
+					reason: "reset",
+				},
+				state,
+			),
+		).toBe(true);
 	});
 });
 
