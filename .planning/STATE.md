@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 Task 3 one Qwen diagnostic authorized and reserved; 39/62 ceiling"
-last_updated: "2026-07-24T02:25:14.204Z"
+stopped_at: "02-02 Task 3 Qwen relationship effects violation identified; 39/62 consumed"
+last_updated: "2026-07-24T02:27:14.790Z"
 last_activity: 2026-07-24
-last_activity_desc: "One Qwen-only diagnostic is authorized: two catalog reads, one generation, no retry or fallback; cumulative ceiling reserved at 39/62"
+last_activity_desc: "One Qwen diagnostic identified schema-relationship-effects-forbidden; exactly one generation consumed with no retry or fallback; cumulative accounting is 39/62"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Task 3 one Qwen diagnostic authorized and reserved
-Last activity: 2026-07-24 — exactly two read-only catalog requests and one Qwen generation are authorized with exact routing, zero retries, disabled fallback, sanitized output, and a cumulative generation ceiling of 39/62
+Status: Task 3 blocked on Qwen proposing a forbidden relationship effect
+Last activity: 2026-07-24 — the Qwen-only diagnostic returned `schema-relationship-effects-forbidden`; exactly one generation was consumed with no retry, fallback, substitution, or raw-output logging, bringing cumulative accounting to 39/62
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -90,7 +90,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: One Qwen-only field-level diagnostic is authorized and conservatively reserved at 39/62: two read-only catalog requests and one generation, with exact routing, zero retries, disabled fallback, sanitized output, and an immediate stop afterward.
+- [Phase 2]: Qwen's first admission response is structurally valid but populates `proposedRelationshipEffects`, which the local turn contract forbids. The privacy-safe diagnostic returned `schema-relationship-effects-forbidden`. Accounting is 39/62 with 23 calls unused; no further provider call is authorized.
 - [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
@@ -107,6 +107,7 @@ None yet.
 | 260724-guf | Add deterministic inter-generation pacing to the live admission matrix after reproducible fourth-request HTTP 429s, verify offline, and make no provider calls | 2026-07-24 | 11d1523 | [260724-guf-add-deterministic-inter-generation-pacin](./quick/260724-guf-add-deterministic-inter-generation-pacin/) |
 | 260724-h0c | Run the one authorized paced final six-resident admission matrix with 21-second generation spacing and cumulative ceiling 62 | 2026-07-24 | bf09b61 | [260724-h0c-run-the-one-authorized-paced-final-six-r](./quick/260724-h0c-run-the-one-authorized-paced-final-six-r/) |
 | 260724-h57 | Add privacy-safe field-level classification for local admission schema failures, with no provider calls | 2026-07-24 | 9f031bc | [260724-h57-add-privacy-safe-field-level-classificat](./quick/260724-h57-add-privacy-safe-field-level-classificat/) |
+| 260724-h91 | Run one privacy-safe Qwen admission diagnostic with two catalog reads, one generation, and cumulative ceiling 39 | 2026-07-24 | 4ec7c22 | [260724-h91-run-one-privacy-safe-qwen-admission-diag](./quick/260724-h91-run-one-privacy-safe-qwen-admission-diag/) |
 
 ## Deferred Items
 
