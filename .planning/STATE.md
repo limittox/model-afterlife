@@ -5,10 +5,10 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: grounded-ensemble-and-safe-scenes
 status: executing
-stopped_at: "02-02 conditional Qwen3 canary and final matrix authorized; 71/71 ceiling"
-last_updated: "2026-07-24T03:25:50.737Z"
+stopped_at: "02-02 Task 3 live admission passed; Task 4 remains; 71/71 consumed"
+last_updated: "2026-07-24T03:43:24.049Z"
 last_activity: 2026-07-24
-last_activity_desc: "One Qwen3 DeepInfra FP8 canary and, only on success, one paced final matrix are authorized; cumulative generation ceiling is conservatively reserved at 71/71"
+last_activity_desc: "Qwen3 passed its exact DeepInfra FP8 canary and all six residents passed the paced 30-sample admission matrix; cumulative generation accounting is 71/71 and no further provider call is authorized"
 progress:
   total_phases: 2
   completed_phases: 1
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 
 Phase: 02 (grounded-ensemble-and-safe-scenes) — EXECUTING
 Plan: 2 of 4
-Status: Conditional Qwen3 canary and final matrix authorized
-Last activity: 2026-07-24 — one Qwen3 canary through the exact DeepInfra FP8 route is authorized and, only if it passes, one standard paced matrix with at most 30 generations; zero retries, disabled fallback, no substitutions, first-failure stop, and cumulative ceiling 71/71
+Status: Task 3 live admission complete; Task 4 public six-resident presentation remains
+Last activity: 2026-07-24 — Qwen3 passed its exact DeepInfra FP8 canary, then all six exact resident profiles passed five paced samples each with direct first-attempt routes, empty pipelines, valid schemas, and verified OpenRouter identity; accounting is 71/71
 
 Progress: [█████████████░░░░░░░] 5/8 plans (63%)
 
@@ -91,8 +91,8 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 2]: One Qwen3 canary through the exact DeepInfra FP8 route and, conditional on its success, one paced final matrix are authorized. The combined hard ceiling is 31 new generations and 71/71 cumulative, with at most 14 associated read-only catalog requests. Zero retries, disabled fallback, no route/model substitutions, first-failure stop, and sanitized output remain mandatory.
-- [Phase 2]: Live admission requires one development-scoped `OPENROUTER_API_KEY` and one bundled human calibration review; the secret must stay out of chat, git, public bundles, and traces.
+- [Phase 2]: Live strict-route admission now passes for all six exact residents. The 31-call checkpoint is fully consumed at 71/71 cumulative, and no further provider call is authorized.
+- [Phase 2]: One bundled human calibration review remains before publication-gate completion; the OpenRouter credential must stay out of chat, git, public bundles, and traces.
 - [Phase 3]: Phase 1 UI audit scored 14/24; revisit the game-like dock, mixed hard-error/loading copy, typography wiring, accent reservation, and spacing during production presentation work.
 - [Phase 4]: Qualified legal and provider-brand review is an external launch dependency.
 
@@ -113,6 +113,7 @@ None yet.
 | 260724-hf4 | Run one post-fix Qwen canary and, only if it passes, one paced final admission matrix with cumulative ceiling 70 | 2026-07-24 | ecdb4c9 | [260724-hf4-run-one-post-fix-qwen-canary-and-only-if](./quick/260724-hf4-run-one-post-fix-qwen-canary-and-only-if/) |
 | 260724-hgn | Remove application-owned relationship effects from the model wire schema and inject an empty array locally, verified with TDD and no provider calls | 2026-07-24 | ab1f52c | [260724-hgn-remove-application-owned-relationship-ef](./quick/260724-hgn-remove-application-owned-relationship-ef/) |
 | 260724-ho4 | Replace Qwen 2.5 7B resident with Qwen3 235B A22B Instruct 2507 on DeepInfra FP8, update grounded identity and tests, no provider calls | 2026-07-24 | 6be74a9 | [260724-ho4-replace-qwen-2-5-7b-resident-with-qwen3-](./quick/260724-ho4-replace-qwen-2-5-7b-resident-with-qwen3-/) |
+| 260724-in8 | Run one authorized Qwen3 DeepInfra FP8 canary and, only on success, one paced 30-generation final matrix, stopping at cumulative ceiling 71 | 2026-07-24 | cd9d0c5 | [260724-in8-run-one-authorized-qwen3-deepinfra-fp8-a](./quick/260724-in8-run-one-authorized-qwen3-deepinfra-fp8-a/) |
 
 ## Deferred Items
 
