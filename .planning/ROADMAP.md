@@ -102,7 +102,35 @@ Plans:
   4. A mobile visitor can use a touch-friendly, scene-first presentation with a compact establishing view, residents, recap, archive, profiles, sharing, and jump-to-live controls without depending on a shrunken desktop map or drag-only interaction.
   5. Any published scene can be opened at a stable public page showing its canonical transcript, cast, home time, premise, historical provenance, exact resident-model authorship, and staged-fiction disclosure, then shared without an account through an original social preview that retains AI-authorship and non-affiliation context.
 
-**Plans:** TBD
+**Plans:** 0/7 plans executed
+**Wave 1**
+
+- [ ] 03-01-PLAN.md
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 03-02-PLAN.md
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 03-03-PLAN.md
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
+- [ ] 03-04-PLAN.md
+
+**Wave 5** *(blocked on Wave 4 completion)*
+
+- [ ] 03-05-PLAN.md
+
+**Wave 6** *(blocked on Wave 5 completion)*
+
+- [ ] 03-06-PLAN.md
+
+**Wave 7** *(blocked on Wave 6 completion)*
+
+- [ ] 03-07-PLAN.md
+
 **UI hint**: yes
 
 ### Phase 4: Safe Public Operation
@@ -130,5 +158,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Shared Watchable Home | 4/4 | Complete    | 2026-07-22 |
 | 2. Grounded Ensemble and Safe Scenes | 4/4 | Complete | 2026-07-24 |
-| 3. Return Loop and Inclusive Presentation | 0/TBD | Not started | - |
+| 3. Return Loop and Inclusive Presentation | 0/7 | Planned    |  |
 | 4. Safe Public Operation | 0/TBD | Not started | - |
