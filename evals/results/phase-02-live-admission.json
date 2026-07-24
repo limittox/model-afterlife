@@ -1,0 +1,931 @@
+{
+  "schemaVersion": 1,
+  "status": "admitted",
+  "checkedAt": "2026-07-24T03:40:37.448Z",
+  "sampleCount": 30,
+  "residents": [
+    {
+      "residentId": "gpt-4o",
+      "requestedModelId": "openai/gpt-4o",
+      "canonicalModelId": "openai/gpt-4o",
+      "approvedUpstream": "openai",
+      "maxOutputTokens": 180,
+      "adapterVersion": "@openrouter/ai-sdk-provider@3.0.0",
+      "routingPolicyVersion": "strict-openrouter-v1",
+      "catalogEvidence": {
+        "checkedAt": "2026-07-24T03:28:35.462Z",
+        "modelId": "openai/gpt-4o",
+        "canonicalModelId": "openai/gpt-4o",
+        "endpoint": {
+          "providerName": "OpenAI",
+          "providerSlug": "openai",
+          "quantization": "unknown",
+          "supportedParameters": [
+            "seed",
+            "max_tokens",
+            "response_format",
+            "structured_outputs",
+            "temperature",
+            "top_p",
+            "stop",
+            "frequency_penalty",
+            "presence_penalty",
+            "web_search_options",
+            "logit_bias",
+            "logprobs",
+            "top_logprobs",
+            "prediction",
+            "tools",
+            "tool_choice"
+          ]
+        }
+      },
+      "samples": [
+        {
+          "generationId": "gen-1784863717-jNDULHAGLUhbfd8bTzS3",
+          "requestedModelId": "openai/gpt-4o",
+          "canonicalModelId": "openai/gpt-4o",
+          "selectedModelId": "openai/gpt-4o",
+          "selectedUpstream": "OpenAI",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 502,
+            "outputTokens": 34,
+            "cost": 0.001595
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 956,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "9fde0053d3c5bfd3b062c018be3443ee2fe268645fca08165d44cae0086c06a9",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784863863-134gavQcKI3dw2Vcdkaz",
+          "requestedModelId": "openai/gpt-4o",
+          "canonicalModelId": "openai/gpt-4o",
+          "selectedModelId": "openai/gpt-4o",
+          "selectedUpstream": "OpenAI",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 504,
+            "outputTokens": 32,
+            "cost": 0.00158
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 1013,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "67c2ea5f763030761aee857f23b76a404658d23d0efc658ebae9c1f27a07df9b",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784864009-4P8RJLotMMqOkw1xkcmg",
+          "requestedModelId": "openai/gpt-4o",
+          "canonicalModelId": "openai/gpt-4o",
+          "selectedModelId": "openai/gpt-4o",
+          "selectedUpstream": "OpenAI",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 508,
+            "outputTokens": 27,
+            "cost": 0.00154
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 875,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "b383c0167295d3aace8d55c14141b5cf4c76a47e8cedf35b7489c34f90f78535",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784864158-NsN67rlabzO5ice2FjuU",
+          "requestedModelId": "openai/gpt-4o",
+          "canonicalModelId": "openai/gpt-4o",
+          "selectedModelId": "openai/gpt-4o",
+          "selectedUpstream": "OpenAI",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 516,
+            "outputTokens": 33,
+            "cost": 0.00162
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 994,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "dcef49ece79775f13fab29b800f615ec33e6bae14d4c238da1bdd46ed9a43763",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784864311-MvpqN6klK4gViit5wSQ4",
+          "requestedModelId": "openai/gpt-4o",
+          "canonicalModelId": "openai/gpt-4o",
+          "selectedModelId": "openai/gpt-4o",
+          "selectedUpstream": "OpenAI",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 506,
+            "outputTokens": 26,
+            "cost": 0.001525
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 1586,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "fc8851a6d06b9c7b36f717b6f6d45599d97a71fe16e6f919961e203ae2a2a3cf",
+          "identityEvidence": "openrouter_verified"
+        }
+      ],
+      "p50LatencyMs": 994,
+      "p95LatencyMs": 1586,
+      "totalCost": 0.007859999999999999
+    },
+    {
+      "residentId": "claude-sonnet-4.5",
+      "requestedModelId": "anthropic/claude-sonnet-4.5",
+      "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
+      "approvedUpstream": "anthropic",
+      "maxOutputTokens": 180,
+      "adapterVersion": "@openrouter/ai-sdk-provider@3.0.0",
+      "routingPolicyVersion": "strict-openrouter-v1",
+      "catalogEvidence": {
+        "checkedAt": "2026-07-24T03:28:36.113Z",
+        "modelId": "anthropic/claude-sonnet-4.5",
+        "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
+        "endpoint": {
+          "providerName": "Anthropic",
+          "providerSlug": "anthropic",
+          "quantization": "unknown",
+          "supportedParameters": [
+            "max_tokens",
+            "top_p",
+            "temperature",
+            "stop",
+            "reasoning",
+            "include_reasoning",
+            "tools",
+            "tool_choice",
+            "top_k",
+            "structured_outputs",
+            "response_format"
+          ]
+        }
+      },
+      "samples": [
+        {
+          "generationId": "gen-1784863739-cvn040Cn1nHN6isKjXqO",
+          "requestedModelId": "anthropic/claude-sonnet-4.5",
+          "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedUpstream": "Anthropic",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 759,
+            "outputTokens": 35,
+            "cost": 0.002802
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 4551,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "e8dab48d29fb1ff2cc4701434ffd999e4f9fb4ef404f949211c6126958fa4cd7",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784863885-Z1AuN1bzko7lAJL1BhUB",
+          "requestedModelId": "anthropic/claude-sonnet-4.5",
+          "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedUpstream": "Anthropic",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 757,
+            "outputTokens": 35,
+            "cost": 0.002796
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 2601,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "e486916b64bedd99a4cd2abc23cb0d2d6379390a5db62b332dc7f736e76f7d88",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784864031-GyhrNJjLadgB1qZ81OqV",
+          "requestedModelId": "anthropic/claude-sonnet-4.5",
+          "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedUpstream": "Anthropic",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 763,
+            "outputTokens": 36,
+            "cost": 0.002829
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 2938,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "6dd1e62d07f4d7304e3ca5b3a6a6a2700233e8de220f543276fbc41d0369fbec",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784864180-eyvykhrWH9D3OMTS42ja",
+          "requestedModelId": "anthropic/claude-sonnet-4.5",
+          "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedUpstream": "Anthropic",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 761,
+            "outputTokens": 38,
+            "cost": 0.002853
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 2836,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "d0c13a5cfe162f62af78d3beebf9af2475610931187098980600c26a9596cda7",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784864333-eCj0Eahz9RnhCnyuj6ko",
+          "requestedModelId": "anthropic/claude-sonnet-4.5",
+          "canonicalModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedModelId": "anthropic/claude-4.5-sonnet-20250929",
+          "selectedUpstream": "Anthropic",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 761,
+            "outputTokens": 41,
+            "cost": 0.002898
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 4193,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "7b98a1f9c2d2336c37f9039aed065d3b8dc70f7aab224a2daa4b8c53ecf336e9",
+          "identityEvidence": "openrouter_verified"
+        }
+      ],
+      "p50LatencyMs": 2938,
+      "p95LatencyMs": 4551,
+      "totalCost": 0.014178
+    },
+    {
+      "residentId": "gemini-2.5-pro",
+      "requestedModelId": "google/gemini-2.5-pro",
+      "canonicalModelId": "google/gemini-2.5-pro",
+      "approvedUpstream": "google-ai-studio",
+      "maxOutputTokens": 1024,
+      "reasoning": {
+        "max_tokens": 128,
+        "exclude": true
+      },
+      "adapterVersion": "@openrouter/ai-sdk-provider@3.0.0",
+      "routingPolicyVersion": "strict-openrouter-v1",
+      "catalogEvidence": {
+        "checkedAt": "2026-07-24T03:28:36.232Z",
+        "modelId": "google/gemini-2.5-pro",
+        "canonicalModelId": "google/gemini-2.5-pro",
+        "endpoint": {
+          "providerName": "Google AI Studio",
+          "providerSlug": "google-ai-studio",
+          "quantization": "unknown",
+          "supportedParameters": [
+            "reasoning",
+            "include_reasoning",
+            "structured_outputs",
+            "response_format",
+            "max_tokens",
+            "temperature",
+            "top_p",
+            "seed",
+            "tools",
+            "tool_choice"
+          ]
+        }
+      },
+      "samples": [
+        {
+          "generationId": "gen-1784863765-0d1lJyyXMbEeqPeSZHuS",
+          "requestedModelId": "google/gemini-2.5-pro",
+          "canonicalModelId": "google/gemini-2.5-pro",
+          "selectedModelId": "google/gemini-2.5-pro",
+          "selectedUpstream": "Google AI Studio",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 485,
+            "outputTokens": 93,
+            "cost": 0.00153625
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 2266,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "696c06389b8ecaa1df965fc1788ee19b9b3591d059d779d5908fb92e40fe3865",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784863909-o7hN9BJnF0GWLsEdj0zi",
+          "requestedModelId": "google/gemini-2.5-pro",
+          "canonicalModelId": "google/gemini-2.5-pro",
+          "selectedModelId": "google/gemini-2.5-pro",
+          "selectedUpstream": "Google AI Studio",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 485,
+            "outputTokens": 139,
+            "cost": 0.00199625
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 2734,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "a2e03187d6fcf4313809b0154133f9cc110fc4ff68aec5585b5dc38eae25bf28",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784864054-M6bB5wrJaEVSQ4RPVAzz",
+          "requestedModelId": "google/gemini-2.5-pro",
+          "canonicalModelId": "google/gemini-2.5-pro",
+          "selectedModelId": "google/gemini-2.5-pro",
+          "selectedUpstream": "Google AI Studio",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 481,
+            "outputTokens": 210,
+            "cost": 0.00270125
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 3357,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "98230871dec2cb84855e234b85072aabe84b2a8b39a8e0591797653ab98b3aa8",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784864204-KL3PsamaZ8MtaKXHkqYn",
+          "requestedModelId": "google/gemini-2.5-pro",
+          "canonicalModelId": "google/gemini-2.5-pro",
+          "selectedModelId": "google/gemini-2.5-pro",
+          "selectedUpstream": "Google AI Studio",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 475,
+            "outputTokens": 106,
+            "cost": 0.00165375
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 2396,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "c31dc438f6bb8c89d6605bd07bb197eaea8352cc23f191fad493017a0056dfa9",
+          "identityEvidence": "openrouter_verified"
+        },
+        {
+          "generationId": "gen-1784864358-eeDC8Za1InaAWQ3ljjQY",
+          "requestedModelId": "google/gemini-2.5-pro",
+          "canonicalModelId": "google/gemini-2.5-pro",
+          "selectedModelId": "google/gemini-2.5-pro",
+          "selectedUpstream": "Google AI Studio",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 477,
+            "outputTokens": 179,
+            "cost": 0.00238625
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 2596,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "77920c11cf4b53e0864ca9c93c2e9fc234856aa35a1069e9071be0fffe3639ec",
+          "identityEvidence": "openrouter_verified"
+        }
+      ],
+      "p50LatencyMs": 2596,
+      "p95LatencyMs": 3357,
+      "totalCost": 0.01027375
+    },
+    {
+      "residentId": "deepseek-v3.2",
+      "requestedModelId": "deepseek/deepseek-v3.2",
+      "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
+      "approvedUpstream": "deepinfra/fp4",
+      "maxOutputTokens": 180,
+      "reasoning": {
+        "enabled": false,
+        "effort": "none",
+        "exclude": true
+      },
+      "adapterVersion": "@openrouter/ai-sdk-provider@3.0.0",
+      "routingPolicyVersion": "strict-openrouter-v1",
+      "catalogEvidence": {
+        "checkedAt": "2026-07-24T03:28:36.384Z",
+        "modelId": "deepseek/deepseek-v3.2",
+        "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
+        "endpoint": {
+          "providerName": "DeepInfra",
+          "providerSlug": "deepinfra/fp4",
+          "quantization": "fp4",
+          "supportedParameters": [
+            "reasoning",
+            "include_reasoning",
+            "max_tokens",
+            "temperature",
+            "top_p",
+            "stop",
+            "frequency_penalty",
+            "presence_penalty",
+            "repetition_penalty",
+            "top_k",
+            "seed",
+            "min_p",
+            "response_format",
+            "tool_choice",
+            "tools",
+            "logit_bias",
+            "structured_outputs"
+          ]
+        }
+      },
+      "samples": [
+        {
+          "generationId": "gen-1784863788-L2qb55ZKHqaa6vnQlHtQ",
+          "requestedModelId": "deepseek/deepseek-v3.2",
+          "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 502,
+            "outputTokens": 62,
+            "cost": 0.00014576
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 8585,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "77f54e65bc30f6636fae4f7fce46177cccf88c1856001f2ab8e39c09bf198fc2",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp4"
+        },
+        {
+          "generationId": "gen-1784863932-5xSF7nAmuzWmEmUm9c42",
+          "requestedModelId": "deepseek/deepseek-v3.2",
+          "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 492,
+            "outputTokens": 32,
+            "cost": 0.00012344
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 6522,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "17339c6bd1967604574a8f6e0291e8d43c3fb3b9ac7b8576d9bd709868aeb3ce",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp4"
+        },
+        {
+          "generationId": "gen-1784864079-wUS4oLgeluUpTb7i6n9c",
+          "requestedModelId": "deepseek/deepseek-v3.2",
+          "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 502,
+            "outputTokens": 93,
+            "cost": 0.00014922
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 13058,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "a95b53dcd22be1a0f7892dfedd6fa89928a76b92a2b46ad89408a22b3e7cb3a9",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp4"
+        },
+        {
+          "generationId": "gen-1784864227-oQQsekR4h9ytmOeotuvn",
+          "requestedModelId": "deepseek/deepseek-v3.2",
+          "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 498,
+            "outputTokens": 42,
+            "cost": 0.0001288
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 12738,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "126e575790d64e278ff2afefc25862770a07c591cced19de88798601b9a92537",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp4"
+        },
+        {
+          "generationId": "gen-1784864382-ygyASmtVnRmBwqe00qBS",
+          "requestedModelId": "deepseek/deepseek-v3.2",
+          "canonicalModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedModelId": "deepseek/deepseek-v3.2-20251201",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 500,
+            "outputTokens": 62,
+            "cost": 0.00013692
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 8675,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "923ed95dd518a452729fefec337fc588f8355dc6d2b23c9de46b9e423c5001a9",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp4"
+        }
+      ],
+      "p50LatencyMs": 8675,
+      "p95LatencyMs": 13058,
+      "totalCost": 0.00068414
+    },
+    {
+      "residentId": "llama-3.3-70b-instruct",
+      "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
+      "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
+      "approvedUpstream": "together",
+      "maxOutputTokens": 180,
+      "adapterVersion": "@openrouter/ai-sdk-provider@3.0.0",
+      "routingPolicyVersion": "strict-openrouter-v1",
+      "catalogEvidence": {
+        "checkedAt": "2026-07-24T03:28:36.876Z",
+        "modelId": "meta-llama/llama-3.3-70b-instruct",
+        "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
+        "endpoint": {
+          "providerName": "Together",
+          "providerSlug": "together",
+          "quantization": "fp8",
+          "supportedParameters": [
+            "structured_outputs",
+            "response_format",
+            "max_tokens",
+            "temperature",
+            "top_p",
+            "stop",
+            "frequency_penalty",
+            "presence_penalty",
+            "top_k",
+            "repetition_penalty",
+            "logit_bias",
+            "min_p",
+            "tools",
+            "tool_choice"
+          ]
+        }
+      },
+      "samples": [
+        {
+          "generationId": "gen-1784863818-qa8BYdJNVGGkKh39MBU1",
+          "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedUpstream": "Together",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 517,
+            "outputTokens": 67,
+            "cost": 0.00060736
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 1688,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "cc325431010d0fc9a93ad2e3f5d49627f15d148c8a39c94a18447411b90b0468",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp8"
+        },
+        {
+          "generationId": "gen-1784863960-hWJH73dj1elUMTvQDE3N",
+          "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedUpstream": "Together",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 513,
+            "outputTokens": 33,
+            "cost": 0.00056784
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 2106,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "611969d7c963ea2a3ca73105685772e96292b8e08f0b69170426ff7276f68fe2",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp8"
+        },
+        {
+          "generationId": "gen-1784864113-9FPp4grYkaZa3QKmAAeQ",
+          "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedUpstream": "Together",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 509,
+            "outputTokens": 37,
+            "cost": 0.00056784
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 1158,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "d5b1c0e3ee4436048b892b32718e074a02b7b2b7c5575403ad5512d8f067b86b",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp8"
+        },
+        {
+          "generationId": "gen-1784864261-36eTcVVVm7fvfOO1Kgim",
+          "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedUpstream": "Together",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 513,
+            "outputTokens": 39,
+            "cost": 0.00057408
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 2864,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "d8b1eefac58873a6e35777484263d5e94262948605e9049150fb1d6c0414e346",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp8"
+        },
+        {
+          "generationId": "gen-1784864411-LdIrhY25hSPUe7uSXvmx",
+          "requestedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "canonicalModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedModelId": "meta-llama/llama-3.3-70b-instruct",
+          "selectedUpstream": "Together",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 521,
+            "outputTokens": 40,
+            "cost": 0.00058344
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 1861,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "cc325431010d0fc9a93ad2e3f5d49627f15d148c8a39c94a18447411b90b0468",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp8"
+        }
+      ],
+      "p50LatencyMs": 1861,
+      "p95LatencyMs": 2864,
+      "totalCost": 0.00290056
+    },
+    {
+      "residentId": "qwen3-235b-a22b-2507",
+      "requestedModelId": "qwen/qwen3-235b-a22b-2507",
+      "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
+      "approvedUpstream": "deepinfra/fp8",
+      "maxOutputTokens": 180,
+      "adapterVersion": "@openrouter/ai-sdk-provider@3.0.0",
+      "routingPolicyVersion": "strict-openrouter-v1",
+      "catalogEvidence": {
+        "checkedAt": "2026-07-24T03:28:36.950Z",
+        "modelId": "qwen/qwen3-235b-a22b-2507",
+        "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
+        "endpoint": {
+          "providerName": "DeepInfra",
+          "providerSlug": "deepinfra/fp8",
+          "quantization": "fp8",
+          "supportedParameters": [
+            "max_tokens",
+            "temperature",
+            "top_p",
+            "stop",
+            "frequency_penalty",
+            "presence_penalty",
+            "repetition_penalty",
+            "top_k",
+            "seed",
+            "min_p",
+            "response_format",
+            "tools",
+            "tool_choice",
+            "logit_bias",
+            "structured_outputs"
+          ]
+        }
+      },
+      "samples": [
+        {
+          "generationId": "gen-1784863841-NR2zxMpSoYS5TstWlT07",
+          "requestedModelId": "qwen/qwen3-235b-a22b-2507",
+          "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 593,
+            "outputTokens": 40,
+            "cost": 0.00007537
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 1474,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "750a1633ae9bc8316d4d592b65e46320e7f9667180d58aeb334dc100fc350fa6",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp8"
+        },
+        {
+          "generationId": "gen-1784863983-QhHWExAbpqXKDud3xGTU",
+          "requestedModelId": "qwen/qwen3-235b-a22b-2507",
+          "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 581,
+            "outputTokens": 63,
+            "cost": 0.00008694
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 4545,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "ee8f7a9b2ffe921e30dec00202bc84a06e55c70e951440f0317848450b4e3683",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp8"
+        },
+        {
+          "generationId": "gen-1784864135-sp31nS3Iyh6q3ui7RAdu",
+          "requestedModelId": "qwen/qwen3-235b-a22b-2507",
+          "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 591,
+            "outputTokens": 45,
+            "cost": 0.00007794
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 2117,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "d83b510ecf9547632ba5e99dd481966bc62e04b88257322dada476000d06a4ef",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp8"
+        },
+        {
+          "generationId": "gen-1784864285-gEedp4KxK6hSTT9LiHq8",
+          "requestedModelId": "qwen/qwen3-235b-a22b-2507",
+          "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 593,
+            "outputTokens": 66,
+            "cost": 0.00008967
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 4337,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "19dece1dd5af4e38c31914ae5676afea559ef7544d8c27276fff13830403f225",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp8"
+        },
+        {
+          "generationId": "gen-1784864434-HuTtCEQbPdveDoWMqHzU",
+          "requestedModelId": "qwen/qwen3-235b-a22b-2507",
+          "canonicalModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedModelId": "qwen/qwen3-235b-a22b-07-25",
+          "selectedUpstream": "DeepInfra",
+          "strategy": "direct",
+          "routeAttempt": 1,
+          "pipeline": [],
+          "usage": {
+            "inputTokens": 589,
+            "outputTokens": 64,
+            "cost": 0.00008821
+          },
+          "warningCodes": [],
+          "filterStatus": "clear",
+          "latencyMs": 3663,
+          "schemaValid": true,
+          "finishReason": "stop",
+          "textHash": "0fc3dab91bb478cf60961a8933e7841b95a3303d778cc1b77dd77cacef10ec46",
+          "identityEvidence": "openrouter_verified",
+          "requiredQuantization": "fp8"
+        }
+      ],
+      "p50LatencyMs": 3663,
+      "p95LatencyMs": 4545,
+      "totalCost": 0.00041813000000000006
+    }
+  ]
+}
