@@ -1,7 +1,10 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { generateText, Output } from "ai";
 import { z } from "zod";
-import { buildLaunchResidentPrompt } from "./build-resident-prompt.ts";
+import {
+	buildLaunchResidentPrompt,
+	RESIDENT_TURN_PROMPT_VERSION,
+} from "./build-resident-prompt.ts";
 import { validateOpenRouterMetadata } from "./openrouter-metadata.ts";
 import { providerProfileFor } from "./provider-registry.ts";
 import type {
@@ -36,12 +39,10 @@ const ModelTurnWireOutputSchema = z
 	})
 	.strict();
 
-type RouterFactory = (
-	configuration: {
-		apiKey: string;
-		headers: { "X-OpenRouter-Metadata": "enabled" };
-	},
-) => (modelId: string, settings: Record<string, unknown>) => unknown;
+type RouterFactory = (configuration: {
+	apiKey: string;
+	headers: { "X-OpenRouter-Metadata": "enabled" };
+}) => (modelId: string, settings: Record<string, unknown>) => unknown;
 
 type GenerateResult = {
 	output: unknown;
@@ -95,7 +96,9 @@ export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 	}) {
 		const apiKey = options?.apiKey ?? process.env.OPENROUTER_API_KEY;
 		if (!apiKey) {
-			throw new Error("OPENROUTER_API_KEY is required for live resident generation.");
+			throw new Error(
+				"OPENROUTER_API_KEY is required for live resident generation.",
+			);
 		}
 		const routerFactory =
 			options?.createRouter ?? (createOpenRouter as unknown as RouterFactory);
@@ -103,7 +106,8 @@ export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 			apiKey,
 			headers: { "X-OpenRouter-Metadata": "enabled" },
 		});
-		this.generate = options?.generateText ?? (generateText as unknown as Generate);
+		this.generate =
+			options?.generateText ?? (generateText as unknown as Generate);
 	}
 
 	async generateTurn(
@@ -111,7 +115,9 @@ export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 	): Promise<ProviderTurnResponse> {
 		const profile = providerProfileFor(input.residentId);
 		if (input.requestedModelId !== profile.requestedModelId) {
-			throw new Error("Requested model does not match the approved resident profile.");
+			throw new Error(
+				"Requested model does not match the approved resident profile.",
+			);
 		}
 
 		const provider = {
@@ -152,7 +158,10 @@ export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 				functionId: "resident-turn",
 				recordInputs: false,
 				recordOutputs: false,
-				metadata: { residentId: input.residentId },
+				metadata: {
+					residentId: input.residentId,
+					promptVersion: RESIDENT_TURN_PROMPT_VERSION,
+				},
 			},
 		});
 		const wireOutput = ModelTurnWireOutputSchema.parse(result.output);
@@ -165,7 +174,9 @@ export class OpenRouterResidentTurnProvider implements ResidentTurnProvider {
 				(claimId) => !prompts.approvedClaimIds.includes(claimId),
 			)
 		) {
-			throw new Error("Resident turn referenced a claim outside its active approved context.");
+			throw new Error(
+				"Resident turn referenced a claim outside its active approved context.",
+			);
 		}
 		const responseBody = result.response.body as
 			| { openrouter_metadata?: unknown }

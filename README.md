@@ -144,6 +144,8 @@ The third retry makes no admission calls, writes `phase-02-live-reference-retry-
 
 The fourth retry is an efficient continuation from the fail-closed cumulative 129 state. It reuses the accepted tea-timer evidence, runs only the two unfinished reference cases, writes `phase-02-live-reference-retry-4.json` after every generation, and requires a fresh explicit authorization for exactly 10 generations and cumulative ceiling 139. The calibrated judge prompt, model, route, and scoring contract remain unchanged; only the private rationale field accepts up to 320 characters.
 
+The fifth retry continues from cumulative 135 with both accepted cases preserved. It runs only the final radio-labels case, writes `phase-02-live-reference-retry-5.json` after every generation, and requires fresh explicit authorization for exactly five generations and cumulative ceiling 140. Resident prompt version `resident-turn-v2` requires non-empty dialogue of at most 180 Unicode graphemes while the independent 240-grapheme publication gate remains unchanged.
+
 ## Full verification
 
 The Playwright project starts Docker services, applies reviewed migrations, seeds only when no canonical projection exists, and starts Next.js. It includes a real two-browser database convergence case plus controlled recovery and UI-state cases:

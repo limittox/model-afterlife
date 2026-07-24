@@ -6,6 +6,7 @@ import {
 	type SceneBrief,
 } from "./contracts.ts";
 import type { ResidentTurnProvider } from "./resident-turn-provider.ts";
+import { RESIDENT_TURN_PROMPT_VERSION } from "./build-resident-prompt.ts";
 
 export async function conductSceneAttempt(input: {
 	brief: SceneBrief;
@@ -67,7 +68,7 @@ export async function conductSceneAttempt(input: {
 			providerResponseId,
 			adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 			configurationVersion: "strict-openrouter-v1",
-			promptVersion: "resident-turn-v1",
+			promptVersion: RESIDENT_TURN_PROMPT_VERSION,
 			bibleVersionKey: "launch-residents-v1",
 			claimVersionKey: "historical-claims-v1",
 			finishReason,

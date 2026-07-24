@@ -58,6 +58,10 @@ const RETRY_4_STARTING_CUMULATIVE_GENERATIONS = 129;
 const RETRY_4_CHECKPOINT_GENERATIONS = 10;
 const RETRY_4_REQUIRED_CUMULATIVE_CAP =
 	RETRY_4_STARTING_CUMULATIVE_GENERATIONS + RETRY_4_CHECKPOINT_GENERATIONS;
+const RETRY_5_STARTING_CUMULATIVE_GENERATIONS = 135;
+const RETRY_5_CHECKPOINT_GENERATIONS = 5;
+const RETRY_5_REQUIRED_CUMULATIVE_CAP =
+	RETRY_5_STARTING_CUMULATIVE_GENERATIONS + RETRY_5_CHECKPOINT_GENERATIONS;
 const GENERATION_INTERVAL_MS = 21_000;
 const INITIAL_LEDGER_PATH = resolve(
 	"evals/results/phase-02-live-checkpoint.json",
@@ -76,6 +80,9 @@ const RETRY_3_LEDGER_PATH = resolve(
 );
 const RETRY_4_LEDGER_PATH = resolve(
 	"evals/results/phase-02-live-reference-retry-4.json",
+);
+const RETRY_5_LEDGER_PATH = resolve(
+	"evals/results/phase-02-live-reference-retry-5.json",
 );
 const JUDGE_DIAGNOSTIC_LEDGER_PATH = resolve(
 	"evals/results/phase-02-live-judge-diagnostic.json",
@@ -120,12 +127,13 @@ type RunConfiguration = Readonly<{
 		| "reference-retry"
 		| "reference-retry-2"
 		| "reference-retry-3"
-		| "reference-retry-4";
+		| "reference-retry-4"
+		| "reference-retry-5";
 	startingCumulativeGenerations: number;
 	checkpointGenerations: number;
 	requiredCumulativeCap: number;
 	ledgerPath: string;
-	referenceStartCaseIndex: number;
+	referenceStartCaseIndex: 0 | 1 | 2;
 }>;
 
 function canonicalApprovedHash(): string {
@@ -360,7 +368,7 @@ export function validatePriorRetry3Checkpoint(): void {
 	}
 }
 
-export function validatePriorRetry4Checkpoint(): void {
+function validateStateThroughRetry3(expectedAcceptedCaseCount: 1 | 2): void {
 	validatePriorRetryCheckpoint();
 	if (
 		!existsSync(RETRY_LEDGER_PATH) ||
@@ -397,7 +405,9 @@ export function validatePriorRetry4Checkpoint(): void {
 	const retry3 = JSON.parse(
 		readFileSync(RETRY_3_LEDGER_PATH, "utf8"),
 	) as Ledger;
-	const acceptedResults = loadRetry4ReferenceResults();
+	const acceptedResults = loadAcceptedReferenceResults(
+		expectedAcceptedCaseCount,
+	);
 	const retryResidents = [
 		"gpt-4o",
 		"claude-sonnet-4.5",
@@ -528,10 +538,89 @@ export function validatePriorRetry4Checkpoint(): void {
 		retry3.labelSetHash !== APPROVED_SEMANTIC_CALIBRATION.labelSetHash ||
 		retry3.entries.length !== retry3Expected.length ||
 		!retry3EntriesMatch ||
-		acceptedResults.length !== 1
+		acceptedResults.length !== expectedAcceptedCaseCount
 	) {
 		throw new Error(
-			"The saved state does not match the reviewed cumulative 129 reason-length failure with one accepted reference case.",
+			"The saved state does not match the reviewed ledger chain and accepted reference prefix.",
+		);
+	}
+}
+
+export function validatePriorRetry4Checkpoint(): void {
+	validateStateThroughRetry3(1);
+}
+
+export function validatePriorRetry5Checkpoint(): void {
+	validateStateThroughRetry3(2);
+	if (!existsSync(RETRY_4_LEDGER_PATH)) {
+		throw new Error(
+			"Fifth reference retry requires the reviewed retry-4 ledger.",
+		);
+	}
+	const retry4 = JSON.parse(
+		readFileSync(RETRY_4_LEDGER_PATH, "utf8"),
+	) as Ledger;
+	const expected = [
+		[
+			"reference-resident",
+			"gemini-2.5-pro",
+			"ordinary-02-misfiled-atlas",
+			"passed",
+		],
+		[
+			"reference-resident",
+			"deepseek-v3.2",
+			"ordinary-02-misfiled-atlas",
+			"passed",
+		],
+		[
+			"reference-resident",
+			"gemini-2.5-pro",
+			"ordinary-02-misfiled-atlas",
+			"passed",
+		],
+		[
+			"reference-resident",
+			"deepseek-v3.2",
+			"ordinary-02-misfiled-atlas",
+			"passed",
+		],
+		[
+			"reference-judge",
+			"semantic-judge",
+			"ordinary-02-misfiled-atlas",
+			"passed",
+		],
+		[
+			"reference-resident",
+			"llama-3.3-70b-instruct",
+			"ordinary-03-radio-labels",
+			"failed",
+		],
+	] as const;
+	const entriesMatch = retry4.entries.every(
+		(entry, index) =>
+			entry.kind === expected[index]?.[0] &&
+			entry.residentId === expected[index]?.[1] &&
+			entry.caseId === expected[index]?.[2] &&
+			entry.ordinal === index + 1 &&
+			entry.status === expected[index]?.[3] &&
+			(index !== expected.length - 1 || entry.code === "schema-text-invalid"),
+	);
+	if (
+		retry4.status !== "failed" ||
+		retry4.startingCumulativeGenerations !==
+			RETRY_4_STARTING_CUMULATIVE_GENERATIONS ||
+		retry4.authorizedCheckpointGenerations !== RETRY_4_CHECKPOINT_GENERATIONS ||
+		retry4.cumulativeGenerationCap !== RETRY_4_REQUIRED_CUMULATIVE_CAP ||
+		retry4.cumulativeGenerationsConsumed !==
+			RETRY_5_STARTING_CUMULATIVE_GENERATIONS ||
+		retry4.labelSetHash !== APPROVED_SEMANTIC_CALIBRATION.labelSetHash ||
+		retry4.entries.length !== expected.length ||
+		!entriesMatch
+	) {
+		throw new Error(
+			"The saved retry-4 state does not match the reviewed cumulative 135 text-schema failure with two accepted cases.",
 		);
 	}
 }
@@ -546,69 +635,81 @@ function assertAuthorization(): {
 	const retry2 = args.has("--reference-only-retry-2");
 	const retry3 = args.has("--reference-only-retry-3");
 	const retry4 = args.has("--reference-only-retry-4");
+	const retry5 = args.has("--reference-only-retry-5");
 	if (
-		[continuation, retry, retry2, retry3, retry4].filter(Boolean).length > 1
+		[continuation, retry, retry2, retry3, retry4, retry5].filter(Boolean)
+			.length > 1
 	) {
 		throw new Error("Choose exactly one reference continuation or retry mode.");
 	}
-	const configuration: RunConfiguration = retry4
+	const configuration: RunConfiguration = retry5
 		? {
-				mode: "reference-retry-4",
-				startingCumulativeGenerations: RETRY_4_STARTING_CUMULATIVE_GENERATIONS,
-				checkpointGenerations: RETRY_4_CHECKPOINT_GENERATIONS,
-				requiredCumulativeCap: RETRY_4_REQUIRED_CUMULATIVE_CAP,
-				ledgerPath: RETRY_4_LEDGER_PATH,
-				referenceStartCaseIndex: 1,
+				mode: "reference-retry-5",
+				startingCumulativeGenerations: RETRY_5_STARTING_CUMULATIVE_GENERATIONS,
+				checkpointGenerations: RETRY_5_CHECKPOINT_GENERATIONS,
+				requiredCumulativeCap: RETRY_5_REQUIRED_CUMULATIVE_CAP,
+				ledgerPath: RETRY_5_LEDGER_PATH,
+				referenceStartCaseIndex: 2,
 			}
-		: retry3
+		: retry4
 			? {
-					mode: "reference-retry-3",
+					mode: "reference-retry-4",
 					startingCumulativeGenerations:
-						RETRY_3_STARTING_CUMULATIVE_GENERATIONS,
-					checkpointGenerations: RETRY_3_CHECKPOINT_GENERATIONS,
-					requiredCumulativeCap: RETRY_3_REQUIRED_CUMULATIVE_CAP,
-					ledgerPath: RETRY_3_LEDGER_PATH,
-					referenceStartCaseIndex: 0,
+						RETRY_4_STARTING_CUMULATIVE_GENERATIONS,
+					checkpointGenerations: RETRY_4_CHECKPOINT_GENERATIONS,
+					requiredCumulativeCap: RETRY_4_REQUIRED_CUMULATIVE_CAP,
+					ledgerPath: RETRY_4_LEDGER_PATH,
+					referenceStartCaseIndex: 1,
 				}
-			: retry2
+			: retry3
 				? {
-						mode: "reference-retry-2",
+						mode: "reference-retry-3",
 						startingCumulativeGenerations:
-							RETRY_2_STARTING_CUMULATIVE_GENERATIONS,
-						checkpointGenerations: RETRY_2_CHECKPOINT_GENERATIONS,
-						requiredCumulativeCap: RETRY_2_REQUIRED_CUMULATIVE_CAP,
-						ledgerPath: RETRY_2_LEDGER_PATH,
+							RETRY_3_STARTING_CUMULATIVE_GENERATIONS,
+						checkpointGenerations: RETRY_3_CHECKPOINT_GENERATIONS,
+						requiredCumulativeCap: RETRY_3_REQUIRED_CUMULATIVE_CAP,
+						ledgerPath: RETRY_3_LEDGER_PATH,
 						referenceStartCaseIndex: 0,
 					}
-				: retry
+				: retry2
 					? {
-							mode: "reference-retry",
+							mode: "reference-retry-2",
 							startingCumulativeGenerations:
-								RETRY_STARTING_CUMULATIVE_GENERATIONS,
-							checkpointGenerations: RETRY_CHECKPOINT_GENERATIONS,
-							requiredCumulativeCap: RETRY_REQUIRED_CUMULATIVE_CAP,
-							ledgerPath: RETRY_LEDGER_PATH,
+								RETRY_2_STARTING_CUMULATIVE_GENERATIONS,
+							checkpointGenerations: RETRY_2_CHECKPOINT_GENERATIONS,
+							requiredCumulativeCap: RETRY_2_REQUIRED_CUMULATIVE_CAP,
+							ledgerPath: RETRY_2_LEDGER_PATH,
 							referenceStartCaseIndex: 0,
 						}
-					: continuation
+					: retry
 						? {
-								mode: "reference-continuation",
+								mode: "reference-retry",
 								startingCumulativeGenerations:
-									CONTINUATION_STARTING_CUMULATIVE_GENERATIONS,
-								checkpointGenerations: CONTINUATION_CHECKPOINT_GENERATIONS,
-								requiredCumulativeCap: CONTINUATION_REQUIRED_CUMULATIVE_CAP,
-								ledgerPath: CONTINUATION_LEDGER_PATH,
+									RETRY_STARTING_CUMULATIVE_GENERATIONS,
+								checkpointGenerations: RETRY_CHECKPOINT_GENERATIONS,
+								requiredCumulativeCap: RETRY_REQUIRED_CUMULATIVE_CAP,
+								ledgerPath: RETRY_LEDGER_PATH,
 								referenceStartCaseIndex: 0,
 							}
-						: {
-								mode: "initial",
-								startingCumulativeGenerations:
-									INITIAL_STARTING_CUMULATIVE_GENERATIONS,
-								checkpointGenerations: INITIAL_CHECKPOINT_GENERATIONS,
-								requiredCumulativeCap: INITIAL_REQUIRED_CUMULATIVE_CAP,
-								ledgerPath: INITIAL_LEDGER_PATH,
-								referenceStartCaseIndex: 0,
-							};
+						: continuation
+							? {
+									mode: "reference-continuation",
+									startingCumulativeGenerations:
+										CONTINUATION_STARTING_CUMULATIVE_GENERATIONS,
+									checkpointGenerations: CONTINUATION_CHECKPOINT_GENERATIONS,
+									requiredCumulativeCap: CONTINUATION_REQUIRED_CUMULATIVE_CAP,
+									ledgerPath: CONTINUATION_LEDGER_PATH,
+									referenceStartCaseIndex: 0,
+								}
+							: {
+									mode: "initial",
+									startingCumulativeGenerations:
+										INITIAL_STARTING_CUMULATIVE_GENERATIONS,
+									checkpointGenerations: INITIAL_CHECKPOINT_GENERATIONS,
+									requiredCumulativeCap: INITIAL_REQUIRED_CUMULATIVE_CAP,
+									ledgerPath: INITIAL_LEDGER_PATH,
+									referenceStartCaseIndex: 0,
+								};
 	if (!args.has("--live")) {
 		throw new Error("Phase 2 live proof requires --live.");
 	}
@@ -650,6 +751,9 @@ function assertAuthorization(): {
 	}
 	if (configuration.mode === "reference-retry-4") {
 		validatePriorRetry4Checkpoint();
+	}
+	if (configuration.mode === "reference-retry-5") {
+		validatePriorRetry5Checkpoint();
 	}
 	if (existsSync(configuration.ledgerPath)) {
 		throw new Error(
@@ -766,7 +870,9 @@ type ReferenceResult = {
 	accepted: true;
 };
 
-function loadRetry4ReferenceResults(): ReferenceResult[] {
+function loadAcceptedReferenceResults(
+	expectedCaseCount: 1 | 2,
+): ReferenceResult[] {
 	const evidence = JSON.parse(readFileSync(REFERENCE_RESULT_PATH, "utf8")) as {
 		status?: unknown;
 		labelSetHash?: unknown;
@@ -775,51 +881,63 @@ function loadRetry4ReferenceResults(): ReferenceResult[] {
 		failure?: unknown;
 	};
 	const results = evidence.results ?? [];
-	const first = results[0];
-	const expectedResidents = [
-		"gpt-4o",
-		"claude-sonnet-4.5",
-		"gpt-4o",
-		"claude-sonnet-4.5",
-	];
-	const turnsMatch =
-		first?.turns.length === expectedResidents.length &&
-		first.turns.every((turn, index) => {
-			const expectedResidentId = expectedResidents[index];
-			if (!expectedResidentId) return false;
-			const profile = providerProfileFor(expectedResidentId);
-			return (
-				turn.turnIndex === index &&
-				turn.residentId === expectedResidentId &&
-				turn.requestedModelId === profile.requestedModelId &&
-				turn.selectedModelId === profile.canonicalModelId &&
-				turn.selectedUpstream === profile.selectedUpstreamName &&
-				typeof turn.generationId === "string" &&
-				/^[a-f0-9]{64}$/u.test(turn.textSha256)
-			);
-		});
+	const resultsMatch = results.every((result, caseIndex) => {
+		const reference = REFERENCE_CASES[caseIndex];
+		if (!reference) return false;
+		const expectedResidents = [
+			reference.participantIds[0],
+			reference.participantIds[1],
+			reference.participantIds[0],
+			reference.participantIds[1],
+		];
+		const turnsMatch =
+			result.turns.length === expectedResidents.length &&
+			result.turns.every((turn, turnIndex) => {
+				const expectedResidentId = expectedResidents[turnIndex];
+				if (!expectedResidentId) return false;
+				const profile = providerProfileFor(expectedResidentId);
+				return (
+					turn.turnIndex === turnIndex &&
+					turn.residentId === expectedResidentId &&
+					turn.requestedModelId === profile.requestedModelId &&
+					turn.selectedModelId === profile.canonicalModelId &&
+					turn.selectedUpstream === profile.selectedUpstreamName &&
+					typeof turn.generationId === "string" &&
+					/^[a-f0-9]{64}$/u.test(turn.textSha256)
+				);
+			});
+		return (
+			result.caseId === reference.caseId &&
+			result.participantIds.length === reference.participantIds.length &&
+			result.participantIds.every(
+				(participantId, index) =>
+					participantId === reference.participantIds[index],
+			) &&
+			turnsMatch &&
+			result.judge.requestedModelId ===
+				SEMANTIC_JUDGE_PROFILE.requestedModelId &&
+			result.judge.resolvedModelId ===
+				SEMANTIC_JUDGE_PROFILE.canonicalModelId &&
+			result.judge.promptVersion === SEMANTIC_JUDGE_PROFILE.promptVersion &&
+			result.judge.recommendation === "pass" &&
+			result.judge.criticalFailureCount === 0 &&
+			result.validatorCodes.length === 15 &&
+			result.validatorCodes.every(
+				(validation) => validation.status === "pass",
+			) &&
+			result.accepted === true
+		);
+	});
 	if (
 		evidence.status !== "running" ||
 		evidence.labelSetHash !== APPROVED_SEMANTIC_CALIBRATION.labelSetHash ||
-		evidence.caseCount !== 1 ||
-		results.length !== 1 ||
+		evidence.caseCount !== expectedCaseCount ||
+		results.length !== expectedCaseCount ||
 		evidence.failure !== undefined ||
-		first?.caseId !== "ordinary-01-tea-timer" ||
-		first.participantIds.length !== 2 ||
-		first.participantIds[0] !== "gpt-4o" ||
-		first.participantIds[1] !== "claude-sonnet-4.5" ||
-		!turnsMatch ||
-		first.judge.requestedModelId !== SEMANTIC_JUDGE_PROFILE.requestedModelId ||
-		first.judge.resolvedModelId !== SEMANTIC_JUDGE_PROFILE.canonicalModelId ||
-		first.judge.promptVersion !== SEMANTIC_JUDGE_PROFILE.promptVersion ||
-		first.judge.recommendation !== "pass" ||
-		first.judge.criticalFailureCount !== 0 ||
-		first.validatorCodes.length !== 15 ||
-		first.validatorCodes.some((result) => result.status !== "pass") ||
-		first.accepted !== true
+		!resultsMatch
 	) {
 		throw new Error(
-			"Retry-4 requires the exact accepted tea-timer reference evidence.",
+			`Reference continuation requires the exact ${expectedCaseCount}-case accepted evidence prefix.`,
 		);
 	}
 	return results;
@@ -908,10 +1026,11 @@ async function main(): Promise<void> {
 				});
 			},
 		});
+		const referenceStartCaseIndex = configuration.referenceStartCaseIndex;
 		const referenceResults: ReferenceResult[] =
-			configuration.mode === "reference-retry-4"
-				? loadRetry4ReferenceResults()
-				: [];
+			referenceStartCaseIndex === 0
+				? []
+				: loadAcceptedReferenceResults(referenceStartCaseIndex);
 
 		for (const [caseIndex, reference] of REFERENCE_CASES.entries()) {
 			if (caseIndex < configuration.referenceStartCaseIndex) continue;

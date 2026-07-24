@@ -39,6 +39,7 @@ import {
 	type SemanticGateEvidence,
 	type SemanticJudgeProvider,
 } from "../features/world/generation/semantic-judge.ts";
+import { RESIDENT_TURN_PROMPT_VERSION } from "../features/world/generation/build-resident-prompt.ts";
 
 export const GENERATE_SCENE_TASK_ID = "model-afterlife-generate-scene";
 export const GENERATE_SCENE_MAX_DURATION = 240;
@@ -85,7 +86,9 @@ async function loadPersistedBrief(request: CommittedGenerationRequest) {
 			.where(eq(sceneBriefs.sceneKey, request.sceneKey))
 			.limit(1);
 		if (!row) {
-			throw new Error(`No approved immutable brief exists for ${request.sceneKey}.`);
+			throw new Error(
+				`No approved immutable brief exists for ${request.sceneKey}.`,
+			);
 		}
 		return SceneBriefSchema.parse(row.brief);
 	} finally {
@@ -95,11 +98,7 @@ async function loadPersistedBrief(request: CommittedGenerationRequest) {
 
 export function classifyProviderFailure(
 	error: unknown,
-):
-	| "timed_out"
-	| "refused"
-	| "provider_outage"
-	| "provider_failed" {
+): "timed_out" | "refused" | "provider_outage" | "provider_failed" {
 	const message =
 		error instanceof Error
 			? `${error.name} ${error.message}`.toLowerCase()
@@ -119,9 +118,7 @@ export function classifyProviderFailure(
 }
 
 async function recordPersistentContinuity(
-	input: Parameters<
-		GenerationRequestDependencies["resolveContinuity"]
-	>[0],
+	input: Parameters<GenerationRequestDependencies["resolveContinuity"]>[0],
 ) {
 	const { db, close } = createWorldDatabase();
 	try {
@@ -132,7 +129,9 @@ async function recordPersistentContinuity(
 			.orderBy(desc(generationAttempts.attemptOrdinal))
 			.limit(1);
 		if (!latest) {
-			throw new Error("A quiet generation disposition requires a persisted attempt.");
+			throw new Error(
+				"A quiet generation disposition requires a persisted attempt.",
+			);
 		}
 		await db
 			.insert(sceneValidationResults)
@@ -280,7 +279,7 @@ export function createProductionGenerationDependencies(
 				if (!validation.acceptedCandidate) {
 					return {
 						status: "rejected" as const,
-					disposition: conducted.attempt.disposition as
+						disposition: conducted.attempt.disposition as
 							| "schema_rejected"
 							| "identity_rejected"
 							| "fact_rejected"
@@ -304,7 +303,7 @@ export function createProductionGenerationDependencies(
 					identityEvidence: "requested_only",
 					adapterVersion: "@openrouter/ai-sdk-provider@3.0.0",
 					configurationVersion: "strict-openrouter-v1",
-					promptVersion: "resident-turn-v1",
+					promptVersion: RESIDENT_TURN_PROMPT_VERSION,
 					bibleVersionKey: "phase-02-tracer-v1",
 					claimVersionKey: "phase-02-tracer-v1",
 					finishReason: disposition,
@@ -314,7 +313,8 @@ export function createProductionGenerationDependencies(
 					attemptId,
 					accepted: false,
 					code: disposition,
-					detail: "The resident provider call failed before a complete candidate existed.",
+					detail:
+						"The resident provider call failed before a complete candidate existed.",
 				});
 				await persistAttempt({
 					worldId: CANONICAL_WORLD_ID,
@@ -346,8 +346,7 @@ export function createProductionGenerationDependencies(
 
 export async function runGenerateScene(
 	payload: CommittedGenerationRequest,
-	dependencies: GenerationRequestDependencies =
-		createProductionGenerationDependencies(),
+	dependencies: GenerationRequestDependencies = createProductionGenerationDependencies(),
 ) {
 	return runGenerationRequest(payload, dependencies);
 }

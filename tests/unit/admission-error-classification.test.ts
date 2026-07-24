@@ -3,7 +3,8 @@ import { describe, expect, it } from "vitest";
 import { OpenRouterIdentityError } from "../../src/features/world/generation/openrouter-metadata.ts";
 import { classifyAdmissionFailure } from "../../src/features/world/generation/run-admission-canaries.ts";
 
-const SECRET = "SENSITIVE prompt, output, response body, header, and credential material";
+const SECRET =
+	"SENSITIVE prompt, output, response body, header, and credential material";
 
 function providerError(properties: Record<string, unknown>): Error {
 	return Object.assign(new Error(SECRET), properties, {
@@ -15,18 +16,49 @@ function providerError(properties: Record<string, unknown>): Error {
 
 describe("admission failure classification", () => {
 	it.each([
-		{ label: "HTTP 401", error: providerError({ name: "AI_APICallError", statusCode: 401 }), expected: "provider-http-401" },
-		{ label: "HTTP 429", error: providerError({ name: "AI_APICallError", statusCode: 429 }), expected: "provider-http-429" },
-		{ label: "HTTP 503", error: providerError({ name: "AI_APICallError", statusCode: 503 }), expected: "provider-http-503" },
-		{ label: "timeout", error: providerError({ name: "TimeoutError" }), expected: "provider-timeout" },
-		{ label: "abort", error: providerError({ name: "AbortError" }), expected: "provider-timeout" },
-		{ label: "no object", error: providerError({ name: "AI_NoObjectGeneratedError" }), expected: "schema-no-object" },
-		{ label: "schema", error: providerError({ name: "ZodError" }), expected: "schema-invalid" },
-	] as const)("returns a stable code for $label without sensitive detail", ({ error, expected }) => {
-		const code = classifyAdmissionFailure(error);
-		expect(code).toBe(expected);
-		expect(JSON.stringify(code)).not.toContain(SECRET);
-	});
+		{
+			label: "HTTP 401",
+			error: providerError({ name: "AI_APICallError", statusCode: 401 }),
+			expected: "provider-http-401",
+		},
+		{
+			label: "HTTP 429",
+			error: providerError({ name: "AI_APICallError", statusCode: 429 }),
+			expected: "provider-http-429",
+		},
+		{
+			label: "HTTP 503",
+			error: providerError({ name: "AI_APICallError", statusCode: 503 }),
+			expected: "provider-http-503",
+		},
+		{
+			label: "timeout",
+			error: providerError({ name: "TimeoutError" }),
+			expected: "provider-timeout",
+		},
+		{
+			label: "abort",
+			error: providerError({ name: "AbortError" }),
+			expected: "provider-timeout",
+		},
+		{
+			label: "no object",
+			error: providerError({ name: "AI_NoObjectGeneratedError" }),
+			expected: "schema-no-object",
+		},
+		{
+			label: "schema",
+			error: providerError({ name: "ZodError" }),
+			expected: "schema-invalid",
+		},
+	] as const)(
+		"returns a stable code for $label without sensitive detail",
+		({ error, expected }) => {
+			const code = classifyAdmissionFailure(error);
+			expect(code).toBe(expected);
+			expect(JSON.stringify(code)).not.toContain(SECRET);
+		},
+	);
 
 	it("preserves only typed router identity codes", () => {
 		const error = new OpenRouterIdentityError(
@@ -53,9 +85,19 @@ describe("admission failure classification", () => {
 			expected: "schema-text-too-long",
 		},
 		{
-			label: "invalid text",
+			label: "invalid text type",
 			issue: { code: "invalid_type", path: ["text"], message: SECRET },
-			expected: "schema-text-invalid",
+			expected: "schema-text-type-invalid",
+		},
+		{
+			label: "empty text",
+			issue: { code: "too_small", path: ["text"], message: SECRET },
+			expected: "schema-text-empty",
+		},
+		{
+			label: "over-grapheme-budget text",
+			issue: { code: "custom", path: ["text"], message: SECRET },
+			expected: "schema-text-grapheme-limit",
 		},
 		{
 			label: "too many approved claims",

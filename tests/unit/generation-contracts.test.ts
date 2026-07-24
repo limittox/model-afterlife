@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { PublicWorldSnapshotSchema } from "../../src/features/world/contracts/public-world.ts";
 import { createProvisionalWorld } from "../../src/features/world/fixtures/provisional-world.ts";
+import { RESIDENT_TURN_PROMPT_VERSION } from "../../src/features/world/generation/build-resident-prompt.ts";
 import { conductSceneAttempt } from "../../src/features/world/generation/conduct-scene.ts";
 import { SceneBriefSchema } from "../../src/features/world/generation/contracts.ts";
 import { validateTracerCandidate } from "../../src/features/world/generation/validate-tracer-candidate.ts";
@@ -70,6 +71,7 @@ describe("strict resident identity evidence", () => {
 		});
 
 		expect(attempt.identityEvidence).toBe("openrouter_verified");
+		expect(attempt.promptVersion).toBe(RESIDENT_TURN_PROMPT_VERSION);
 	});
 
 	it("keeps verified canonical model observations bound to their requested alias", async () => {

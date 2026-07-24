@@ -1,6 +1,9 @@
 import { createHash } from "node:crypto";
 import { SceneBriefSchema } from "./contracts.ts";
-import { historicalClaimsFor, LAUNCH_RESIDENTS } from "../fixtures/launch-residents.ts";
+import {
+	historicalClaimsFor,
+	LAUNCH_RESIDENTS,
+} from "../fixtures/launch-residents.ts";
 import { OpenRouterResidentTurnProvider } from "./openrouter-resident-turn-provider.ts";
 import { OpenRouterIdentityError } from "./openrouter-metadata.ts";
 import {
@@ -90,9 +93,11 @@ function classifySchemaIssues(issues: unknown): string {
 
 		switch (issue.path[0]) {
 			case "text":
-				return issue.code === "too_big"
-					? "schema-text-too-long"
-					: "schema-text-invalid";
+				if (issue.code === "too_big") return "schema-text-too-long";
+				if (issue.code === "too_small") return "schema-text-empty";
+				if (issue.code === "custom") return "schema-text-grapheme-limit";
+				if (issue.code === "invalid_type") return "schema-text-type-invalid";
+				return "schema-text-invalid";
 			case "approvedClaimIds":
 				return issue.code === "too_big" && issue.path.length === 1
 					? "schema-approved-claim-count"
@@ -121,14 +126,19 @@ export function classifyAdmissionFailure(error: unknown): string {
 		issues?: unknown;
 	};
 	const status = failure.statusCode ?? failure.status;
-	if (Number.isInteger(status) && Number(status) >= 400 && Number(status) <= 599) {
+	if (
+		Number.isInteger(status) &&
+		Number(status) >= 400 &&
+		Number(status) <= 599
+	) {
 		return `provider-http-${status}`;
 	}
 	if (failure.name === "TimeoutError" || failure.name === "AbortError") {
 		return "provider-timeout";
 	}
 	if (failure.name === "AI_NoObjectGeneratedError") return "schema-no-object";
-	if (failure.name === "AI_NoOutputGeneratedError") return "generation-no-output";
+	if (failure.name === "AI_NoOutputGeneratedError")
+		return "generation-no-output";
 	if (failure.name === "ZodError") return classifySchemaIssues(failure.issues);
 	return "generation-check-failed";
 }
@@ -149,11 +159,15 @@ export async function runAdmissionCanaries(
 	dependencies: AdmissionDependencies,
 ): Promise<AdmissionSummary> {
 	if (options.samples !== 5) {
-		throw new RangeError("Resident admission requires exactly five samples per resident.");
+		throw new RangeError(
+			"Resident admission requires exactly five samples per resident.",
+		);
 	}
 	const generationIntervalMs = options.generationIntervalMs ?? 0;
 	if (!Number.isInteger(generationIntervalMs) || generationIntervalMs < 0) {
-		throw new RangeError("Resident admission generation pacing must be whole milliseconds.");
+		throw new RangeError(
+			"Resident admission generation pacing must be whole milliseconds.",
+		);
 	}
 	const wait =
 		dependencies.wait ??
@@ -258,7 +272,10 @@ export async function runAdmissionCanaries(
 		schemaVersion: 1,
 		status: "admitted",
 		checkedAt: options.checkedAt ?? new Date().toISOString(),
-		sampleCount: residents.reduce((sum, resident) => sum + resident.samples.length, 0),
+		sampleCount: residents.reduce(
+			(sum, resident) => sum + resident.samples.length,
+			0,
+		),
 		residents,
 	};
 }
@@ -274,7 +291,9 @@ function string(value: unknown): string | undefined {
 }
 
 function stringArray(value: unknown): string[] {
-	return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+	return Array.isArray(value)
+		? value.filter((item): item is string => typeof item === "string")
+		: [];
 }
 
 function normalizeSlug(value: string): string {
@@ -303,7 +322,9 @@ function endpointEntries(body: JsonRecord): JsonRecord[] {
 	const data = record(body.data);
 	const candidates = data?.endpoints ?? body.endpoints ?? body.data;
 	return Array.isArray(candidates)
-		? candidates.map(record).filter((entry): entry is JsonRecord => Boolean(entry))
+		? candidates
+				.map(record)
+				.filter((entry): entry is JsonRecord => Boolean(entry))
 		: [];
 }
 
@@ -311,9 +332,18 @@ function modelData(body: JsonRecord): JsonRecord {
 	return record(body.data) ?? body;
 }
 
-function routeMatches(endpoint: JsonRecord, profile: ResidentProviderProfile): boolean {
-	const name = string(endpoint.provider_name) ?? string(endpoint.provider) ?? string(endpoint.name);
-	const tag = string(endpoint.tag) ?? string(endpoint.provider_slug) ?? string(endpoint.slug);
+function routeMatches(
+	endpoint: JsonRecord,
+	profile: ResidentProviderProfile,
+): boolean {
+	const name =
+		string(endpoint.provider_name) ??
+		string(endpoint.provider) ??
+		string(endpoint.name);
+	const tag =
+		string(endpoint.tag) ??
+		string(endpoint.provider_slug) ??
+		string(endpoint.slug);
 	return (
 		name === profile.selectedUpstreamName ||
 		tag === profile.approvedUpstream ||
@@ -347,20 +377,28 @@ function canaryBrief(profile: ResidentProviderProfile, ordinal: number) {
 	const claims = historicalClaimsFor(profile.residentId).filter(
 		(candidate) => candidate.editorialStatus === "approved",
 	);
-	if (!partner || claims.length === 0) throw new Error("resident-context-missing");
+	if (!partner || claims.length === 0)
+		throw new Error("resident-context-missing");
 
 	return SceneBriefSchema.parse({
 		schemaVersion: 1,
 		sceneKey: `admission-${profile.residentId}-${ordinal}`,
 		expectedWorldHead: 1,
 		participantIds: [profile.residentId, partner.id],
-		speakerOrder: [profile.residentId, partner.id, profile.residentId, partner.id],
+		speakerOrder: [
+			profile.residentId,
+			partner.id,
+			profile.residentId,
+			partner.id,
+		],
 		locationId: "common-room",
-		premise: "A quiet resident notices the tea has cooled and makes one gentle observation.",
+		premise:
+			"A quiet resident notices the tea has cooled and makes one gentle observation.",
 		allowedFactIds: claims.map((claim) => claim.claimId),
 		tone: "warm, concise, and non-confrontational",
 		turnBudget: 4,
-		permittedOutcome: "One brief line; no state change and no relationship effect.",
+		permittedOutcome:
+			"One brief line; no state change and no relationship effect.",
 	});
 }
 
@@ -375,7 +413,11 @@ export function createLiveAdmissionDependencies(input: {
 		async checkCatalog(profile) {
 			const path = modelPath(profile.requestedModelId);
 			const [modelBody, endpointsBody] = await Promise.all([
-				getJson(fetcher, `https://openrouter.ai/api/v1/model/${path}`, input.apiKey),
+				getJson(
+					fetcher,
+					`https://openrouter.ai/api/v1/model/${path}`,
+					input.apiKey,
+				),
 				getJson(
 					fetcher,
 					`https://openrouter.ai/api/v1/models/${path}/endpoints`,

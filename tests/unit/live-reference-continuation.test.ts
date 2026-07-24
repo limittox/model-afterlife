@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
 	classifyLiveGenerationFailure,
 	validatePriorCheckpoint,
-	validatePriorRetry4Checkpoint,
+	validatePriorRetry5Checkpoint,
 	validatePriorRetryCheckpoint,
 } from "../../scripts/run-phase-02-live.ts";
 
@@ -114,12 +114,12 @@ describe("live reference continuation", () => {
 		});
 	});
 
-	it("accepts only the cumulative 129 reason-length stop with one accepted case", () => {
-		expect(() => validatePriorRetry4Checkpoint()).not.toThrow();
+	it("accepts only the cumulative 135 text-schema stop with two accepted cases", () => {
+		expect(() => validatePriorRetry5Checkpoint()).not.toThrow();
 
-		const retry3 = JSON.parse(
+		const retry4 = JSON.parse(
 			readFileSync(
-				resolve("evals/results/phase-02-live-reference-retry-3.json"),
+				resolve("evals/results/phase-02-live-reference-retry-4.json"),
 				"utf8",
 			),
 		) as {
@@ -138,21 +138,25 @@ describe("live reference continuation", () => {
 			results: { caseId: string; accepted: boolean }[];
 		};
 
-		expect(retry3).toMatchObject({
+		expect(retry4).toMatchObject({
 			status: "failed",
-			cumulativeGenerationsConsumed: 129,
+			cumulativeGenerationsConsumed: 135,
 		});
-		expect(retry3.entries).toHaveLength(10);
-		expect(retry3.entries.at(-1)).toMatchObject({
+		expect(retry4.entries).toHaveLength(6);
+		expect(retry4.entries.at(-1)).toMatchObject({
 			status: "failed",
-			code: "judge-schema-reason-too-long",
+			code: "schema-text-invalid",
 		});
 		expect(evidence).toMatchObject({
 			status: "running",
-			caseCount: 1,
+			caseCount: 2,
 			results: [
 				{
 					caseId: "ordinary-01-tea-timer",
+					accepted: true,
+				},
+				{
+					caseId: "ordinary-02-misfiled-atlas",
 					accepted: true,
 				},
 			],
