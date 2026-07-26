@@ -36,6 +36,15 @@ export type ResidentProductionAsset = {
 	states: Record<ResidentAssetState, ResidentAssetStateFrames>;
 };
 
+export type OriginalArtworkAsset = {
+	id: "home-establishing" | "social-preview-frame";
+	textureKey: "home-establishing-art" | "social-preview-frame-art";
+	path: string;
+	sha256: string;
+	provenanceRef: string;
+	dimensions: { width: number; height: number };
+};
+
 export type ProductionAssetManifest = {
 	schemaVersion: 1;
 	status: "pilot" | "production";
@@ -45,6 +54,7 @@ export type ProductionAssetManifest = {
 		tileSize: 16;
 	};
 	residents: ResidentProductionAsset[];
+	artwork: OriginalArtworkAsset[];
 };
 
 export type AssetManifestParseResult =
@@ -179,6 +189,36 @@ function parseResident(value: unknown): ResidentProductionAsset | null {
 	};
 }
 
+function parseArtwork(value: unknown): OriginalArtworkAsset | null {
+	if (!isRecord(value)) return null;
+	if (
+		(value.id !== "home-establishing" && value.id !== "social-preview-frame") ||
+		(value.textureKey !== "home-establishing-art" &&
+			value.textureKey !== "social-preview-frame-art") ||
+		typeof value.path !== "string" ||
+		!value.path.startsWith("/art/") ||
+		typeof value.sha256 !== "string" ||
+		!/^[a-f0-9]{64}$/.test(value.sha256) ||
+		typeof value.provenanceRef !== "string" ||
+		!value.provenanceRef.startsWith("art-src/") ||
+		!isRecord(value.dimensions) ||
+		!isPositiveInteger(value.dimensions.width) ||
+		!isPositiveInteger(value.dimensions.height)
+	)
+		return null;
+	return {
+		id: value.id,
+		textureKey: value.textureKey,
+		path: value.path,
+		sha256: value.sha256,
+		provenanceRef: value.provenanceRef,
+		dimensions: {
+			width: value.dimensions.width,
+			height: value.dimensions.height,
+		},
+	};
+}
+
 export function parseProductionAssetManifest(
 	value: unknown,
 ): AssetManifestParseResult {
@@ -196,7 +236,8 @@ export function parseProductionAssetManifest(
 		value.world.width !== 352 ||
 		value.world.height !== 256 ||
 		value.world.tileSize !== 16 ||
-		!Array.isArray(value.residents)
+		!Array.isArray(value.residents) ||
+		!Array.isArray(value.artwork)
 	) {
 		return {
 			success: false,
@@ -209,6 +250,14 @@ export function parseProductionAssetManifest(
 		return { success: false, error: "Runtime resident asset entry is invalid" };
 	}
 	const parsedResidents = residents as ResidentProductionAsset[];
+	const artwork = value.artwork.map(parseArtwork);
+	if (artwork.some((asset) => asset === null)) {
+		return {
+			success: false,
+			error: "Runtime original artwork entry is invalid",
+		};
+	}
+	const parsedArtwork = artwork as OriginalArtworkAsset[];
 	if (
 		new Set(parsedResidents.map((resident) => resident.id)).size !==
 			parsedResidents.length ||
@@ -219,6 +268,17 @@ export function parseProductionAssetManifest(
 	) {
 		return { success: false, error: "Runtime resident assets must be unique" };
 	}
+	if (
+		parsedArtwork.length !== 2 ||
+		new Set(parsedArtwork.map((asset) => asset.id)).size !==
+			parsedArtwork.length ||
+		new Set(parsedArtwork.map((asset) => asset.path)).size !==
+			parsedArtwork.length
+	)
+		return {
+			success: false,
+			error: "Runtime original artwork assets must be unique",
+		};
 
 	return {
 		success: true,
@@ -227,6 +287,7 @@ export function parseProductionAssetManifest(
 			status: value.status,
 			world: { width: 352, height: 256, tileSize: 16 },
 			residents: parsedResidents,
+			artwork: parsedArtwork,
 		},
 	};
 }

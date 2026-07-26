@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="352" height="256" viewBox="0 0 352 256" shape-rendering="crispEdges">
+  <title>Model Afterlife shared home</title>
+  <rect width="352" height="256" fill="#171b26"/>
+  <rect x="8" y="8" width="112" height="80" fill="#647a5e" stroke="#6f513d" stroke-width="4"/>
+  <rect x="232" y="8" width="112" height="80" fill="#746b8f" stroke="#6f513d" stroke-width="4"/>
+  <rect x="88" y="72" width="176" height="160" fill="#d8c7a7" stroke="#6f513d" stroke-width="4"/>
+  <rect x="264" y="152" width="80" height="80" fill="#d8c7a7" stroke="#6f513d" stroke-width="4"/>
+  <path d="M20 66h28v-12h16v12h28M40 58v-24M92 58v-22" fill="none" stroke="#a9874f" stroke-width="4"/>
+  <path d="M244 68V30h88v38M254 38h20v22h-20M282 38h18v22h-18M308 38h14v22h-14" fill="#6f513d"/>
+  <path d="M152 104h48v20h-8v20h-32v-20h-8z" fill="#6f513d"/>
+  <path d="M164 112h24v16h-24z" fill="#a9874f"/>
+  <path d="M112 190h48v20h-48M192 190h48v20h-48" fill="#6f513d"/>
+  <path d="M276 192h56v16h-56M304 168v16" fill="#6f513d" stroke="#a9874f" stroke-width="4"/>
+  <path d="M88 92h176M120 232h112" stroke="#6f513d" stroke-width="4"/>
+</svg>

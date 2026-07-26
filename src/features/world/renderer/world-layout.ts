@@ -61,6 +61,31 @@ const ROOM_ANCHORS: Record<string, readonly { x: number; y: number }[]> = {
 	],
 };
 
+const RESIDENT_PRESENTATION_INTENTS = {
+	"gpt-4o": { pose: "seated", facing: "right", movementIntent: "settled" },
+	"claude-sonnet-4.5": {
+		pose: "seated",
+		facing: "left",
+		movementIntent: "settled",
+	},
+	"gemini-2.5-pro": {
+		pose: "listen",
+		facing: "left",
+		movementIntent: "listening",
+	},
+	"deepseek-v3.2": { pose: "walk", facing: "right", movementIntent: "walking" },
+	"llama-3.3-70b-instruct": {
+		pose: "neutral",
+		facing: "right",
+		movementIntent: "idle",
+	},
+	"qwen3-235b-a22b-2507": {
+		pose: "listen",
+		facing: "left",
+		movementIntent: "listening",
+	},
+} as const;
+
 export function projectRooms(
 	rooms: PublicWorldSnapshot["rooms"],
 ): RenderRoom[] {
@@ -92,6 +117,9 @@ export function projectResidents(
 			x: anchor.x,
 			y: anchor.y,
 			variant: resident.visualVariantId as ResidentVisualVariant,
+			...RESIDENT_PRESENTATION_INTENTS[
+				resident.id as keyof typeof RESIDENT_PRESENTATION_INTENTS
+			],
 		};
 	});
 }

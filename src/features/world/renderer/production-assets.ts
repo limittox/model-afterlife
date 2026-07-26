@@ -1,6 +1,7 @@
 import rawAssetManifest from "../../../../public/art/manifest.json";
 import {
 	parseProductionAssetManifest,
+	type OriginalArtworkAsset,
 	type ResidentProductionAsset,
 } from "./asset-manifest.ts";
 import type { RenderResident } from "./renderer-types.ts";
@@ -22,17 +23,23 @@ export function getResidentProductionAsset(
 	);
 }
 
+export function getOriginalArtworkAsset(
+	id: OriginalArtworkAsset["id"],
+): OriginalArtworkAsset | null {
+	return (
+		PRODUCTION_ASSET_MANIFEST?.artwork.find((asset) => asset.id === id) ?? null
+	);
+}
+
 export function selectResidentProductionFrame(
 	asset: ResidentProductionAsset,
 	options: {
-		activeSpeaker: boolean;
+		state: keyof ResidentProductionAsset["states"];
 		reducedMotion: boolean;
 		animationStep: number;
 	},
 ): number {
-	const state = options.activeSpeaker
-		? asset.states.speak
-		: asset.states.neutral;
+	const state = asset.states[options.state];
 	if (options.reducedMotion) return state.reducedMotionFrame;
 	const frameIndex =
 		Math.abs(Math.trunc(options.animationStep)) % state.frames.length;

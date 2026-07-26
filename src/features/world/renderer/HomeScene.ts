@@ -3,6 +3,7 @@ import type { ResidentProductionAsset } from "./asset-manifest.ts";
 import { CameraController, type CameraViewState } from "./CameraController.ts";
 import {
 	getResidentProductionAsset,
+	getOriginalArtworkAsset,
 	PRODUCTION_ASSET_MANIFEST,
 	selectResidentProductionFrame,
 } from "./production-assets.ts";
@@ -25,6 +26,7 @@ type ResidentVisual = {
 	activeSpeaker: boolean;
 	asset: ResidentProductionAsset | null;
 	sprite: Phaser.GameObjects.Sprite | null;
+	pose: RenderResident["pose"];
 };
 
 function colorNumber(hex: string): number {
@@ -54,6 +56,13 @@ export class HomeScene extends Phaser.Scene {
 	}
 
 	preload(): void {
+		const home = getOriginalArtworkAsset("home-establishing");
+		if (home && !this.textures.exists(home.textureKey)) {
+			this.load.svg(home.textureKey, home.path, {
+				width: home.dimensions.width,
+				height: home.dimensions.height,
+			});
+		}
 		for (const asset of PRODUCTION_ASSET_MANIFEST?.residents ?? []) {
 			if (this.textures.exists(asset.textureKey)) continue;
 			this.load.spritesheet(asset.textureKey, asset.path, {
@@ -103,7 +112,7 @@ export class HomeScene extends Phaser.Scene {
 			if (visual.asset && visual.sprite) {
 				visual.sprite.setFrame(
 					selectResidentProductionFrame(visual.asset, {
-						activeSpeaker: visual.activeSpeaker,
+						state: visual.activeSpeaker ? "speak" : visual.pose,
 						reducedMotion: state.reducedMotion,
 						animationStep: frame,
 					}),
@@ -135,6 +144,12 @@ export class HomeScene extends Phaser.Scene {
 		this.game.canvas.dataset.residentIds = state.residents
 			.map((resident) => resident.id)
 			.join("|");
+		this.game.canvas.dataset.residentIntents = state.residents
+			.map(
+				(resident) =>
+					`${resident.id}:${resident.pose}:${resident.facing}:${resident.movementIntent}`,
+			)
+			.join("|");
 		this.game.canvas.dataset.sceneId = state.scene?.id ?? "quiet";
 		this.children.removeAll(true);
 		this.residentVisuals = [];
@@ -161,6 +176,15 @@ export class HomeScene extends Phaser.Scene {
 	}
 
 	private drawFloor(): void {
+		const home = getOriginalArtworkAsset("home-establishing");
+		if (home && this.textures.exists(home.textureKey)) {
+			this.add
+				.image(0, 0, home.textureKey)
+				.setOrigin(0, 0)
+				.setName("home:original-art");
+			this.game.canvas.dataset.homeArtwork = home.id;
+			return;
+		}
 		const graphics = this.add.graphics();
 		graphics.fillStyle(colorNumber(this.tokens.colors.dominant), 1);
 		graphics.fillRect(0, 0, HOME_WIDTH, HOME_HEIGHT);
@@ -264,12 +288,13 @@ export class HomeScene extends Phaser.Scene {
 						-2,
 						loadedAsset.textureKey,
 						selectResidentProductionFrame(loadedAsset, {
-							activeSpeaker: isSpeaker,
+							state: isSpeaker ? "speak" : resident.pose,
 							reducedMotion: state.reducedMotion,
 							animationStep: 0,
 						}),
 					)
 					.setOrigin(0.5, 0.5)
+					.setFlipX(resident.facing === "left")
 					.setName(`${resident.renderId}:production-sprite`)
 			: null;
 		if (sprite) body.add(sprite);
@@ -301,6 +326,7 @@ export class HomeScene extends Phaser.Scene {
 			activeSpeaker: isSpeaker,
 			asset: loadedAsset,
 			sprite,
+			pose: resident.pose,
 		});
 	}
 

@@ -97,6 +97,9 @@ export type RenderResident = {
 	x: number;
 	y: number;
 	variant: ResidentVisualVariant;
+	pose: "neutral" | "seated" | "listen" | "speak" | "walk";
+	facing: "left" | "right";
+	movementIntent: "idle" | "settled" | "listening" | "walking";
 };
 
 export type RenderActiveTurn = {

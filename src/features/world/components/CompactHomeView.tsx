@@ -1,5 +1,7 @@
 import type { ConnectionState } from "../client/presentation-types.ts";
 import type { PublicWorldSnapshot } from "../contracts/public-world.ts";
+import { getResidentProductionAsset } from "../renderer/production-assets.ts";
+import type { ResidentVisualVariant } from "../renderer/renderer-types.ts";
 
 function currentLocation(snapshot: PublicWorldSnapshot): string {
 	const locationId =
@@ -71,6 +73,13 @@ export function CompactHomeView({
 				data-static-home="true"
 				data-current-location={location}
 			>
+				{/* biome-ignore lint/performance/noImgElement: static SVG is an exact pixel-art establishing view. */}
+				<img
+					className="compact-home-art"
+					src="/art/home/model-afterlife-home.svg"
+					alt=""
+					aria-hidden="true"
+				/>
 				{snapshot.rooms.map((room) => {
 					const residentCount = snapshot.residents.filter(
 						(resident) => resident.roomId === room.id,
@@ -90,6 +99,24 @@ export function CompactHomeView({
 						</span>
 					);
 				})}
+				<div className="compact-resident-portraits" aria-hidden="true">
+					{snapshot.residents.map((resident) => {
+						const asset = getResidentProductionAsset({
+							id: resident.id,
+							variant: resident.visualVariantId as ResidentVisualVariant,
+						});
+						return asset ? (
+							<span className="compact-resident-portrait" key={resident.id}>
+								{/* biome-ignore lint/performance/noImgElement: atlas cropping needs the exact checked-in frame. */}
+								<img
+									src={asset.path}
+									alt=""
+									style={{ transform: "translate(-96px, -32px)" }}
+								/>
+							</span>
+						) : null;
+					})}
+				</div>
 			</div>
 			<nav className="resident-shortcuts" aria-label="Resident shortcuts">
 				<h3>Resident profiles</h3>

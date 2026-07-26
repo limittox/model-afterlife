@@ -22,6 +22,14 @@ function pngDimensions(buffer: Buffer): { width: number; height: number } {
 	};
 }
 
+function svgDimensions(source: string): { width: number; height: number } {
+	const width = /\bwidth="(\d+)"/.exec(source)?.[1];
+	const height = /\bheight="(\d+)"/.exec(source)?.[1];
+	if (!width || !height)
+		throw new Error("Runtime artwork is missing SVG dimensions.");
+	return { width: Number(width), height: Number(height) };
+}
+
 async function main(): Promise<void> {
 	const rawAssetManifest = JSON.parse(
 		await readFile(
@@ -86,8 +94,39 @@ async function main(): Promise<void> {
 		]);
 	}
 
+	for (const artwork of parsed.data.artwork) {
+		const runtimePath = path.join(
+			process.cwd(),
+			"public",
+			artwork.path.replace(/^\/+/, ""),
+		);
+		const runtime = await readFile(runtimePath);
+		const hash = createHash("sha256").update(runtime).digest("hex");
+		if (hash !== artwork.sha256)
+			throw new Error(
+				`${artwork.id} runtime hash does not match the manifest.`,
+			);
+		const dimensions = svgDimensions(runtime.toString("utf8"));
+		if (
+			dimensions.width !== artwork.dimensions.width ||
+			dimensions.height !== artwork.dimensions.height
+		) {
+			throw new Error(
+				`${artwork.id} runtime dimensions do not match the manifest.`,
+			);
+		}
+		const sourcePath =
+			artwork.id === "home-establishing"
+				? "art-src/home/model-afterlife-home.svg"
+				: "art-src/social/model-afterlife-social-card.svg";
+		await Promise.all([
+			access(path.join(process.cwd(), sourcePath)),
+			access(path.join(process.cwd(), artwork.provenanceRef)),
+		]);
+	}
+
 	console.log(
-		`Validated ${parsed.data.residents.length} Phase 3 resident atlases as ${parsed.data.status} assets.`,
+		`Validated ${parsed.data.residents.length} resident atlases and ${parsed.data.artwork.length} original artwork exports as ${parsed.data.status} assets.`,
 	);
 }
 

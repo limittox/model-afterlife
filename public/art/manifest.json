@@ -6,6 +6,24 @@
 		"height": 256,
 		"tileSize": 16
 	},
+	"artwork": [
+		{
+			"id": "home-establishing",
+			"textureKey": "home-establishing-art",
+			"path": "/art/home/model-afterlife-home.svg",
+			"sha256": "a409965e34e1f325f34cda5aa037385f4cb928f4444ebc2bc61aa8eea4193dae",
+			"provenanceRef": "art-src/ORIGIN.md",
+			"dimensions": { "width": 352, "height": 256 }
+		},
+		{
+			"id": "social-preview-frame",
+			"textureKey": "social-preview-frame-art",
+			"path": "/art/social/model-afterlife-social-card.svg",
+			"sha256": "01a5871de8ee993a16f7bebd94b4d8ba4cb76ee4953646a85ca2e1ce3bd93cc6",
+			"provenanceRef": "art-src/ORIGIN.md",
+			"dimensions": { "width": 1200, "height": 630 }
+		}
+	],
 	"residents": [
 		{
 			"id": "gpt-4o",

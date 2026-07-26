@@ -8,6 +8,8 @@ import {
 	PRODUCTION_ASSET_MANIFEST,
 	selectResidentProductionFrame,
 } from "../../src/features/world/renderer/production-assets.ts";
+import { projectResidents } from "../../src/features/world/renderer/world-layout.ts";
+import { activeSceneState } from "../../src/features/world/fixtures/ui-states.ts";
 
 const EXPECTED_RESIDENT_ASSETS = [
 	{
@@ -54,6 +56,18 @@ describe("production resident asset manifest", () => {
 			world: { width: 352, height: 256, tileSize: 16 },
 		});
 		expect(parsed.data.residents).toHaveLength(6);
+		expect(parsed.data.artwork).toEqual([
+			expect.objectContaining({
+				id: "home-establishing",
+				path: "/art/home/model-afterlife-home.svg",
+				dimensions: { width: 352, height: 256 },
+			}),
+			expect.objectContaining({
+				id: "social-preview-frame",
+				path: "/art/social/model-afterlife-social-card.svg",
+				dimensions: { width: 1200, height: 630 },
+			}),
+		]);
 		expect(
 			parsed.data.residents.map(({ id, visualVariant, sha256 }) => ({
 				id,
@@ -126,14 +140,14 @@ describe("production resident asset manifest", () => {
 		).toBeNull();
 	});
 
-	it("uses speaking frames only for the active speaker and static reduced-motion frames", () => {
+	it("selects every explicit pose and a stable reduced-motion still", () => {
 		const asset = PRODUCTION_ASSET_MANIFEST?.residents[0];
 		expect(asset).toBeDefined();
 		if (!asset) return;
 
 		expect(
 			selectResidentProductionFrame(asset, {
-				activeSpeaker: false,
+				state: "neutral",
 				reducedMotion: false,
 				animationStep: 83,
 			}),
@@ -141,7 +155,7 @@ describe("production resident asset manifest", () => {
 		expect(
 			[0, 1, 2, 3].map((animationStep) =>
 				selectResidentProductionFrame(asset, {
-					activeSpeaker: true,
+					state: "speak",
 					reducedMotion: false,
 					animationStep,
 				}),
@@ -149,18 +163,85 @@ describe("production resident asset manifest", () => {
 		).toEqual([3, 4, 3, 4]);
 		expect(
 			selectResidentProductionFrame(asset, {
-				activeSpeaker: false,
+				state: "neutral",
 				reducedMotion: true,
 				animationStep: 1,
 			}),
 		).toBe(9);
 		expect(
 			selectResidentProductionFrame(asset, {
-				activeSpeaker: true,
+				state: "speak",
 				reducedMotion: true,
 				animationStep: 1,
 			}),
 		).toBe(3);
+		for (const state of [
+			"neutral",
+			"seated",
+			"listen",
+			"speak",
+			"walk",
+		] as const) {
+			expect(
+				selectResidentProductionFrame(asset, {
+					state,
+					reducedMotion: true,
+					animationStep: 999,
+				}),
+			).toBe(asset.states[state].reducedMotionFrame);
+		}
+	});
+
+	it("projects stable discrete pose, facing, and movement intent for every resident", () => {
+		const snapshot = activeSceneState.snapshot;
+		expect(snapshot).not.toBeNull();
+		if (!snapshot) return;
+		const residents = projectResidents(snapshot.residents);
+		expect(
+			residents.map(({ id, pose, facing, movementIntent }) => ({
+				id,
+				pose,
+				facing,
+				movementIntent,
+			})),
+		).toEqual([
+			{
+				id: "gpt-4o",
+				pose: "seated",
+				facing: "right",
+				movementIntent: "settled",
+			},
+			{
+				id: "claude-sonnet-4.5",
+				pose: "seated",
+				facing: "left",
+				movementIntent: "settled",
+			},
+			{
+				id: "gemini-2.5-pro",
+				pose: "listen",
+				facing: "left",
+				movementIntent: "listening",
+			},
+			{
+				id: "deepseek-v3.2",
+				pose: "walk",
+				facing: "right",
+				movementIntent: "walking",
+			},
+			{
+				id: "llama-3.3-70b-instruct",
+				pose: "neutral",
+				facing: "right",
+				movementIntent: "idle",
+			},
+			{
+				id: "qwen3-235b-a22b-2507",
+				pose: "listen",
+				facing: "left",
+				movementIntent: "listening",
+			},
+		]);
 	});
 
 	it("pins every checked-in runtime atlas to its manifest hash", async () => {
