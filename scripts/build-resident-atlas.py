@@ -1,4 +1,4 @@
-"""Normalize the selected AI-generated GPT-4o pilot into Phaser frame cells.
+"""Normalize a selected AI-generated resident sheet into Phaser frame cells.
 
 This script performs local mechanical processing only. It makes no ownership,
 license, originality, or Phase 3 completion claim about its input.

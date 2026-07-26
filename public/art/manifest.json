@@ -47,6 +47,121 @@
 					"reducedMotionFrame": 9
 				}
 			}
+		},
+		{
+			"id": "claude-sonnet-4.5",
+			"visualVariant": "navy-cardigan-tall-bookish",
+			"textureKey": "resident-claude-sonnet-4-5-pilot",
+			"path": "/art/residents/claude-sonnet-4.5-pilot.png",
+			"sha256": "a639da96f4e3d5aee2ad97b10db1bcd1a5ecf2ee5cb1ebc96316c8b55dc58d49",
+			"provenanceRef": "art-src/ORIGIN.md",
+			"dimensions": { "width": 120, "height": 64 },
+			"grid": {
+				"columns": 5,
+				"rows": 2,
+				"frameWidth": 24,
+				"frameHeight": 32,
+				"frameCount": 10
+			},
+			"states": {
+				"neutral": { "frames": [0], "reducedMotionFrame": 9 },
+				"seated": { "frames": [1], "reducedMotionFrame": 1 },
+				"listen": { "frames": [2], "reducedMotionFrame": 2 },
+				"speak": { "frames": [3, 4], "reducedMotionFrame": 3 },
+				"walk": { "frames": [5, 6, 7, 8], "reducedMotionFrame": 9 }
+			}
+		},
+		{
+			"id": "gemini-2.5-pro",
+			"visualVariant": "violet-shawl-round-satchel",
+			"textureKey": "resident-gemini-2-5-pro-pilot",
+			"path": "/art/residents/gemini-2.5-pro-pilot.png",
+			"sha256": "cd2bb9cb3ae0d7bfed0319da1c4b058c5ca1e0ad948d57a3a28fe85b5521d12d",
+			"provenanceRef": "art-src/ORIGIN.md",
+			"dimensions": { "width": 120, "height": 64 },
+			"grid": {
+				"columns": 5,
+				"rows": 2,
+				"frameWidth": 24,
+				"frameHeight": 32,
+				"frameCount": 10
+			},
+			"states": {
+				"neutral": { "frames": [0], "reducedMotionFrame": 9 },
+				"seated": { "frames": [1], "reducedMotionFrame": 1 },
+				"listen": { "frames": [2], "reducedMotionFrame": 2 },
+				"speak": { "frames": [3, 4], "reducedMotionFrame": 3 },
+				"walk": { "frames": [5, 6, 7, 8], "reducedMotionFrame": 9 }
+			}
+		},
+		{
+			"id": "deepseek-v3.2",
+			"visualVariant": "teal-apron-square-glasses",
+			"textureKey": "resident-deepseek-v3-2-pilot",
+			"path": "/art/residents/deepseek-v3.2-pilot.png",
+			"sha256": "2011075ca3d9a876581a4081d2307ac22bc9c19ed2e761d969ff6db0c7addf8d",
+			"provenanceRef": "art-src/ORIGIN.md",
+			"dimensions": { "width": 120, "height": 64 },
+			"grid": {
+				"columns": 5,
+				"rows": 2,
+				"frameWidth": 24,
+				"frameHeight": 32,
+				"frameCount": 10
+			},
+			"states": {
+				"neutral": { "frames": [0], "reducedMotionFrame": 9 },
+				"seated": { "frames": [1], "reducedMotionFrame": 1 },
+				"listen": { "frames": [2], "reducedMotionFrame": 2 },
+				"speak": { "frames": [3, 4], "reducedMotionFrame": 3 },
+				"walk": { "frames": [5, 6, 7, 8], "reducedMotionFrame": 9 }
+			}
+		},
+		{
+			"id": "llama-3.3-70b-instruct",
+			"visualVariant": "rust-overalls-broad-brim",
+			"textureKey": "resident-llama-3-3-70b-instruct-pilot",
+			"path": "/art/residents/llama-3.3-70b-instruct-pilot.png",
+			"sha256": "b640441d9252d84f6bba3dd767ba3d5a65178f5fa9a923171bd577b79dd2a2c9",
+			"provenanceRef": "art-src/ORIGIN.md",
+			"dimensions": { "width": 120, "height": 64 },
+			"grid": {
+				"columns": 5,
+				"rows": 2,
+				"frameWidth": 24,
+				"frameHeight": 32,
+				"frameCount": 10
+			},
+			"states": {
+				"neutral": { "frames": [0], "reducedMotionFrame": 9 },
+				"seated": { "frames": [1], "reducedMotionFrame": 1 },
+				"listen": { "frames": [2], "reducedMotionFrame": 2 },
+				"speak": { "frames": [3, 4], "reducedMotionFrame": 3 },
+				"walk": { "frames": [5, 6, 7, 8], "reducedMotionFrame": 9 }
+			}
+		},
+		{
+			"id": "qwen3-235b-a22b-2507",
+			"visualVariant": "jade-coat-many-tabbed-satchel",
+			"textureKey": "resident-qwen3-235b-a22b-2507-pilot",
+			"path": "/art/residents/qwen3-235b-a22b-2507-pilot.png",
+			"sha256": "6f2dbdcade35aa5b4bcbfe2b9cdef63926046773b6d70b3c2b6e3961c0952862",
+			"provenanceRef": "art-src/ORIGIN.md",
+			"dimensions": { "width": 120, "height": 64 },
+			"grid": {
+				"columns": 5,
+				"rows": 2,
+				"frameWidth": 24,
+				"frameHeight": 32,
+				"frameCount": 10
+			},
+			"states": {
+				"neutral": { "frames": [0], "reducedMotionFrame": 9 },
+				"seated": { "frames": [1], "reducedMotionFrame": 1 },
+				"listen": { "frames": [2], "reducedMotionFrame": 2 },
+				"speak": { "frames": [3, 4], "reducedMotionFrame": 3 },
+				"walk": { "frames": [5, 6, 7, 8], "reducedMotionFrame": 9 }
+			}
 		}
 	]
 }

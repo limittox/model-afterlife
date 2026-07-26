@@ -9,8 +9,41 @@ import {
 	selectResidentProductionFrame,
 } from "../../src/features/world/renderer/production-assets.ts";
 
-describe("production asset manifest pilot", () => {
-	it("validates the bounded 352x256 manifest and GPT-4o frame contract", () => {
+const EXPECTED_RESIDENT_ASSETS = [
+	{
+		id: "gpt-4o",
+		variant: "amber-waistcoat-short-stack",
+		hash: "ee3d3349c5efab355b401382d99d197c46ded9d5138cbf3a8b57fedfc2178e61",
+	},
+	{
+		id: "claude-sonnet-4.5",
+		variant: "navy-cardigan-tall-bookish",
+		hash: "a639da96f4e3d5aee2ad97b10db1bcd1a5ecf2ee5cb1ebc96316c8b55dc58d49",
+	},
+	{
+		id: "gemini-2.5-pro",
+		variant: "violet-shawl-round-satchel",
+		hash: "cd2bb9cb3ae0d7bfed0319da1c4b058c5ca1e0ad948d57a3a28fe85b5521d12d",
+	},
+	{
+		id: "deepseek-v3.2",
+		variant: "teal-apron-square-glasses",
+		hash: "2011075ca3d9a876581a4081d2307ac22bc9c19ed2e761d969ff6db0c7addf8d",
+	},
+	{
+		id: "llama-3.3-70b-instruct",
+		variant: "rust-overalls-broad-brim",
+		hash: "b640441d9252d84f6bba3dd767ba3d5a65178f5fa9a923171bd577b79dd2a2c9",
+	},
+	{
+		id: "qwen3-235b-a22b-2507",
+		variant: "jade-coat-many-tabbed-satchel",
+		hash: "6f2dbdcade35aa5b4bcbfe2b9cdef63926046773b6d70b3c2b6e3961c0952862",
+	},
+] as const;
+
+describe("production resident asset manifest", () => {
+	it("validates all six bounded 352x256 resident frame contracts", () => {
 		const parsed = parseProductionAssetManifest(rawAssetManifest);
 		expect(parsed.success).toBe(true);
 		if (!parsed.success) return;
@@ -20,30 +53,33 @@ describe("production asset manifest pilot", () => {
 			status: "pilot",
 			world: { width: 352, height: 256, tileSize: 16 },
 		});
-		expect(parsed.data.residents).toHaveLength(1);
-		expect(parsed.data.residents[0]).toMatchObject({
-			id: "gpt-4o",
-			visualVariant: "amber-waistcoat-short-stack",
-			textureKey: "resident-gpt-4o-pilot",
-			path: "/art/residents/gpt-4o-pilot.png",
-			sha256:
-				"ee3d3349c5efab355b401382d99d197c46ded9d5138cbf3a8b57fedfc2178e61",
-			dimensions: { width: 120, height: 64 },
-			grid: {
-				columns: 5,
-				rows: 2,
-				frameWidth: 24,
-				frameHeight: 32,
-				frameCount: 10,
-			},
-			states: {
-				neutral: { frames: [0], reducedMotionFrame: 9 },
-				seated: { frames: [1], reducedMotionFrame: 1 },
-				listen: { frames: [2], reducedMotionFrame: 2 },
-				speak: { frames: [3, 4], reducedMotionFrame: 3 },
-				walk: { frames: [5, 6, 7, 8], reducedMotionFrame: 9 },
-			},
-		});
+		expect(parsed.data.residents).toHaveLength(6);
+		expect(
+			parsed.data.residents.map(({ id, visualVariant, sha256 }) => ({
+				id,
+				variant: visualVariant,
+				hash: sha256,
+			})),
+		).toEqual(EXPECTED_RESIDENT_ASSETS);
+		for (const resident of parsed.data.residents) {
+			expect(resident).toMatchObject({
+				dimensions: { width: 120, height: 64 },
+				grid: {
+					columns: 5,
+					rows: 2,
+					frameWidth: 24,
+					frameHeight: 32,
+					frameCount: 10,
+				},
+				states: {
+					neutral: { frames: [0], reducedMotionFrame: 9 },
+					seated: { frames: [1], reducedMotionFrame: 1 },
+					listen: { frames: [2], reducedMotionFrame: 2 },
+					speak: { frames: [3, 4], reducedMotionFrame: 3 },
+					walk: { frames: [5, 6, 7, 8], reducedMotionFrame: 9 },
+				},
+			});
+		}
 	});
 
 	it("rejects private generation metadata and malformed sprite geometry", () => {
@@ -80,12 +116,12 @@ describe("production asset manifest pilot", () => {
 			getResidentProductionAsset({
 				id: "claude-sonnet-4.5",
 				variant: "navy-cardigan-tall-bookish",
-			}),
-		).toBeNull();
+			})?.textureKey,
+		).toBe("resident-claude-sonnet-4-5-pilot");
 		expect(
 			getResidentProductionAsset({
-				id: "gpt-4o",
-				variant: "navy-cardigan-tall-bookish",
+				id: "future-resident",
+				variant: "amber-waistcoat-short-stack",
 			}),
 		).toBeNull();
 	});
@@ -127,10 +163,12 @@ describe("production asset manifest pilot", () => {
 		).toBe(3);
 	});
 
-	it("pins the checked-in runtime atlas to the reviewed manifest hash", async () => {
-		const atlas = await readFile("public/art/residents/gpt-4o-pilot.png");
-		expect(createHash("sha256").update(atlas).digest("hex")).toBe(
-			PRODUCTION_ASSET_MANIFEST?.residents[0]?.sha256,
-		);
+	it("pins every checked-in runtime atlas to its manifest hash", async () => {
+		for (const resident of PRODUCTION_ASSET_MANIFEST?.residents ?? []) {
+			const atlas = await readFile(`public${resident.path}`);
+			expect(createHash("sha256").update(atlas).digest("hex")).toBe(
+				resident.sha256,
+			);
+		}
 	});
 });

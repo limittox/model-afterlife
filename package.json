@@ -32,6 +32,7 @@
 		"eval:phase-02:judge-diagnostic": "node --env-file-if-exists=.env --experimental-strip-types scripts/run-semantic-judge-diagnostic.ts --live --one-judge",
 		"privacy:phase-02": "node --experimental-strip-types scripts/scan-phase-02-privacy.ts",
 		"verify:phase-02": "node --experimental-strip-types scripts/verify-phase-02.ts",
+		"verify:phase-03:assets": "node --experimental-strip-types scripts/validate-phase-03-assets.ts",
 		"rebuild-world": "node --env-file-if-exists=.env --experimental-strip-types scripts/rebuild-world.ts",
 		"trigger:dev": "trigger.dev dev"
 	},
