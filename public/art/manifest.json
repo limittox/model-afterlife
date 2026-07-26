@@ -1,0 +1,52 @@
+{
+	"schemaVersion": 1,
+	"status": "pilot",
+	"world": {
+		"width": 352,
+		"height": 256,
+		"tileSize": 16
+	},
+	"residents": [
+		{
+			"id": "gpt-4o",
+			"visualVariant": "amber-waistcoat-short-stack",
+			"textureKey": "resident-gpt-4o-pilot",
+			"path": "/art/residents/gpt-4o-pilot.png",
+			"sha256": "ee3d3349c5efab355b401382d99d197c46ded9d5138cbf3a8b57fedfc2178e61",
+			"provenanceRef": "art-src/ORIGIN.md",
+			"dimensions": {
+				"width": 120,
+				"height": 64
+			},
+			"grid": {
+				"columns": 5,
+				"rows": 2,
+				"frameWidth": 24,
+				"frameHeight": 32,
+				"frameCount": 10
+			},
+			"states": {
+				"neutral": {
+					"frames": [0],
+					"reducedMotionFrame": 9
+				},
+				"seated": {
+					"frames": [1],
+					"reducedMotionFrame": 1
+				},
+				"listen": {
+					"frames": [2],
+					"reducedMotionFrame": 2
+				},
+				"speak": {
+					"frames": [3, 4],
+					"reducedMotionFrame": 3
+				},
+				"walk": {
+					"frames": [5, 6, 7, 8],
+					"reducedMotionFrame": 9
+				}
+			}
+		}
+	]
+}

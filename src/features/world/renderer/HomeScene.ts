@@ -1,5 +1,11 @@
 import Phaser from "phaser";
+import type { ResidentProductionAsset } from "./asset-manifest.ts";
 import { CameraController, type CameraViewState } from "./CameraController.ts";
+import {
+	getResidentProductionAsset,
+	PRODUCTION_ASSET_MANIFEST,
+	selectResidentProductionFrame,
+} from "./production-assets.ts";
 import type { RendererBridge } from "./renderer-bridge.ts";
 import type {
 	PresentationTokens,
@@ -16,6 +22,9 @@ type ResidentVisual = {
 	body: Phaser.GameObjects.Container;
 	baseY: number;
 	index: number;
+	activeSpeaker: boolean;
+	asset: ResidentProductionAsset | null;
+	sprite: Phaser.GameObjects.Sprite | null;
 };
 
 function colorNumber(hex: string): number {
@@ -42,6 +51,18 @@ export class HomeScene extends Phaser.Scene {
 		super({ key: "HomeScene" });
 		this.bridge = bridge;
 		this.tokens = tokens;
+	}
+
+	preload(): void {
+		for (const asset of PRODUCTION_ASSET_MANIFEST?.residents ?? []) {
+			if (this.textures.exists(asset.textureKey)) continue;
+			this.load.spritesheet(asset.textureKey, asset.path, {
+				frameWidth: asset.grid.frameWidth,
+				frameHeight: asset.grid.frameHeight,
+				startFrame: 0,
+				endFrame: asset.grid.frameCount - 1,
+			});
+		}
 	}
 
 	create(): void {
@@ -79,6 +100,15 @@ export class HomeScene extends Phaser.Scene {
 		const state = this.bridge.getState();
 		const frame = Math.floor(time / 143);
 		for (const visual of this.residentVisuals) {
+			if (visual.asset && visual.sprite) {
+				visual.sprite.setFrame(
+					selectResidentProductionFrame(visual.asset, {
+						activeSpeaker: visual.activeSpeaker,
+						reducedMotion: state.reducedMotion,
+						animationStep: frame,
+					}),
+				);
+			}
 			const quietStep = state.reducedMotion
 				? 0
 				: (frame + visual.index * 2) % 12 === 0
@@ -114,6 +144,9 @@ export class HomeScene extends Phaser.Scene {
 		for (const [index, resident] of state.residents.entries()) {
 			this.drawResident(resident, index, state);
 		}
+		this.game.canvas.dataset.productionAssetIds = this.residentVisuals
+			.flatMap((visual) => (visual.asset ? [visual.asset.id] : []))
+			.join("|");
 		this.drawSpeechBubble(state);
 		this.applyFollowState(state);
 		this.lastSceneId = state.scene?.id ?? null;
@@ -221,7 +254,60 @@ export class HomeScene extends Phaser.Scene {
 		const isSpeaker = state.scene?.activeTurn?.speakerId === resident.id;
 		const body = this.add.container(resident.x, resident.y);
 		body.setName(resident.renderId);
+		const asset = getResidentProductionAsset(resident);
+		const loadedAsset =
+			asset && this.textures.exists(asset.textureKey) ? asset : null;
+		const sprite = loadedAsset
+			? this.add
+					.sprite(
+						0,
+						-2,
+						loadedAsset.textureKey,
+						selectResidentProductionFrame(loadedAsset, {
+							activeSpeaker: isSpeaker,
+							reducedMotion: state.reducedMotion,
+							animationStep: 0,
+						}),
+					)
+					.setOrigin(0.5, 0.5)
+					.setName(`${resident.renderId}:production-sprite`)
+			: null;
+		if (sprite) body.add(sprite);
+		else this.drawProceduralResident(body, resident);
 
+		if (isSpeaker) {
+			const marker = this.add.graphics();
+			marker.lineStyle(2, colorNumber(this.tokens.colors.accent), 1);
+			marker.strokeEllipse(0, 12, 26, 8);
+			body.addAt(marker, 0);
+		}
+
+		const target = this.add
+			.zone(0, -2, 44, 44)
+			.setInteractive({ useHandCursor: true });
+		target.on(Phaser.Input.Events.POINTER_DOWN, () => {
+			this.bridge.emit({
+				type: "residentSelected",
+				residentId: resident.id,
+				residentName: resident.name,
+			});
+		});
+		body.add(target);
+		this.residentBodies.set(resident.id, body);
+		this.residentVisuals.push({
+			body,
+			baseY: resident.y,
+			index,
+			activeSpeaker: isSpeaker,
+			asset: loadedAsset,
+			sprite,
+		});
+	}
+
+	private drawProceduralResident(
+		body: Phaser.GameObjects.Container,
+		resident: RenderResident,
+	): void {
 		const pixels = this.add.graphics();
 		const style = RESIDENT_VISUAL_STYLES[resident.variant];
 		const headX = -Math.floor(style.headWidth / 2);
@@ -265,27 +351,6 @@ export class HomeScene extends Phaser.Scene {
 		pixels.fillRect(-6, 5, 5, 7);
 		pixels.fillRect(1, 5, 5, 7);
 		body.add(pixels);
-
-		if (isSpeaker) {
-			const marker = this.add.graphics();
-			marker.lineStyle(2, colorNumber(this.tokens.colors.accent), 1);
-			marker.strokeEllipse(0, 12, 26, 8);
-			body.addAt(marker, 0);
-		}
-
-		const target = this.add
-			.zone(0, -2, 44, 44)
-			.setInteractive({ useHandCursor: true });
-		target.on(Phaser.Input.Events.POINTER_DOWN, () => {
-			this.bridge.emit({
-				type: "residentSelected",
-				residentId: resident.id,
-				residentName: resident.name,
-			});
-		});
-		body.add(target);
-		this.residentBodies.set(resident.id, body);
-		this.residentVisuals.push({ body, baseY: resident.y, index });
 	}
 
 	private applyFollowState(state: RenderWorldState): void {
