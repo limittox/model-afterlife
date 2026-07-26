@@ -185,6 +185,7 @@ export class HomeScene extends Phaser.Scene {
 			this.game.canvas.dataset.homeArtwork = home.id;
 			return;
 		}
+		this.game.canvas.dataset.homeArtwork = "procedural-fallback";
 		const graphics = this.add.graphics();
 		graphics.fillStyle(colorNumber(this.tokens.colors.dominant), 1);
 		graphics.fillRect(0, 0, HOME_WIDTH, HOME_HEIGHT);
@@ -200,17 +201,28 @@ export class HomeScene extends Phaser.Scene {
 	private drawRoom(room: RenderRoom, state: RenderWorldState): void {
 		const graphics = this.add.graphics();
 		const isSceneRoom = state.scene?.locationId === room.id;
-		graphics.fillStyle(colorNumber(this.tokens.colors.secondary), 1);
-		graphics.fillRect(room.x, room.y, room.width, room.height);
-		graphics.lineStyle(
-			isSceneRoom ? 2 : 1,
-			colorNumber(
-				isSceneRoom ? this.tokens.colors.text : this.tokens.colors.border,
-			),
-			1,
+		const home = getOriginalArtworkAsset("home-establishing");
+		const hasOriginalHomeArtwork = Boolean(
+			home && this.textures.exists(home.textureKey),
 		);
-		graphics.strokeRect(room.x, room.y, room.width, room.height);
-		this.drawStructuralCue(graphics, room);
+		if (hasOriginalHomeArtwork) {
+			if (isSceneRoom) {
+				graphics.lineStyle(2, colorNumber(this.tokens.colors.text), 1);
+				graphics.strokeRect(room.x, room.y, room.width, room.height);
+			}
+		} else {
+			graphics.fillStyle(colorNumber(this.tokens.colors.secondary), 1);
+			graphics.fillRect(room.x, room.y, room.width, room.height);
+			graphics.lineStyle(
+				isSceneRoom ? 2 : 1,
+				colorNumber(
+					isSceneRoom ? this.tokens.colors.text : this.tokens.colors.border,
+				),
+				1,
+			);
+			graphics.strokeRect(room.x, room.y, room.width, room.height);
+			this.drawStructuralCue(graphics, room);
+		}
 
 		const roomLabel =
 			room.label.length > 20
