@@ -7,6 +7,7 @@ import {
 	PRODUCTION_ASSET_MANIFEST,
 	selectResidentProductionFrame,
 } from "./production-assets.ts";
+import { resolveResidentPosition } from "./resident-motion.ts";
 import type { RendererBridge } from "./renderer-bridge.ts";
 import type {
 	PresentationTokens,
@@ -19,18 +20,20 @@ import { RESIDENT_VISUAL_STYLES } from "./renderer-types.ts";
 import { createSpeechBubble } from "./SpeechBubbleLayer.ts";
 import {
 	ESTABLISHING_VIEW,
+	VIEWPORT_HEIGHT,
+	VIEWPORT_WIDTH,
 	WORLD_HEIGHT,
 	WORLD_WIDTH,
 } from "./world-geometry.ts";
 
 type ResidentVisual = {
 	body: Phaser.GameObjects.Container;
-	baseY: number;
 	index: number;
 	activeSpeaker: boolean;
 	asset: ResidentProductionAsset | null;
 	sprite: Phaser.GameObjects.Sprite | null;
 	pose: RenderResident["pose"];
+	resident: RenderResident;
 };
 
 function colorNumber(hex: string): number {
@@ -85,6 +88,9 @@ export class HomeScene extends Phaser.Scene {
 			ESTABLISHING_VIEW.centerX,
 			ESTABLISHING_VIEW.centerY,
 		);
+		this.game.canvas.dataset.worldSize = `${WORLD_WIDTH}x${WORLD_HEIGHT}`;
+		this.game.canvas.dataset.viewportSize =
+			`${VIEWPORT_WIDTH}x${VIEWPORT_HEIGHT}`;
 		this.renderState(this.bridge.getState());
 		this.unsubscribe = this.bridge.subscribe((state) =>
 			this.renderState(state),
@@ -126,12 +132,18 @@ export class HomeScene extends Phaser.Scene {
 					}),
 				);
 			}
-			const quietStep = state.reducedMotion
-				? 0
-				: (frame + visual.index * 2) % 12 === 0
-					? -1
-					: 0;
-			visual.body.y = visual.baseY + quietStep;
+			const position = resolveResidentPosition(
+				visual.resident,
+				time,
+				state.reducedMotion,
+			);
+			const quietStep =
+				visual.resident.movementIntent === "walking" || state.reducedMotion
+					? 0
+					: (frame + visual.index * 2) % 12 === 0
+						? -1
+						: 0;
+			visual.body.setPosition(position.x, position.y + quietStep);
 		}
 	}
 
@@ -341,12 +353,12 @@ export class HomeScene extends Phaser.Scene {
 		this.residentBodies.set(resident.id, body);
 		this.residentVisuals.push({
 			body,
-			baseY: resident.y,
 			index,
 			activeSpeaker: isSpeaker,
 			asset: loadedAsset,
 			sprite,
 			pose: resident.pose,
+			resident,
 		});
 	}
 

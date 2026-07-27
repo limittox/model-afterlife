@@ -4,6 +4,7 @@ import {
 	type RenderResident,
 	type RenderRoom,
 	type ResidentVisualVariant,
+	type WorldPoint,
 } from "./renderer-types.ts";
 import { ESTABLISHING_VIEW } from "./world-geometry.ts";
 
@@ -71,6 +72,33 @@ const ROOM_ANCHORS: Record<string, readonly { x: number; y: number }[]> = {
 	],
 };
 
+const ROOM_WAYPOINTS: Record<string, readonly WorldPoint[]> = {
+	"memory-garden": [
+		{ x: 32, y: 176 },
+		{ x: 112, y: 176 },
+		{ x: 112, y: 272 },
+		{ x: 48, y: 288 },
+	],
+	"common-room": [
+		{ x: 176, y: 208 },
+		{ x: 336, y: 208 },
+		{ x: 336, y: 288 },
+		{ x: 176, y: 288 },
+	],
+	library: [
+		{ x: 400, y: 48 },
+		{ x: 480, y: 48 },
+		{ x: 480, y: 128 },
+		{ x: 400, y: 128 },
+	],
+	"tea-nook": [
+		{ x: 400, y: 192 },
+		{ x: 480, y: 192 },
+		{ x: 480, y: 288 },
+		{ x: 400, y: 288 },
+	],
+};
+
 const RESIDENT_PRESENTATION_INTENTS = {
 	"gpt-4o": { pose: "seated", facing: "right", movementIntent: "settled" },
 	"claude-sonnet-4.5": {
@@ -129,6 +157,7 @@ export function projectResidents(
 			renderId: `resident:${resident.id}` as const,
 			x: anchor.x,
 			y: anchor.y,
+			waypoints: ROOM_WAYPOINTS[resident.roomId] ?? [anchor],
 			variant: resident.visualVariantId as ResidentVisualVariant,
 			...RESIDENT_PRESENTATION_INTENTS[
 				resident.id as keyof typeof RESIDENT_PRESENTATION_INTENTS

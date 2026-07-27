@@ -8,6 +8,7 @@ import {
 } from "../../src/features/world/fixtures/ui-states.ts";
 import { CameraController } from "../../src/features/world/renderer/CameraController.ts";
 import { calculateIntegerDisplayScale } from "../../src/features/world/renderer/integer-display-scale.ts";
+import { resolveResidentPosition } from "../../src/features/world/renderer/resident-motion.ts";
 import {
 	isRendererControl,
 	isRendererIntent,
@@ -53,6 +54,21 @@ describe("renderer bridge", () => {
 			"resident:llama-3.3-70b-instruct",
 			"resident:qwen3-235b-a22b-2507",
 		]);
+		for (const resident of first.residents) {
+			const room = first.rooms.find((candidate) => candidate.id === resident.roomId);
+			expect(room).toBeDefined();
+			expect(resident.waypoints.length).toBeGreaterThanOrEqual(4);
+			for (const waypoint of resident.waypoints) {
+				expect(waypoint.x).toBeGreaterThanOrEqual(room?.x ?? 0);
+				expect(waypoint.x).toBeLessThanOrEqual(
+					(room?.x ?? 0) + (room?.width ?? 0),
+				);
+				expect(waypoint.y).toBeGreaterThanOrEqual(room?.y ?? 0);
+				expect(waypoint.y).toBeLessThanOrEqual(
+					(room?.y ?? 0) + (room?.height ?? 0),
+				);
+			}
+		}
 		expect(first.scene?.activeTurn?.speakerRenderId).toBe("resident:gpt-4o");
 		expect(first.scene?.id).toBe(snapshot.scene?.id);
 		expect(first.rooms.map((room) => room.id)).toContain(
@@ -225,6 +241,42 @@ describe("renderer bridge", () => {
 				state,
 			),
 		).toBe(true);
+	});
+});
+
+describe("resident motion", () => {
+	const walkingResident = {
+		x: 32,
+		y: 144,
+		movementIntent: "walking" as const,
+		waypoints: [
+			{ x: 32, y: 176 },
+			{ x: 112, y: 176 },
+			{ x: 112, y: 272 },
+			{ x: 48, y: 288 },
+		],
+	};
+
+	it("moves walking residents deterministically along pixel-rounded segments", () => {
+		expect(resolveResidentPosition(walkingResident, 0, false)).toEqual({
+			x: 32,
+			y: 176,
+		});
+		expect(resolveResidentPosition(walkingResident, 600, false)).toEqual({
+			x: 72,
+			y: 176,
+		});
+		expect(resolveResidentPosition(walkingResident, 1_200, false)).toEqual({
+			x: 112,
+			y: 176,
+		});
+	});
+
+	it("holds the authored anchor when reduced motion is enabled", () => {
+		expect(resolveResidentPosition(walkingResident, 600, true)).toEqual({
+			x: 32,
+			y: 144,
+		});
 	});
 });
 

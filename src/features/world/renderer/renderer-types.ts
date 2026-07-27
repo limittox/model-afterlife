@@ -77,6 +77,11 @@ export const RESIDENT_VISUAL_STYLES = {
 
 export type ResidentVisualVariant = keyof typeof RESIDENT_VISUAL_STYLES;
 
+export type WorldPoint = {
+	x: number;
+	y: number;
+};
+
 export type RenderRoom = {
 	id: string;
 	label: string;
@@ -96,6 +101,7 @@ export type RenderResident = {
 	activity: string;
 	x: number;
 	y: number;
+	waypoints: readonly WorldPoint[];
 	variant: ResidentVisualVariant;
 	pose: "neutral" | "seated" | "listen" | "speak" | "walk";
 	facing: "left" | "right";
