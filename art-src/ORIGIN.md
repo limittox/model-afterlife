@@ -177,16 +177,22 @@ Each request appended one of the following exact subject/backdrop blocks:
 ## Project-authored home and social elements
 
 The home establishing illustration and social-preview frame were authored as
-editable SVG source by the Model Afterlife project on 2026-07-27. They use
-only the project palette and simple original architectural marks: warm plaster,
-dark timber, garden beds, a library, a hearth, and a tea counter. They contain
-no provider logos, mascots, text marks, copied characters, or protected-game
-assets/expression. The runtime SVG files are direct checked-in exports of their
-matching source SVG files; hashes are recorded in `public/art/manifest.json`.
+editable SVG source by the Model Afterlife project. The home map was redesigned
+on 2026-07-27 from the approved Model Afterlife design specification as original
+project artwork; it was not adapted from any third-party game map, asset, layout,
+or protected visual expression. Both assets use the project palette and simple
+original architectural marks: warm plaster, dark timber, garden beds, a library,
+a GPU-heater hearth, and a tea counter. They contain no provider logos, mascots,
+text marks, or copied characters. Runtime SVG files are byte-for-byte checked-in
+exports of their matching source SVG files; hashes are recorded in
+`public/art/manifest.json`.
+
+The home world is 512×384 logical pixels on a 16×16 authoring grid. Its status
+remains `pilot` pending final visual review and explicit project-use approval.
 
 | Asset | Editable source | Runtime export | Purpose |
 | --- | --- | --- | --- |
-| Shared home | `art-src/home/model-afterlife-home.svg` | `public/art/home/model-afterlife-home.svg` | 352×256 Phaser and compact-home establishing artwork |
+| Shared home | `art-src/home/model-afterlife-home.svg` | `public/art/home/model-afterlife-home.svg` | 512×384 Phaser world and compact-home establishing artwork |
 | Social card frame | `art-src/social/model-afterlife-social-card.svg` | `public/art/social/model-afterlife-social-card.svg` | 1200×630 provider-neutral social-preview frame for Plan 03-07 |
 
 | Resident | Chroma source SHA-256 | Prepared alpha SHA-256 | Preview SHA-256 | Runtime SHA-256 |

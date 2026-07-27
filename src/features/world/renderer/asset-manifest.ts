@@ -49,8 +49,8 @@ export type ProductionAssetManifest = {
 	schemaVersion: 1;
 	status: "pilot" | "production";
 	world: {
-		width: 352;
-		height: 256;
+		width: 512;
+		height: 384;
 		tileSize: 16;
 	};
 	residents: ResidentProductionAsset[];
@@ -233,8 +233,8 @@ export function parseProductionAssetManifest(
 		value.schemaVersion !== 1 ||
 		(value.status !== "pilot" && value.status !== "production") ||
 		!isRecord(value.world) ||
-		value.world.width !== 352 ||
-		value.world.height !== 256 ||
+		value.world.width !== 512 ||
+		value.world.height !== 384 ||
 		value.world.tileSize !== 16 ||
 		!Array.isArray(value.residents) ||
 		!Array.isArray(value.artwork)
@@ -285,7 +285,7 @@ export function parseProductionAssetManifest(
 		data: {
 			schemaVersion: 1,
 			status: value.status,
-			world: { width: 352, height: 256, tileSize: 16 },
+			world: { width: 512, height: 384, tileSize: 16 },
 			residents: parsedResidents,
 			artwork: parsedArtwork,
 		},

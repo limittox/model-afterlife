@@ -2,8 +2,8 @@
 	"schemaVersion": 1,
 	"status": "pilot",
 	"world": {
-		"width": 352,
-		"height": 256,
+		"width": 512,
+		"height": 384,
 		"tileSize": 16
 	},
 	"artwork": [
@@ -11,9 +11,9 @@
 			"id": "home-establishing",
 			"textureKey": "home-establishing-art",
 			"path": "/art/home/model-afterlife-home.svg",
-			"sha256": "a409965e34e1f325f34cda5aa037385f4cb928f4444ebc2bc61aa8eea4193dae",
+			"sha256": "712119e0280195426b21e302938597230aa418336d4e7f794781a0692fbe4636",
 			"provenanceRef": "art-src/ORIGIN.md",
-			"dimensions": { "width": 352, "height": 256 }
+			"dimensions": { "width": 512, "height": 384 }
 		},
 		{
 			"id": "social-preview-frame",

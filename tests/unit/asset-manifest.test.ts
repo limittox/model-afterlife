@@ -45,7 +45,7 @@ const EXPECTED_RESIDENT_ASSETS = [
 ] as const;
 
 describe("production resident asset manifest", () => {
-	it("validates all six bounded 352x256 resident frame contracts", () => {
+	it("validates the expanded world and all six resident frame contracts", () => {
 		const parsed = parseProductionAssetManifest(rawAssetManifest);
 		expect(parsed.success).toBe(true);
 		if (!parsed.success) return;
@@ -53,14 +53,14 @@ describe("production resident asset manifest", () => {
 		expect(parsed.data).toMatchObject({
 			schemaVersion: 1,
 			status: "pilot",
-			world: { width: 352, height: 256, tileSize: 16 },
+			world: { width: 512, height: 384, tileSize: 16 },
 		});
 		expect(parsed.data.residents).toHaveLength(6);
 		expect(parsed.data.artwork).toEqual([
 			expect.objectContaining({
 				id: "home-establishing",
 				path: "/art/home/model-afterlife-home.svg",
-				dimensions: { width: 352, height: 256 },
+				dimensions: { width: 512, height: 384 },
 			}),
 			expect.objectContaining({
 				id: "social-preview-frame",
@@ -251,5 +251,16 @@ describe("production resident asset manifest", () => {
 				resident.sha256,
 			);
 		}
+	});
+
+	it("keeps the editable and runtime home artwork byte-identical", async () => {
+		const [source, runtime] = await Promise.all([
+			readFile("art-src/home/model-afterlife-home.svg"),
+			readFile("public/art/home/model-afterlife-home.svg"),
+		]);
+		expect(createHash("sha256").update(source).digest("hex")).toBe(
+			createHash("sha256").update(runtime).digest("hex"),
+		);
+		expect(source.equals(runtime)).toBe(true);
 	});
 });

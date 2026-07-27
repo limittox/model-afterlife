@@ -42,6 +42,17 @@ async function main(): Promise<void> {
 		throw new Error(`Runtime manifest rejected: ${parsed.error}`);
 	}
 
+	const home = parsed.data.artwork.find(
+		(asset) => asset.id === "home-establishing",
+	);
+	if (
+		!home ||
+		home.dimensions.width !== parsed.data.world.width ||
+		home.dimensions.height !== parsed.data.world.height
+	) {
+		throw new Error("Home artwork dimensions must match world dimensions.");
+	}
+
 	const expected = LAUNCH_RESIDENTS.map((resident) => ({
 		id: resident.id,
 		variant: resident.visualVariantId,
@@ -119,8 +130,13 @@ async function main(): Promise<void> {
 			artwork.id === "home-establishing"
 				? "art-src/home/model-afterlife-home.svg"
 				: "art-src/social/model-afterlife-social-card.svg";
+		const source = await readFile(path.join(process.cwd(), sourcePath));
+		if (!source.equals(runtime)) {
+			throw new Error(
+				`${artwork.id} source and runtime artwork must match byte-for-byte.`,
+			);
+		}
 		await Promise.all([
-			access(path.join(process.cwd(), sourcePath)),
 			access(path.join(process.cwd(), artwork.provenanceRef)),
 		]);
 	}
