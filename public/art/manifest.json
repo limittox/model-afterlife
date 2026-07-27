@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"status": "pilot",
+	"status": "production",
 	"world": {
 		"width": 512,
 		"height": 384,

@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 03
 current_phase_name: return-loop-and-inclusive-presentation
 status: executing
-stopped_at: Completed 03-05-PLAN.md
-last_updated: "2026-07-24T19:22:53.123Z"
-last_activity: 2026-07-25
-last_activity_desc: Completed Phase 03 Plan 05 inclusive observer presentation
+stopped_at: Completed 03-06-PLAN.md
+last_updated: "2026-07-27T02:11:03.5500111Z"
+last_activity: 2026-07-27
+last_activity_desc: Completed Phase 03 Plan 06 approved production home art integration
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 15
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # Project State
@@ -28,17 +28,17 @@ See: .planning/PROJECT.md (updated 2026-07-22)
 ## Current Position
 
 Phase: 03 (return-loop-and-inclusive-presentation) — EXECUTING
-Plan: 6 of 7
+Plan: 7 of 7
 Status: Ready to execute
-Last activity: 2026-07-25 — Completed Phase 03 Plan 05 inclusive observer presentation
+Last activity: 2026-07-27 — Completed Phase 03 Plan 06 approved production home art integration
 
-Progress: [█████████████████░░░] 13/15 milestone plans complete (87%)
+Progress: [███████████████████░] 14/15 milestone plans complete (93%)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 13
+- Total plans completed: 14
 - Average duration: not recalculated; Plan 02-02 spanned interactive provider checkpoints
 - Total execution time: 3.3 recorded hours plus multi-session Plan 02-02 work
 
@@ -48,12 +48,12 @@ Progress: [█████████████████░░░] 13/15 m
 |-------|-------|-------|----------|
 | 1 | 4 | 111 min | 28 min |
 | 2 | 4 | multi-session | n/a |
-| 3 | 5 | multi-session | n/a |
+| 3 | 6 | multi-session | n/a |
 
 **Recent Trend:**
 
-- Last 4 plans: 18 min, 25 min, 24 min, multi-session
-- Trend: Phase 3 now has durable profiles, return recaps, and an inclusive semantic observer
+- Last 4 plans: 25 min, 24 min, multi-session, multi-session
+- Trend: Phase 3 now has durable profiles, return recaps, an inclusive observer, and approved production art
 
 *Updated after each plan completion*
 **Per-Plan Metrics:**
@@ -73,6 +73,7 @@ Progress: [█████████████████░░░] 13/15 m
 | Phase 03 P03 | 25min | 2 tasks | 15 files |
 | Phase 03 P04 | 24min | 2 tasks | 14 files |
 | Phase 03 P05 | multi-session | 2 tasks | 14 files |
+| Phase 03 P06 | multi-session | 5 tasks | 20 files |
 
 ## Accumulated Context
 
@@ -117,6 +118,8 @@ Recent decisions affecting current work:
 - [Phase 03]: Semantic React content remains the complete observer experience while Phaser is an optional desktop enhancement.
 - [Phase 03]: Renderer messages validate stable projected identities and a closed bounded observer-only intent and control set at the bridge.
 - [Phase 03]: Polling focus tests prove hydration through an application-owned DOM transition before asserting optional-control removal preserves focus.
+- [Phase 03]: The production home uses a 512x384 world behind a crisp 352x256 viewport, with deterministic room-safe resident paths and one source-identical SVG for Phaser and compact presentation.
+- [Phase 03]: The user explicitly approved the final home map and resident assets for project use on 2026-07-27; the validated runtime manifest is now production.
 
 ### Pending Todos
 
@@ -172,6 +175,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-24T19:22:53.110Z
-Stopped at: Completed 03-05-PLAN.md
+Last session: 2026-07-27T02:11:03.5500111Z
+Stopped at: Completed 03-06-PLAN.md
 Resume file: None

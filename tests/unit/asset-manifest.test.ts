@@ -52,7 +52,7 @@ describe("production resident asset manifest", () => {
 
 		expect(parsed.data).toMatchObject({
 			schemaVersion: 1,
-			status: "pilot",
+			status: "production",
 			world: { width: 512, height: 384, tileSize: 16 },
 		});
 		expect(parsed.data.residents).toHaveLength(6);
@@ -119,7 +119,7 @@ describe("production resident asset manifest", () => {
 	});
 
 	it("matches residents by stable identity and preserves procedural fallback", () => {
-		expect(PRODUCTION_ASSET_MANIFEST?.status).toBe("pilot");
+		expect(PRODUCTION_ASSET_MANIFEST?.status).toBe("production");
 		expect(
 			getResidentProductionAsset({
 				id: "gpt-4o",

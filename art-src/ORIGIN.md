@@ -8,12 +8,12 @@ technical review candidates.
 - GPT-4o used one built-in image-generation attempt on 2026-07-27.
 - The user then authorized one attempt for each of the other five residents.
   Exactly five additional calls were made, concurrently, with no retries.
-- All six runtime sheets are deliberately marked `pilot`. Integration does not
-  close the Phase 3 originality, ownership/license, protected-expression, or
-  final visual-review checkpoints.
-- The repository does not claim the generated pixels are wholly human-authored,
-  exclusively licensed, or cleared as original. RSID-08 and VIEW-07 remain open
-  until a human explicitly approves those points.
+- On 2026-07-27, the user explicitly approved the final home map and assets for
+  project use. All six runtime sheets and the shared home map are therefore
+  marked `production`.
+- This project-use visual approval is not a third-party legal opinion or a claim
+  that the AI-generated resident pixels are wholly human-authored, exclusively
+  licensed, or legally cleared in every jurisdiction.
 - The supplied GPT-4o pilot was used for sheet layout, pixel scale, and technique
   only. Every follow-up prompt prohibited copying its costume, props, body
   proportions, or identity, as well as provider logos, mascots, copied game
@@ -188,7 +188,8 @@ exports of their matching source SVG files; hashes are recorded in
 `public/art/manifest.json`.
 
 The home world is 512×384 logical pixels on a 16×16 authoring grid. Its status
-remains `pilot` pending final visual review and explicit project-use approval.
+is `production` following explicit visual and project-use approval on
+2026-07-27.
 
 | Asset | Editable source | Runtime export | Purpose |
 | --- | --- | --- | --- |
