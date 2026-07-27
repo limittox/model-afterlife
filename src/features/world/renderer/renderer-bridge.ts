@@ -5,12 +5,8 @@ import type {
 	RendererIntent,
 	RenderWorldState,
 } from "./renderer-types.ts";
-import {
-	HOME_HEIGHT,
-	HOME_WIDTH,
-	projectResidents,
-	projectRooms,
-} from "./world-layout.ts";
+import { projectResidents, projectRooms } from "./world-layout.ts";
+import { WORLD_HEIGHT, WORLD_WIDTH } from "./world-geometry.ts";
 
 type BridgeListener = (state: RenderWorldState) => void;
 type IntentHandler = (intent: RendererIntent) => void;
@@ -50,10 +46,10 @@ export function isRendererIntent(
 	return (
 		isFiniteNumber(intent.x) &&
 		intent.x >= 0 &&
-		intent.x <= HOME_WIDTH &&
+		intent.x <= WORLD_WIDTH &&
 		isFiniteNumber(intent.y) &&
 		intent.y >= 0 &&
-		intent.y <= HOME_HEIGHT &&
+		intent.y <= WORLD_HEIGHT &&
 		isFiniteNumber(intent.zoom) &&
 		Number.isInteger(intent.zoom) &&
 		intent.zoom >= 1 &&

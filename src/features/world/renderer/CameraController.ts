@@ -1,5 +1,11 @@
 import type { PresentationMode } from "../client/presentation-types.ts";
-import { HOME_HEIGHT, HOME_WIDTH } from "./world-layout.ts";
+import {
+	ESTABLISHING_VIEW,
+	VIEWPORT_HEIGHT,
+	VIEWPORT_WIDTH,
+	WORLD_HEIGHT,
+	WORLD_WIDTH,
+} from "./world-geometry.ts";
 
 export type CameraResident = { id: string; x: number; y: number };
 
@@ -26,9 +32,7 @@ function integerZoom(value: number): number {
 
 export class CameraController {
 	private state: CameraViewState = {
-		centerX: HOME_WIDTH / 2,
-		centerY: HOME_HEIGHT / 2,
-		zoom: 1,
+		...ESTABLISHING_VIEW,
 		followedResidentId: null,
 		manualPan: false,
 	};
@@ -77,9 +81,7 @@ export class CameraController {
 
 	resetEstablishingView(): CameraViewState {
 		this.state = {
-			centerX: HOME_WIDTH / 2,
-			centerY: HOME_HEIGHT / 2,
-			zoom: 1,
+			...ESTABLISHING_VIEW,
 			followedResidentId: null,
 			manualPan: false,
 		};
@@ -126,14 +128,13 @@ export class CameraController {
 
 	private bound(state: CameraViewState): CameraViewState {
 		const zoom = integerZoom(state.zoom);
-		const halfWidth = HOME_WIDTH / (2 * zoom);
-		const halfHeight = HOME_HEIGHT / (2 * zoom);
+		const halfWidth = VIEWPORT_WIDTH / (2 * zoom);
+		const halfHeight = VIEWPORT_HEIGHT / (2 * zoom);
 		return {
 			...state,
 			zoom,
-			centerX: clamp(state.centerX, halfWidth, HOME_WIDTH - halfWidth),
-			centerY: clamp(state.centerY, halfHeight, HOME_HEIGHT - halfHeight),
+			centerX: clamp(state.centerX, halfWidth, WORLD_WIDTH - halfWidth),
+			centerY: clamp(state.centerY, halfHeight, WORLD_HEIGHT - halfHeight),
 		};
 	}
 }
-

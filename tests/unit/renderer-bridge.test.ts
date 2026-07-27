@@ -238,8 +238,8 @@ describe("local camera controller", () => {
 		camera.panBy(32, 24);
 
 		expect(camera.resetEstablishingView()).toEqual({
-			centerX: 176,
-			centerY: 128,
+			centerX: 256,
+			centerY: 192,
 			zoom: 1,
 			followedResidentId: null,
 			manualPan: false,
@@ -259,8 +259,8 @@ describe("local camera controller", () => {
 		const panned = camera.panBy(10_000, 10_000);
 		expect(panned.followedResidentId).toBeNull();
 		expect(panned.manualPan).toBe(true);
-		expect(panned.centerX).toBe(264);
-		expect(panned.centerY).toBe(192);
+		expect(panned.centerX).toBe(424);
+		expect(panned.centerY).toBe(320);
 	});
 
 	it("frames speakers for 240ms only while live and unobstructed", () => {

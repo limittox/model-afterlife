@@ -1,10 +1,13 @@
-import { HOME_HEIGHT, HOME_WIDTH } from "./world-layout.ts";
+import {
+	VIEWPORT_HEIGHT,
+	VIEWPORT_WIDTH,
+} from "./world-geometry.ts";
 
 export function calculateIntegerDisplayScale(
 	availableWidth: number,
 	availableHeight: number,
-	baseWidth = HOME_WIDTH,
-	baseHeight = HOME_HEIGHT,
+	baseWidth = VIEWPORT_WIDTH,
+	baseHeight = VIEWPORT_HEIGHT,
 ): number {
 	const widthScale = Math.floor(availableWidth / baseWidth);
 	const heightScale = Math.floor(availableHeight / baseHeight);

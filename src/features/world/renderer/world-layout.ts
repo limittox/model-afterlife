@@ -5,59 +5,69 @@ import {
 	type RenderRoom,
 	type ResidentVisualVariant,
 } from "./renderer-types.ts";
+import { ESTABLISHING_VIEW } from "./world-geometry.ts";
 
-export const HOME_WIDTH = 352;
-export const HOME_HEIGHT = 256;
-
-const ROOM_LAYOUT = {
+export const ROOM_LAYOUT = {
 	"common-room": {
-		x: 88,
-		y: 72,
-		width: 176,
-		height: 160,
+		x: 144,
+		y: 96,
+		width: 224,
+		height: 224,
 		structuralCue: "hearth",
 	},
 	"memory-garden": {
-		x: 8,
-		y: 8,
-		width: 112,
-		height: 80,
+		x: 0,
+		y: 96,
+		width: 144,
+		height: 224,
 		structuralCue: "garden",
 	},
 	library: {
-		x: 232,
-		y: 8,
-		width: 112,
-		height: 80,
+		x: 368,
+		y: 0,
+		width: 144,
+		height: 160,
 		structuralCue: "bookshelves",
 	},
 	"tea-nook": {
-		x: 264,
-		y: 152,
-		width: 80,
-		height: 80,
+		x: 368,
+		y: 160,
+		width: 144,
+		height: 160,
 		structuralCue: "counter",
 	},
 } as const;
 
 const ROOM_ANCHORS: Record<string, readonly { x: number; y: number }[]> = {
 	"common-room": [
-		{ x: 136, y: 144 },
-		{ x: 208, y: 144 },
-		{ x: 144, y: 192 },
-		{ x: 208, y: 192 },
+		{ x: 192, y: 160 },
+		{ x: 240, y: 160 },
+		{ x: 288, y: 160 },
+		{ x: 336, y: 160 },
+		{ x: 192, y: 240 },
+		{ x: 240, y: 240 },
+		{ x: 288, y: 240 },
+		{ x: 336, y: 240 },
 	],
 	"memory-garden": [
-		{ x: 40, y: 56 },
-		{ x: 88, y: 56 },
+		{ x: 32, y: 144 },
+		{ x: 80, y: 144 },
+		{ x: 112, y: 192 },
+		{ x: 32, y: 256 },
+		{ x: 80, y: 272 },
+		{ x: 112, y: 288 },
 	],
 	library: [
-		{ x: 264, y: 56 },
-		{ x: 312, y: 56 },
+		{ x: 400, y: 64 },
+		{ x: 448, y: 64 },
+		{ x: 400, y: 112 },
+		{ x: 464, y: 112 },
 	],
 	"tea-nook": [
-		{ x: 288, y: 200 },
-		{ x: 320, y: 200 },
+		{ x: 400, y: 208 },
+		{ x: 464, y: 208 },
+		{ x: 400, y: 272 },
+		{ x: 464, y: 272 },
 	],
 };
 
@@ -103,7 +113,10 @@ export function projectResidents(
 		const roomIndex = usedByRoom.get(resident.roomId) ?? 0;
 		usedByRoom.set(resident.roomId, roomIndex + 1);
 		const anchors = ROOM_ANCHORS[resident.roomId] ?? [
-			{ x: HOME_WIDTH / 2, y: HOME_HEIGHT / 2 },
+			{
+				x: ESTABLISHING_VIEW.centerX,
+				y: ESTABLISHING_VIEW.centerY,
+			},
 		];
 		const anchor = anchors[roomIndex % anchors.length];
 		if (!(resident.visualVariantId in RESIDENT_VISUAL_STYLES)) {

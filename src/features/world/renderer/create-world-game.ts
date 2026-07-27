@@ -2,7 +2,10 @@ import Phaser from "phaser";
 import { HomeScene } from "./HomeScene.ts";
 import type { RendererBridge } from "./renderer-bridge.ts";
 import type { PresentationTokens } from "./renderer-types.ts";
-import { HOME_HEIGHT, HOME_WIDTH } from "./world-layout.ts";
+import {
+	VIEWPORT_HEIGHT,
+	VIEWPORT_WIDTH,
+} from "./world-geometry.ts";
 
 export function createWorldGame(
 	parent: HTMLElement,
@@ -12,8 +15,8 @@ export function createWorldGame(
 	return new Phaser.Game({
 		type: Phaser.AUTO,
 		parent,
-		width: HOME_WIDTH,
-		height: HOME_HEIGHT,
+		width: VIEWPORT_WIDTH,
+		height: VIEWPORT_HEIGHT,
 		backgroundColor: tokens.colors.dominant,
 		transparent: false,
 		pixelArt: true,

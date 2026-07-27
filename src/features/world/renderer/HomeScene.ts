@@ -17,7 +17,11 @@ import type {
 } from "./renderer-types.ts";
 import { RESIDENT_VISUAL_STYLES } from "./renderer-types.ts";
 import { createSpeechBubble } from "./SpeechBubbleLayer.ts";
-import { HOME_HEIGHT, HOME_WIDTH } from "./world-layout.ts";
+import {
+	ESTABLISHING_VIEW,
+	WORLD_HEIGHT,
+	WORLD_WIDTH,
+} from "./world-geometry.ts";
 
 type ResidentVisual = {
 	body: Phaser.GameObjects.Container;
@@ -75,8 +79,12 @@ export class HomeScene extends Phaser.Scene {
 	}
 
 	create(): void {
-		this.cameras.main.setBounds(0, 0, HOME_WIDTH, HOME_HEIGHT);
+		this.cameras.main.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 		this.cameras.main.setRoundPixels(true);
+		this.cameras.main.centerOn(
+			ESTABLISHING_VIEW.centerX,
+			ESTABLISHING_VIEW.centerY,
+		);
 		this.renderState(this.bridge.getState());
 		this.unsubscribe = this.bridge.subscribe((state) =>
 			this.renderState(state),
@@ -188,13 +196,13 @@ export class HomeScene extends Phaser.Scene {
 		this.game.canvas.dataset.homeArtwork = "procedural-fallback";
 		const graphics = this.add.graphics();
 		graphics.fillStyle(colorNumber(this.tokens.colors.dominant), 1);
-		graphics.fillRect(0, 0, HOME_WIDTH, HOME_HEIGHT);
+		graphics.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 		graphics.lineStyle(1, colorNumber(this.tokens.colors.border), 0.24);
-		for (let x = 0; x <= HOME_WIDTH; x += this.tokens.tileSize) {
-			graphics.lineBetween(x, 0, x, HOME_HEIGHT);
+		for (let x = 0; x <= WORLD_WIDTH; x += this.tokens.tileSize) {
+			graphics.lineBetween(x, 0, x, WORLD_HEIGHT);
 		}
-		for (let y = 0; y <= HOME_HEIGHT; y += this.tokens.tileSize) {
-			graphics.lineBetween(0, y, HOME_WIDTH, y);
+		for (let y = 0; y <= WORLD_HEIGHT; y += this.tokens.tileSize) {
+			graphics.lineBetween(0, y, WORLD_WIDTH, y);
 		}
 	}
 
@@ -545,8 +553,8 @@ export class HomeScene extends Phaser.Scene {
 		);
 		if (!speaker) return;
 
-		const x = Phaser.Math.Clamp(speaker.x - 60, 4, HOME_WIDTH - 124);
-		const y = Phaser.Math.Clamp(speaker.y - 48, 4, HOME_HEIGHT - 52);
+		const x = Phaser.Math.Clamp(speaker.x - 60, 4, WORLD_WIDTH - 124);
+		const y = Phaser.Math.Clamp(speaker.y - 48, 4, WORLD_HEIGHT - 52);
 		const graphics = this.add.graphics().setDepth(8);
 		graphics.fillStyle(colorNumber(this.tokens.colors.text), 1);
 		graphics.fillRect(x, y, 120, 35);
