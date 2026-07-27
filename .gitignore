@@ -1,5 +1,6 @@
 .env
 .env.local
+/.codex/
 .next/
 node_modules/
 coverage/

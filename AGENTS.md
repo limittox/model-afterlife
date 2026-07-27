@@ -3,7 +3,8 @@
 This project intentionally avoids the heavyweight `$gsd-debug` workflow for routine development. This preference overrides the default GSD debug-routing guidance later in this file.
 
 - Do not invoke `$gsd-debug`, a debug session manager, or a multi-agent debugging loop unless the user explicitly requests that workflow.
-- Use `$gsd-quick` for ordinary bug fixes, provider integrations, configuration changes, and focused diagnostics.
+- Bypass GSD workflows for trivial, low-risk tasks such as one-line configuration or documentation edits, `.gitignore` changes, typo fixes, and other obvious local modifications. Make the edit directly and run proportionate verification.
+- Use `$gsd-quick` only when a focused task still benefits from planning or durable state tracking, such as a non-trivial bug fix, provider integration, or multi-file configuration change.
 - Keep debugging proportional: inspect the direct evidence, add one focused regression test when useful, make the smallest supported change, and run targeted verification.
 - Avoid repeated full-suite runs, speculative fix-and-canary cycles, and subagent fan-out for narrowly scoped issues.
 - Treat paid external API calls as separate, explicitly bounded checkpoints with durable call accounting.
