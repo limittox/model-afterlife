@@ -1,7 +1,9 @@
 # Model Afterlife Home Map Redesign
 
-**Date:** 2026-07-27  
-**Status:** Approved design  
+**Date:** 2026-07-27
+
+**Status:** Approved design
+
 **Scope:** Replace the existing home map while preserving the approved resident sprites and social-preview artwork.
 
 ## Objective
