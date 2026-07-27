@@ -40,10 +40,16 @@ test("loads a production sprite atlas for all six launch residents", async ({
 		"data-home-artwork",
 		"home-establishing",
 	);
+	await expect(canvas).toHaveAttribute("data-world-size", "512x384");
+	await expect(canvas).toHaveAttribute("data-viewport-size", "352x256");
 	await expect(canvas).toHaveAttribute(
 		"data-resident-intents",
 		expect.stringContaining("deepseek-v3.2:walk:right:walking"),
 	);
+	await page.getByRole("button", { name: "Reset view" }).click();
+	await expect(canvas).toHaveAttribute("data-camera-x", "256");
+	await expect(canvas).toHaveAttribute("data-camera-y", "192");
+	await expect(canvas).toHaveAttribute("data-camera-zoom", "1");
 });
 
 test("uses original home art and static resident portraits in the compact semantic view", async ({
@@ -59,6 +65,8 @@ test("uses original home art and static resident portraits in the compact semant
 		"/art/home/model-afterlife-home.svg",
 	);
 	await expect(home.locator(".compact-resident-portrait")).toHaveCount(6);
+	await expect(home.locator(".compact-room")).toHaveCount(4);
+	await expect(home).toHaveCSS("aspect-ratio", "4 / 3");
 	await expect(home).toHaveAttribute("role", "img");
 });
 

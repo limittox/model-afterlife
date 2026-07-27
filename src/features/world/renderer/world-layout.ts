@@ -39,6 +39,13 @@ export const ROOM_LAYOUT = {
 	},
 } as const;
 
+export type RenderRoomGeometry =
+	(typeof ROOM_LAYOUT)[keyof typeof ROOM_LAYOUT];
+
+export function getRoomLayout(roomId: string): RenderRoomGeometry | null {
+	return ROOM_LAYOUT[roomId as keyof typeof ROOM_LAYOUT] ?? null;
+}
+
 const ROOM_ANCHORS: Record<string, readonly { x: number; y: number }[]> = {
 	"common-room": [
 		{ x: 192, y: 160 },

@@ -1,7 +1,13 @@
+import type { CSSProperties } from "react";
 import type { ConnectionState } from "../client/presentation-types.ts";
 import type { PublicWorldSnapshot } from "../contracts/public-world.ts";
 import { getResidentProductionAsset } from "../renderer/production-assets.ts";
 import type { ResidentVisualVariant } from "../renderer/renderer-types.ts";
+import {
+	WORLD_HEIGHT,
+	WORLD_WIDTH,
+} from "../renderer/world-geometry.ts";
+import { getRoomLayout } from "../renderer/world-layout.ts";
 
 function currentLocation(snapshot: PublicWorldSnapshot): string {
 	const locationId =
@@ -81,6 +87,15 @@ export function CompactHomeView({
 					aria-hidden="true"
 				/>
 				{snapshot.rooms.map((room) => {
+					const layout = getRoomLayout(room.id);
+					const style = layout
+						? ({
+								"--room-x": `${(layout.x / WORLD_WIDTH) * 100}%`,
+								"--room-y": `${(layout.y / WORLD_HEIGHT) * 100}%`,
+								"--room-width": `${(layout.width / WORLD_WIDTH) * 100}%`,
+								"--room-height": `${(layout.height / WORLD_HEIGHT) * 100}%`,
+							} as CSSProperties)
+						: undefined;
 					const residentCount = snapshot.residents.filter(
 						(resident) => resident.roomId === room.id,
 					).length;
@@ -90,6 +105,7 @@ export function CompactHomeView({
 							className={isCurrent ? "compact-room is-current" : "compact-room"}
 							key={room.id}
 							aria-hidden="true"
+							style={style}
 						>
 							<strong>{room.name}</strong>
 							<small>
